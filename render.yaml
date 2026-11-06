@@ -1,0 +1,32 @@
+# Render Blueprint: New > Blueprint > pick this repo. Creates the app, Postgres and Redis (Key Value).
+# After the first deploy, run in the app's Shell:  psql "${DATABASE_URL/+psycopg/}" -c "CREATE EXTENSION IF NOT EXISTS postgis;"
+# (the migration also tries to create it).
+services:
+  - type: web
+    name: speedo-live
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATA_SOURCE
+        value: demo
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: DATABASE_URL
+        fromDatabase: { name: speedo-db, property: connectionString }
+      - key: REDIS_URL
+        fromService: { type: keyvalue, name: speedo-redis, property: connectionString }
+      - key: SEED_ADMIN_PASSWORD
+        sync: false
+  - type: keyvalue
+    name: speedo-redis
+    plan: free
+    ipAllowList: []
+databases:
+  - name: speedo-db
+    plan: free
+    postgresMajorVersion: "16"

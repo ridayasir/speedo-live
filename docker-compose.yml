@@ -1,0 +1,29 @@
+# Local full stack: docker compose up --build   ->  http://localhost:8000
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: speedo
+      POSTGRES_PASSWORD: speedo
+      POSTGRES_DB: speedo
+    volumes: [dbdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U speedo"]
+      interval: 5s
+      retries: 10
+  redis:
+    image: redis:7-alpine
+  app:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://speedo:speedo@db:5432/speedo
+      REDIS_URL: redis://redis:6379/0
+      JWT_SECRET: ${JWT_SECRET:-local-dev-secret-change-me-0123456789abcdef}
+      DATA_SOURCE: ${DATA_SOURCE:-demo}
+      CORS_ORIGINS: "*"
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_started }
+volumes:
+  dbdata:

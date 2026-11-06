@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body { background: #f4f6fa; color: #0f172a; }
+body { font-family: Inter, system-ui, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+.leaflet-container { font-family: inherit; background: #e5e9f0; }
+.leaflet-tooltip { border-radius: 8px; font-size: 12px; }
+.scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }

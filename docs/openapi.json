@@ -1,0 +1,4776 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Speedo Live API",
+        "description": "Speedo Live: bus tracking and route navigation for Lahore.\n\nAuthenticate with `POST /api/auth/login` and send `Authorization: Bearer <token>`.\nLive positions stream over the `/ws/live` WebSocket.\n\nIn DEMO mode all buses, routes and schedules are simulated sample data.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/health": {
+            "get": {
+                "tags": [
+                    "system"
+                ],
+                "summary": "Health",
+                "operationId": "health_health_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register",
+                "description": "Create a passenger account with email or phone and a password.",
+                "operationId": "register_api_auth_register_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TokenOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Login",
+                "description": "Log in with email or phone. Works for passengers, drivers and admins.",
+                "operationId": "login_api_auth_login_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TokenOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Logout",
+                "description": "Tokens are stateless; the client discards its token. Kept so apps have a single logout call.",
+                "operationId": "logout_api_auth_logout_post",
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/me": {
+            "get": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Me",
+                "operationId": "me_api_auth_me_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Update Me",
+                "operationId": "update_me_api_auth_me_patch",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProfileIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/me/password": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Change Password",
+                "operationId": "change_password_api_auth_me_password_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PasswordIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/meta": {
+            "get": {
+                "tags": [
+                    "passenger"
+                ],
+                "summary": "Meta",
+                "description": "Operating mode. In demo mode every bus and route shown is simulated sample data.",
+                "operationId": "meta_api_meta_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/routes": {
+            "get": {
+                "tags": [
+                    "passenger"
+                ],
+                "summary": "List Routes",
+                "description": "List routes. with_path=true adds the line geometry and ordered stops for drawing on a map.",
+                "operationId": "list_routes_api_routes_get",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Q"
+                        }
+                    },
+                    {
+                        "name": "include_inactive",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Include Inactive"
+                        }
+                    },
+                    {
+                        "name": "with_path",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "With Path"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/routes/popular": {
+            "get": {
+                "tags": [
+                    "passenger"
+                ],
+                "summary": "Popular Routes",
+                "description": "Ranked by passenger journeys and favourites in the last 30 days.",
+                "operationId": "popular_routes_api_routes_popular_get",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 20,
+                            "minimum": 1,
+                            "default": 6,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/routes/{route_id}": {
+            "get": {
+                "tags": [
+                    "passenger"
+                ],
+                "summary": "Get Route",
+                "operationId": "get_route_api_routes__route_id__get",
+                "parameters": [
+                    {
+                        "name": "route_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Route Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/routes/{route_id}/buses": {
+            "get": {
+                "tags": [
+                    "passenger"
+                ],
+                "summary": "Route Buses",
+                "operationId": "route_buses_api_routes__route_id__buses_get",
+                "parameters": [
+                    {
+                        "name": "route_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Route Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/stops": {
+            "get": {
+                "tags": [
+                    "passenger"
+                ],
+                "summary": "List Stops",
+                "operationId": "list_stops_api_stops_get",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Q"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 500,
+                            "minimum": 1,
+                            "default": 50,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/stops/nearby": {
+            "get": {
+                "tags": [
+                    "passenger"
+                ],
+                "summary": "Stops Nearby",
+                "operationId": "stops_nearby_api_stops_nearby_get",
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "maximum": 90,
+                            "minimum": -90,
+                            "title": "Lat"
+                        }
+                    },
+                    {
+                        "name": "lng",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "maximum": 180,
+                            "minimum": -180,
+                            "title": "Lng"
+                        }
+                    },
+                    {
+                        "name": "radius_m",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "maximum": 10000,
+                            "minimum": 50,
+                            "default": 1500,
+                            "title": "Radius M"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 50,
+                            "minimum": 1,
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/stops/{stop_id}": {
+            "get": {
+                "tags": [
+                    "passenger"
+                ],
+                "summary": "Get Stop",
+                "operationId": "get_stop_api_stops__stop_id__get",
+                "parameters": [
+                    {
+                        "name": "stop_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Stop Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/stops/{stop_id}/arrivals": {
+            "get": {
+                "tags": [
+                    "passenger"
+                ],
+                "summary": "Stop Arrivals",
+                "description": "Live ETAs from fresh GPS, plus scheduled times. Scheduled entries are never presented as live.",
+                "operationId": "stop_arrivals_api_stops__stop_id__arrivals_get",
+                "parameters": [
+                    {
+                        "name": "stop_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Stop Id"
+                        }
+                    },
+                    {
+                        "name": "route_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Route Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/buses/live": {
+            "get": {
+                "tags": [
+                    "passenger"
+                ],
+                "summary": "Live Buses",
+                "description": "Latest state of every bus. Subscribe to /ws/live for updates.",
+                "operationId": "live_buses_api_buses_live_get",
+                "parameters": [
+                    {
+                        "name": "route_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Route Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/buses/{bus_id}": {
+            "get": {
+                "tags": [
+                    "passenger"
+                ],
+                "summary": "Bus Detail",
+                "operationId": "bus_detail_api_buses__bus_id__get",
+                "parameters": [
+                    {
+                        "name": "bus_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Bus Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/plan": {
+            "post": {
+                "tags": [
+                    "passenger"
+                ],
+                "summary": "Plan Journey",
+                "description": "Find Speedo routes between two places (coordinates or stops), with up to one transfer.",
+                "operationId": "plan_journey_api_plan_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PlanIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/timetable": {
+            "get": {
+                "tags": [
+                    "passenger"
+                ],
+                "summary": "Timetable",
+                "description": "Route operating hours and scheduled times at major stops (today, Pakistan time).",
+                "operationId": "timetable_api_timetable_get",
+                "parameters": [
+                    {
+                        "name": "route_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Route Id"
+                        }
+                    },
+                    {
+                        "name": "stop_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Stop Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/alerts": {
+            "get": {
+                "tags": [
+                    "passenger"
+                ],
+                "summary": "Alerts",
+                "operationId": "alerts_api_alerts_get",
+                "parameters": [
+                    {
+                        "name": "route_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Route Id"
+                        }
+                    },
+                    {
+                        "name": "stop_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Stop Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/search": {
+            "get": {
+                "tags": [
+                    "passenger"
+                ],
+                "summary": "Search",
+                "operationId": "search_api_search_get",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100,
+                            "title": "Q"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/me/favorites": {
+            "get": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "Favorites",
+                "operationId": "favorites_api_me_favorites_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/me/favorites/routes/{route_id}": {
+            "put": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "Add Fav Route",
+                "operationId": "add_fav_route_api_me_favorites_routes__route_id__put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "route_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Route Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "Del Fav Route",
+                "operationId": "del_fav_route_api_me_favorites_routes__route_id__delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "route_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Route Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/me/favorites/stops/{stop_id}": {
+            "put": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "Add Fav Stop",
+                "operationId": "add_fav_stop_api_me_favorites_stops__stop_id__put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "stop_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Stop Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "Del Fav Stop",
+                "operationId": "del_fav_stop_api_me_favorites_stops__stop_id__delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "stop_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Stop Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/me/journeys": {
+            "get": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "Journeys",
+                "operationId": "journeys_api_me_journeys_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "Add Journey",
+                "operationId": "add_journey_api_me_journeys_post",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/JourneyIn"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "Clear Journeys",
+                "operationId": "clear_journeys_api_me_journeys_delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    }
+                }
+            }
+        },
+        "/api/me/notification-preferences": {
+            "get": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "Get Prefs",
+                "operationId": "get_prefs_api_me_notification_preferences_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "Set Prefs",
+                "operationId": "set_prefs_api_me_notification_preferences_put",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PrefsIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/me/notifications": {
+            "get": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "Notifications",
+                "operationId": "notifications_api_me_notifications_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "unread_only",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Unread Only"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/me/notifications/read": {
+            "post": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "Mark Read",
+                "operationId": "mark_read_api_me_notifications_read_post",
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/me/devices": {
+            "post": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "Register Device",
+                "description": "Register an FCM device token for push notifications.",
+                "operationId": "register_device_api_me_devices_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DeviceTokenIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/me/watches": {
+            "get": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "List Watches",
+                "operationId": "list_watches_api_me_watches_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "Add Watch",
+                "description": "Ask to be notified when a bus on this route is a few minutes from this stop.",
+                "operationId": "add_watch_api_me_watches_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WatchIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/me/watches/{watch_id}": {
+            "delete": {
+                "tags": [
+                    "passenger account"
+                ],
+                "summary": "Del Watch",
+                "operationId": "del_watch_api_me_watches__watch_id__delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "watch_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Watch Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/driver/me": {
+            "get": {
+                "tags": [
+                    "driver"
+                ],
+                "summary": "Me",
+                "operationId": "me_api_driver_me_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/driver/trips/start": {
+            "post": {
+                "tags": [
+                    "driver"
+                ],
+                "summary": "Start Trip",
+                "description": "Start (or resume) a trip on the assigned bus. Requires explicit location-sharing consent.",
+                "operationId": "start_trip_api_driver_trips_start_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TripStartIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/driver/trips/{trip_id}/locations": {
+            "post": {
+                "tags": [
+                    "driver"
+                ],
+                "summary": "Post Locations",
+                "description": "Send one or more GPS fixes (buffered fixes from offline periods are accepted up to 1 hour old).",
+                "operationId": "post_locations_api_driver_trips__trip_id__locations_post",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "trip_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Trip Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/GpsBatchIn"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/driver/trips/{trip_id}/end": {
+            "post": {
+                "tags": [
+                    "driver"
+                ],
+                "summary": "End Trip",
+                "operationId": "end_trip_api_driver_trips__trip_id__end_post",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "trip_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Trip Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/components/schemas/TripEndIn"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "title": "Body"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/driver/trips": {
+            "get": {
+                "tags": [
+                    "driver"
+                ],
+                "summary": "Trip History",
+                "operationId": "trip_history_api_driver_trips_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/overview": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Overview",
+                "operationId": "overview_api_admin_overview_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/buses": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "List Buses",
+                "operationId": "list_buses_api_admin_buses_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Q"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Create Bus",
+                "operationId": "create_bus_api_admin_buses_post",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BusIn"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/buses/{bus_id}": {
+            "patch": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Update Bus",
+                "operationId": "update_bus_api_admin_buses__bus_id__patch",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "bus_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Bus Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BusPatch"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Delete Bus",
+                "description": "Deactivates by default (keeps trip history). hard=true deletes the bus and its history.",
+                "operationId": "delete_bus_api_admin_buses__bus_id__delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "bus_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Bus Id"
+                        }
+                    },
+                    {
+                        "name": "hard",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Hard"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/stops": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "List Stops",
+                "operationId": "list_stops_api_admin_stops_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Q"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Create Stop",
+                "operationId": "create_stop_api_admin_stops_post",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StopIn"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/stops/{stop_id}": {
+            "patch": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Update Stop",
+                "operationId": "update_stop_api_admin_stops__stop_id__patch",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "stop_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Stop Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StopPatch"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Delete Stop",
+                "operationId": "delete_stop_api_admin_stops__stop_id__delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "stop_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Stop Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/routes": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "List Routes",
+                "operationId": "list_routes_api_admin_routes_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Create Route",
+                "operationId": "create_route_api_admin_routes_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RouteIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/routes/{route_id}": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Get Route",
+                "operationId": "get_route_api_admin_routes__route_id__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "route_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Route Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Update Route",
+                "operationId": "update_route_api_admin_routes__route_id__patch",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "route_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Route Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RoutePatch"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Delete Route",
+                "operationId": "delete_route_api_admin_routes__route_id__delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "route_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Route Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/schedules": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "List Schedules",
+                "operationId": "list_schedules_api_admin_schedules_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "route_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Route Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Create Schedule",
+                "operationId": "create_schedule_api_admin_schedules_post",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ScheduleIn"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/schedules/{schedule_id}": {
+            "put": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Update Schedule",
+                "operationId": "update_schedule_api_admin_schedules__schedule_id__put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "schedule_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Schedule Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ScheduleIn"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Delete Schedule",
+                "operationId": "delete_schedule_api_admin_schedules__schedule_id__delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "schedule_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Schedule Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/drivers": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "List Drivers",
+                "operationId": "list_drivers_api_admin_drivers_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Create Driver",
+                "operationId": "create_driver_api_admin_drivers_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DriverIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/drivers/{driver_id}": {
+            "patch": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Update Driver",
+                "operationId": "update_driver_api_admin_drivers__driver_id__patch",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "driver_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Driver Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DriverPatch"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/fleet": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Fleet",
+                "description": "Live fleet with assigned driver names (admin only).",
+                "operationId": "fleet_api_admin_fleet_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/trips": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "List Trips",
+                "operationId": "list_trips_api_admin_trips_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/TripStatus"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Status"
+                        }
+                    },
+                    {
+                        "name": "bus_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Bus Id"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 500,
+                            "default": 100,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/trips/{trip_id}/track": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Trip Track",
+                "operationId": "trip_track_api_admin_trips__trip_id__track_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "trip_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Trip Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/trips/{trip_id}/end": {
+            "post": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Force End Trip",
+                "operationId": "force_end_trip_api_admin_trips__trip_id__end_post",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "trip_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Trip Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/alerts": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "List Alerts",
+                "operationId": "list_alerts_api_admin_alerts_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Create Alert",
+                "operationId": "create_alert_api_admin_alerts_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AlertIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/alerts/{alert_id}": {
+            "patch": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Update Alert",
+                "operationId": "update_alert_api_admin_alerts__alert_id__patch",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "alert_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Alert Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AlertIn"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Delete Alert",
+                "operationId": "delete_alert_api_admin_alerts__alert_id__delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "alert_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Alert Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/import/routes": {
+            "post": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Import Routes",
+                "description": "Import verified route data. Replaces the stop list (and schedules, if given) of each route in the file.",
+                "operationId": "import_routes_api_admin_import_routes_post",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_import_routes_api_admin_import_routes_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/import/templates/{kind}": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Import Template",
+                "operationId": "import_template_api_admin_import_templates__kind__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "kind",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Kind"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/reports": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Reports",
+                "operationId": "reports_api_admin_reports_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 90,
+                            "minimum": 1,
+                            "default": 7,
+                            "title": "Days"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/reports/{section}.csv": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Report Csv",
+                "operationId": "report_csv_api_admin_reports__section__csv_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "section",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Section"
+                        }
+                    },
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 90,
+                            "minimum": 1,
+                            "default": 7,
+                            "title": "Days"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/settings": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Settings View",
+                "description": "Non-secret runtime settings (change them through environment variables).",
+                "operationId": "settings_view_api_admin_settings_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/audit": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Audit Log",
+                "operationId": "audit_log_api_admin_audit_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 500,
+                            "default": 100,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AlertIn": {
+                "properties": {
+                    "route_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Route Id"
+                    },
+                    "stop_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Stop Id"
+                    },
+                    "severity": {
+                        "$ref": "#/components/schemas/AlertSeverity",
+                        "default": "info"
+                    },
+                    "title": {
+                        "type": "string",
+                        "maxLength": 200,
+                        "minLength": 3,
+                        "title": "Title"
+                    },
+                    "message": {
+                        "type": "string",
+                        "maxLength": 2000,
+                        "minLength": 3,
+                        "title": "Message"
+                    },
+                    "starts_at": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Starts At"
+                    },
+                    "ends_at": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Ends At"
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "title": "Is Active",
+                        "default": true
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "title",
+                    "message"
+                ],
+                "title": "AlertIn"
+            },
+            "AlertSeverity": {
+                "type": "string",
+                "enum": [
+                    "info",
+                    "warning",
+                    "disruption"
+                ],
+                "title": "AlertSeverity"
+            },
+            "Body_import_routes_api_admin_import_routes_post": {
+                "properties": {
+                    "routes_file": {
+                        "type": "string",
+                        "contentMediaType": "application/octet-stream",
+                        "title": "Routes File",
+                        "description": "CSV or XLSX, one row per stop"
+                    },
+                    "source_reference": {
+                        "type": "string",
+                        "minLength": 3,
+                        "title": "Source Reference",
+                        "description": "Where this data comes from, e.g. 'PMA route list Oct 2026'"
+                    },
+                    "schedules_file": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "contentMediaType": "application/octet-stream"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Schedules File"
+                    },
+                    "shapes_file": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "contentMediaType": "application/octet-stream"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Shapes File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "routes_file",
+                    "source_reference"
+                ],
+                "title": "Body_import_routes_api_admin_import_routes_post"
+            },
+            "BusIn": {
+                "properties": {
+                    "bus_number": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "minLength": 1,
+                        "title": "Bus Number"
+                    },
+                    "registration_number": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 32
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Registration Number"
+                    },
+                    "capacity": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 300.0,
+                                "minimum": 1.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Capacity"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/BusStatus",
+                        "default": "active"
+                    },
+                    "route_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Route Id"
+                    },
+                    "gps_device_id": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 64
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Gps Device Id"
+                    },
+                    "is_demo": {
+                        "type": "boolean",
+                        "title": "Is Demo",
+                        "default": false
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "bus_number"
+                ],
+                "title": "BusIn"
+            },
+            "BusPatch": {
+                "properties": {
+                    "bus_number": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 32,
+                                "minLength": 1
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Bus Number"
+                    },
+                    "registration_number": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Registration Number"
+                    },
+                    "capacity": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 300.0,
+                                "minimum": 1.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Capacity"
+                    },
+                    "status": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/BusStatus"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "route_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Route Id"
+                    },
+                    "gps_device_id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Gps Device Id"
+                    },
+                    "driver_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Driver Id",
+                        "description": "Set to 0 to unassign the driver"
+                    }
+                },
+                "type": "object",
+                "title": "BusPatch"
+            },
+            "BusStatus": {
+                "type": "string",
+                "enum": [
+                    "active",
+                    "inactive",
+                    "maintenance",
+                    "out_of_service"
+                ],
+                "title": "BusStatus"
+            },
+            "DeviceTokenIn": {
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "maxLength": 512,
+                        "minLength": 10,
+                        "title": "Token"
+                    },
+                    "platform": {
+                        "type": "string",
+                        "pattern": "^(android|web|ios)$",
+                        "title": "Platform",
+                        "default": "android"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "token"
+                ],
+                "title": "DeviceTokenIn"
+            },
+            "DriverIn": {
+                "properties": {
+                    "full_name": {
+                        "type": "string",
+                        "maxLength": 120,
+                        "minLength": 2,
+                        "title": "Full Name"
+                    },
+                    "email": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "email"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Email"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "pattern": "^\\+?[0-9]{10,15}$",
+                        "title": "Phone"
+                    },
+                    "password": {
+                        "type": "string",
+                        "maxLength": 128,
+                        "minLength": 8,
+                        "title": "Password"
+                    },
+                    "license_number": {
+                        "type": "string",
+                        "maxLength": 64,
+                        "minLength": 3,
+                        "title": "License Number"
+                    },
+                    "employee_code": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Employee Code"
+                    },
+                    "bus_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Bus Id"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "full_name",
+                    "phone",
+                    "password",
+                    "license_number"
+                ],
+                "title": "DriverIn"
+            },
+            "DriverPatch": {
+                "properties": {
+                    "full_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Full Name"
+                    },
+                    "phone": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "pattern": "^\\+?[0-9]{10,15}$"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Phone"
+                    },
+                    "license_number": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "License Number"
+                    },
+                    "employee_code": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Employee Code"
+                    },
+                    "is_active": {
+                        "anyOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Is Active"
+                    },
+                    "bus_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Bus Id",
+                        "description": "Set to 0 to unassign"
+                    },
+                    "route_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Route Id",
+                        "description": "Assigns this route to the driver's bus"
+                    },
+                    "password": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 128,
+                                "minLength": 8
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Password"
+                    }
+                },
+                "type": "object",
+                "title": "DriverPatch"
+            },
+            "GpsBatchIn": {
+                "properties": {
+                    "points": {
+                        "items": {
+                            "$ref": "#/components/schemas/GpsPointIn"
+                        },
+                        "type": "array",
+                        "maxItems": 500,
+                        "minItems": 1,
+                        "title": "Points"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "points"
+                ],
+                "title": "GpsBatchIn"
+            },
+            "GpsPointIn": {
+                "properties": {
+                    "lat": {
+                        "type": "number",
+                        "title": "Lat"
+                    },
+                    "lng": {
+                        "type": "number",
+                        "title": "Lng"
+                    },
+                    "recorded_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Recorded At"
+                    },
+                    "accuracy_m": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Accuracy M"
+                    },
+                    "speed_mps": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Speed Mps"
+                    },
+                    "heading": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "maximum": 360.0,
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Heading"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "lat",
+                    "lng",
+                    "recorded_at"
+                ],
+                "title": "GpsPointIn"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "JourneyIn": {
+                "properties": {
+                    "route_id": {
+                        "type": "integer",
+                        "title": "Route Id"
+                    },
+                    "from_stop_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "From Stop Id"
+                    },
+                    "to_stop_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "To Stop Id"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "route_id"
+                ],
+                "title": "JourneyIn"
+            },
+            "LoginIn": {
+                "properties": {
+                    "identifier": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 3,
+                        "title": "Identifier",
+                        "description": "Email or phone number"
+                    },
+                    "password": {
+                        "type": "string",
+                        "maxLength": 128,
+                        "minLength": 1,
+                        "title": "Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "identifier",
+                    "password"
+                ],
+                "title": "LoginIn"
+            },
+            "PasswordIn": {
+                "properties": {
+                    "current_password": {
+                        "type": "string",
+                        "title": "Current Password"
+                    },
+                    "new_password": {
+                        "type": "string",
+                        "maxLength": 128,
+                        "minLength": 8,
+                        "title": "New Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "current_password",
+                    "new_password"
+                ],
+                "title": "PasswordIn"
+            },
+            "PlanIn": {
+                "properties": {
+                    "from_lat": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "maximum": 90.0,
+                                "minimum": -90.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "From Lat"
+                    },
+                    "from_lng": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "maximum": 180.0,
+                                "minimum": -180.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "From Lng"
+                    },
+                    "from_stop_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "From Stop Id"
+                    },
+                    "to_lat": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "maximum": 90.0,
+                                "minimum": -90.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "To Lat"
+                    },
+                    "to_lng": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "maximum": 180.0,
+                                "minimum": -180.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "To Lng"
+                    },
+                    "to_stop_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "To Stop Id"
+                    },
+                    "from_label": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "From Label"
+                    },
+                    "to_label": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "To Label"
+                    }
+                },
+                "type": "object",
+                "title": "PlanIn"
+            },
+            "PrefsIn": {
+                "properties": {
+                    "bus_approaching": {
+                        "anyOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Bus Approaching"
+                    },
+                    "arrival_minutes_before": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 30.0,
+                                "minimum": 1.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Arrival Minutes Before"
+                    },
+                    "delays": {
+                        "anyOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Delays"
+                    },
+                    "disruptions": {
+                        "anyOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Disruptions"
+                    },
+                    "schedule_changes": {
+                        "anyOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Schedule Changes"
+                    }
+                },
+                "type": "object",
+                "title": "PrefsIn"
+            },
+            "ProfileIn": {
+                "properties": {
+                    "full_name": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 120,
+                                "minLength": 2
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Full Name"
+                    },
+                    "phone": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "pattern": "^\\+?[0-9]{10,15}$"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Phone"
+                    }
+                },
+                "type": "object",
+                "title": "ProfileIn"
+            },
+            "RegisterIn": {
+                "properties": {
+                    "full_name": {
+                        "type": "string",
+                        "maxLength": 120,
+                        "minLength": 2,
+                        "title": "Full Name"
+                    },
+                    "email": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "email"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Email"
+                    },
+                    "phone": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "pattern": "^\\+?[0-9]{10,15}$"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Phone"
+                    },
+                    "password": {
+                        "type": "string",
+                        "maxLength": 128,
+                        "minLength": 8,
+                        "title": "Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "full_name",
+                    "password"
+                ],
+                "title": "RegisterIn"
+            },
+            "RouteIn": {
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "minLength": 1,
+                        "title": "Code"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 200,
+                        "minLength": 2,
+                        "title": "Name"
+                    },
+                    "color": {
+                        "type": "string",
+                        "pattern": "^#[0-9a-fA-F]{6}$",
+                        "title": "Color",
+                        "default": "#1d4ed8"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/RouteStatus",
+                        "default": "active"
+                    },
+                    "fare_pkr": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Fare Pkr"
+                    },
+                    "path": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "type": "array"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Path",
+                        "description": "[[lat, lng], ...] road geometry"
+                    },
+                    "stops": {
+                        "items": {
+                            "$ref": "#/components/schemas/RouteStopIn"
+                        },
+                        "type": "array",
+                        "title": "Stops",
+                        "description": "Ordered stops; first is the start, last the end"
+                    },
+                    "is_demo": {
+                        "type": "boolean",
+                        "title": "Is Demo",
+                        "default": false
+                    },
+                    "source_reference": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Source Reference"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "code",
+                    "name"
+                ],
+                "title": "RouteIn"
+            },
+            "RoutePatch": {
+                "properties": {
+                    "code": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Code"
+                    },
+                    "name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Name"
+                    },
+                    "color": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "pattern": "^#[0-9a-fA-F]{6}$"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Color"
+                    },
+                    "status": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/RouteStatus"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "fare_pkr": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Fare Pkr"
+                    },
+                    "path": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "items": {
+                                        "type": "number"
+                                    },
+                                    "type": "array"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Path"
+                    },
+                    "stops": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/RouteStopIn"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Stops"
+                    },
+                    "source_reference": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Source Reference"
+                    }
+                },
+                "type": "object",
+                "title": "RoutePatch"
+            },
+            "RouteStatus": {
+                "type": "string",
+                "enum": [
+                    "active",
+                    "suspended",
+                    "inactive"
+                ],
+                "title": "RouteStatus"
+            },
+            "RouteStopIn": {
+                "properties": {
+                    "stop_id": {
+                        "type": "integer",
+                        "title": "Stop Id"
+                    },
+                    "offset_minutes": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "title": "Offset Minutes",
+                        "default": 0
+                    },
+                    "is_major": {
+                        "type": "boolean",
+                        "title": "Is Major",
+                        "default": false
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "stop_id"
+                ],
+                "title": "RouteStopIn"
+            },
+            "ScheduleIn": {
+                "properties": {
+                    "route_id": {
+                        "type": "integer",
+                        "title": "Route Id"
+                    },
+                    "days": {
+                        "type": "string",
+                        "pattern": "^(mon|tue|wed|thu|fri|sat|sun)(,(mon|tue|wed|thu|fri|sat|sun))*$",
+                        "title": "Days",
+                        "default": "mon,tue,wed,thu,fri,sat,sun"
+                    },
+                    "first_departure": {
+                        "type": "string",
+                        "format": "time",
+                        "title": "First Departure"
+                    },
+                    "last_departure": {
+                        "type": "string",
+                        "format": "time",
+                        "title": "Last Departure"
+                    },
+                    "frequency_minutes": {
+                        "type": "integer",
+                        "maximum": 240.0,
+                        "minimum": 1.0,
+                        "title": "Frequency Minutes",
+                        "default": 15
+                    },
+                    "notes": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Notes"
+                    },
+                    "is_demo": {
+                        "type": "boolean",
+                        "title": "Is Demo",
+                        "default": false
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "route_id",
+                    "first_departure",
+                    "last_departure"
+                ],
+                "title": "ScheduleIn"
+            },
+            "StopIn": {
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "minLength": 1,
+                        "title": "Code"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 160,
+                        "minLength": 2,
+                        "title": "Name"
+                    },
+                    "name_ur": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Name Ur"
+                    },
+                    "lat": {
+                        "type": "number",
+                        "maximum": 90.0,
+                        "minimum": -90.0,
+                        "title": "Lat"
+                    },
+                    "lng": {
+                        "type": "number",
+                        "maximum": 180.0,
+                        "minimum": -180.0,
+                        "title": "Lng"
+                    },
+                    "is_demo": {
+                        "type": "boolean",
+                        "title": "Is Demo",
+                        "default": false
+                    },
+                    "source_reference": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Source Reference"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "code",
+                    "name",
+                    "lat",
+                    "lng"
+                ],
+                "title": "StopIn"
+            },
+            "StopPatch": {
+                "properties": {
+                    "code": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Code"
+                    },
+                    "name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Name"
+                    },
+                    "name_ur": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Name Ur"
+                    },
+                    "lat": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "maximum": 90.0,
+                                "minimum": -90.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Lat"
+                    },
+                    "lng": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "maximum": 180.0,
+                                "minimum": -180.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Lng"
+                    },
+                    "source_reference": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Source Reference"
+                    }
+                },
+                "type": "object",
+                "title": "StopPatch"
+            },
+            "TokenOut": {
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "title": "Access Token"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "title": "Token Type",
+                        "default": "bearer"
+                    },
+                    "user": {
+                        "additionalProperties": true,
+                        "type": "object",
+                        "title": "User"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "access_token",
+                    "user"
+                ],
+                "title": "TokenOut"
+            },
+            "TripEndIn": {
+                "properties": {
+                    "reason": {
+                        "type": "string",
+                        "maxLength": 64,
+                        "title": "Reason",
+                        "default": "completed"
+                    }
+                },
+                "type": "object",
+                "title": "TripEndIn"
+            },
+            "TripStartIn": {
+                "properties": {
+                    "consent": {
+                        "type": "boolean",
+                        "title": "Consent",
+                        "description": "Driver confirms consent to share the bus location during this trip"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "consent"
+                ],
+                "title": "TripStartIn"
+            },
+            "TripStatus": {
+                "type": "string",
+                "enum": [
+                    "active",
+                    "completed",
+                    "interrupted"
+                ],
+                "title": "TripStatus"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    },
+                    "input": {
+                        "title": "Input"
+                    },
+                    "ctx": {
+                        "type": "object",
+                        "title": "Context"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            },
+            "WatchIn": {
+                "properties": {
+                    "stop_id": {
+                        "type": "integer",
+                        "title": "Stop Id"
+                    },
+                    "route_id": {
+                        "type": "integer",
+                        "title": "Route Id"
+                    },
+                    "bus_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Bus Id"
+                    },
+                    "minutes_before": {
+                        "type": "integer",
+                        "maximum": 30.0,
+                        "minimum": 1.0,
+                        "title": "Minutes Before",
+                        "default": 5
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "stop_id",
+                    "route_id"
+                ],
+                "title": "WatchIn"
+            }
+        },
+        "securitySchemes": {
+            "HTTPBearer": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}

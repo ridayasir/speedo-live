@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.env
+.venv/
+node_modules/
+.next/
+dist/
+.expo/
+*.log
+.pytest_cache/
+web/out/
+*.tsbuildinfo
+*.db
+*.db-shm
+*.db-wal
+.env.local
