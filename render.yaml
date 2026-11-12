@@ -1,18 +1,13 @@
-# Render.com blueprint: free web service (Docker) + free managed Postgres.
-# In Render: New -> Blueprint -> pick this repo -> Apply. Other hosts: see docs/DEPLOYMENT.md.
-# Free plan notes: the web service sleeps after ~15 min idle (first visit then takes ~1 min),
-# and a free Postgres database expires after 30 days unless upgraded.
-databases:
-  - name: speedo-db
-    databaseName: speedo
-    plan: free
-    region: singapore          # closest Render region to Pakistan
+# Render.com blueprint: free web service (Docker). The database is a free PostgreSQL from neon.tech
+# (free forever, no card); Render's own free Postgres expires after 30 days.
+# In Render: New -> Blueprint -> pick this repo -> paste the Neon connection string as DATABASE_URL -> Apply.
+# Free plan note: the web service sleeps after ~15 min idle (first visit then takes ~1 min).
 services:
   - type: web
     name: speedo-live
     runtime: docker
     plan: free
-    region: singapore
+    region: singapore          # closest Render region to Pakistan
     dockerfilePath: ./deploy/Dockerfile
     dockerContext: .
     healthCheckPath: /health
@@ -28,5 +23,5 @@ services:
         value: "true"
       - key: ENABLE_POSTGIS
         value: "false"
-      - key: DATABASE_URL
-        fromDatabase: { name: speedo-db, property: connectionString }
+      - key: DATABASE_URL      # Neon connection string: postgresql://user:pass@ep-xxx.neon.tech/neondb?sslmode=require
+        sync: false
