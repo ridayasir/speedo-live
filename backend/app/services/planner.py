@@ -1,176 +1,159 @@
-"""Journey planning across routes, with at most one transfer."""
+"""Journey planner: walk → ride (→ transfer → ride) → walk over the route network."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+import datetime as dt
 
-from sqlalchemy import func, select
-from sqlalchemy.orm import Session
+from ..db import get_db, utcnow
+from ..geo import haversine
+from .eta import eta_to_stop
+from .network import RouteInfo, network
+from .schedule import PK_TZ, departures, schedules_for, stop_offset_s
+from .tracking import active_trip, ordered_stops, scheduled_seconds_to, stop_progress
 
-from ..config import get_settings
-from ..db import is_sqlite
-from ..models import BusStop, Route, RouteStatus, RouteStop
-from .geo import haversine_m, point_wkt
-
-TRANSFER_PENALTY_MIN = 5.0
-
-
-@dataclass
-class Place:
-    lat: float
-    lng: float
-    stop_id: int | None = None
-    label: str | None = None
+WALK_MPS = 1.25
+WALK_RADIUS_M = 1500
+MAX_CANDIDATES = 5
+TRANSFER_PENALTY_S = 300
 
 
-def nearby_stops(db: Session, lat: float, lng: float, radius_m: float, limit: int = 8) -> list[tuple[BusStop, float]]:
-    if is_sqlite:
-        all_stops = [(s, haversine_m(lat, lng, s.lat, s.lng)) for s in db.execute(select(BusStop)).scalars()]
-        return sorted((x for x in all_stops if x[1] <= radius_m), key=lambda x: x[1])[:limit]
-    geog = func.ST_GeogFromText(point_wkt(lat, lng))
-    dist = func.ST_Distance(BusStop.geog, geog).label("d")
-    rows = db.execute(
-        select(BusStop, dist).where(func.ST_DWithin(BusStop.geog, geog, radius_m)).order_by(dist).limit(limit)
-    ).all()
-    return [(r[0], float(r[1])) for r in rows]
+def nearby_stops(lat: float, lon: float, radius_m: float = WALK_RADIUS_M, limit: int = MAX_CANDIDATES) -> list[dict]:
+    rows = get_db().all("SELECT id, code, name, name_ur, lat, lon FROM stops WHERE status = 'active'")
+    for r in rows:
+        r["distance_m"] = round(haversine(lat, lon, r["lat"], r["lon"]))
+    rows.sort(key=lambda r: r["distance_m"])
+    near = [r for r in rows if r["distance_m"] <= radius_m][:limit]
+    return near
 
 
-def _walk_min(m: float) -> float:
-    return m / (get_settings().walk_speed_kmh * 1000 / 60)
+def _direction(route: RouteInfo, a: int, b: int) -> str:
+    return "outbound" if route.stop_index(a) < route.stop_index(b) else "inbound"
 
 
-def _candidates(db: Session, place: Place) -> list[tuple[BusStop, float]]:
-    if place.stop_id:
-        stop = db.get(BusStop, place.stop_id)
-        return [(stop, 0.0)] if stop else []
-    found = nearby_stops(db, place.lat, place.lng, get_settings().max_walk_m)
-    if not found:  # fall back to the closest few stops, whatever the distance
-        found = nearby_stops(db, place.lat, place.lng, 15000, limit=3)
-    return found
+def _ride_seconds(route: RouteInfo, direction: str, a: int, b: int) -> float:
+    sa, sb = route.stops[route.stop_index(a)], route.stops[route.stop_index(b)]
+    return scheduled_seconds_to(route, direction, stop_progress(route, sb, direction)) - \
+        scheduled_seconds_to(route, direction, stop_progress(route, sa, direction))
 
 
-@dataclass
-class RouteIndex:
-    route: Route
-    by_stop: dict[int, RouteStop]
-    ordered: list[RouteStop]
-    headway: float
+def _next_bus(route: RouteInfo, stop_id: int, direction: str) -> dict:
+    """Live ETA of the next bus heading the right way, else a timetable estimate."""
+    db = get_db()
+    best = None
+    for bus in db.all("SELECT * FROM buses WHERE route_id = ?", (route.id,)):
+        trip = active_trip(bus["id"])
+        if not trip or trip["direction"] != direction:
+            continue
+        eta = eta_to_stop(bus, trip, route, stop_id)
+        if eta and (best is None or eta["eta_s"] < best["eta_s"]):
+            best = {**eta, "bus_id": bus["id"], "bus_number": bus["bus_number"], "is_demo": bool(bus["is_demo"])}
+    if best:
+        return best
+    now = utcnow()
+    off = stop_offset_s(route, direction, stop_id) or 0
+    local = now.astimezone(PK_TZ)
+    for dep in departures(route.id, local.date()):
+        arr = dep + dt.timedelta(seconds=round(off))
+        if arr >= local:
+            return {"method": "scheduled", "eta_s": round((arr - local).total_seconds()), "arrival": arr.isoformat()}
+    scheds = schedules_for(route.id, local.date())
+    return {"method": "none", "eta_s": None,
+            "note": "No more scheduled departures today" if scheds else "No timetable for today"}
 
-    def ride_minutes(self, a: RouteStop, b: RouteStop) -> float:
-        dt = b.offset_minutes - a.offset_minutes
-        if dt > 0:
-            return dt
-        speed = self.route.avg_speed_kmh or get_settings().default_bus_speed_kmh
-        return (b.distance_from_start_m - a.distance_from_start_m) / (speed * 1000 / 60)
+
+def _ride_leg(route: RouteInfo, a: int, b: int) -> dict:
+    direction = _direction(route, a, b)
+    stops = ordered_stops(route, direction)
+    ids = [s.stop_id for s in stops]
+    i, j = ids.index(a), ids.index(b)
+    seg = stops[i : j + 1]
+    secs = _ride_seconds(route, direction, a, b)
+    return {
+        "kind": "ride",
+        "route": {"id": route.id, "code": route.code, "name": route.name, "color": route.color, "is_demo": route.is_demo},
+        "direction": direction, "towards": stops[-1].name,
+        "board": {"id": seg[0].stop_id, "name": seg[0].name, "lat": seg[0].lat, "lon": seg[0].lon},
+        "alight": {"id": seg[-1].stop_id, "name": seg[-1].name, "lat": seg[-1].lat, "lon": seg[-1].lon},
+        "stops": [{"id": s.stop_id, "name": s.name, "lat": s.lat, "lon": s.lon} for s in seg],
+        "stop_count": len(seg) - 1,
+        "distance_km": round(abs(seg[-1].chainage - seg[0].chainage) / 1000, 2),
+        "ride_min": round(secs / 60, 1),
+        "next_bus": _next_bus(route, seg[0].stop_id, direction),
+    }
 
 
-def _index(db: Session) -> list[RouteIndex]:
-    routes = db.execute(select(Route).where(Route.status == RouteStatus.active)).scalars().all()
-    out = []
+def _walk(frm: dict, to: dict, dist: float) -> dict:
+    return {"kind": "walk", "from": frm.get("name") or frm.get("label"), "to": to.get("name") or to.get("label"),
+            "distance_m": round(dist), "walk_min": round(dist / WALK_MPS / 60, 1)}
+
+
+def plan(origin: dict, dest: dict, max_options: int = 5) -> dict:
+    o_c = nearby_stops(origin["lat"], origin["lon"])
+    d_c = nearby_stops(dest["lat"], dest["lon"])
+    result = {"origin": origin, "destination": dest, "origin_stops": o_c, "destination_stops": d_c, "options": []}
+    if not o_c or not d_c:
+        result["message"] = ("No Speedo stop within walking distance of your "
+                             + ("start" if not o_c else "destination") + f" ({WALK_RADIUS_M / 1000:.1f} km).")
+        return result
+    routes = [r for r in network.routes().values() if r.status == "active" and r.polyline]
+    best: dict[tuple, dict] = {}
+
+    def consider(key, total_s, legs, walk_m, kind):
+        if key not in best or total_s < best[key]["total_s"]:
+            best[key] = {"type": kind, "total_s": total_s, "walk_m": round(walk_m), "legs": legs}
+
     for r in routes:
-        ordered = sorted(r.stops, key=lambda x: x.sequence)
-        headways = [s.frequency_minutes for s in r.schedules] or [15]
-        out.append(RouteIndex(r, {rs.stop_id: rs for rs in ordered}, ordered, float(min(headways))))
-    return out
-
-
-def _stop_json(s: BusStop) -> dict:
-    return {"id": s.id, "code": s.code, "name": s.name, "lat": s.lat, "lng": s.lng}
-
-
-def _ride_leg(ri: RouteIndex, a: RouteStop, b: RouteStop) -> dict:
-    between = [rs for rs in ri.ordered if a.sequence <= rs.sequence <= b.sequence]
-    return {
-        "type": "ride",
-        "route_id": ri.route.id,
-        "route_code": ri.route.code,
-        "route_name": ri.route.name,
-        "color": ri.route.color,
-        "board": _stop_json(a.stop),
-        "alight": _stop_json(b.stop),
-        "stops": [_stop_json(rs.stop) for rs in between],
-        "stop_count": len(between) - 1,
-        "distance_m": round(b.distance_from_start_m - a.distance_from_start_m),
-        "minutes": round(ri.ride_minutes(a, b), 1),
-        "is_demo": ri.route.is_demo,
-    }
-
-
-def _walk_leg(frm: dict, to: dict, meters: float) -> dict:
-    return {"type": "walk", "from": frm, "to": to, "distance_m": round(meters), "minutes": round(_walk_min(meters), 1)}
-
-
-def plan(db: Session, origin: Place, dest: Place, max_options: int = 5) -> dict:
-    o_cands = _candidates(db, origin)
-    d_cands = _candidates(db, dest)
-    idx = _index(db)
-    o_pt = {"lat": origin.lat, "lng": origin.lng, "name": origin.label or "Start"}
-    d_pt = {"lat": dest.lat, "lng": dest.lng, "name": dest.label or "Destination"}
-    options: dict[tuple, dict] = {}
-
-    def add(key: tuple, legs: list[dict], wait: float) -> None:
-        total = wait + sum(l["minutes"] for l in legs)
-        transfers = sum(1 for l in legs if l["type"] == "ride") - 1
-        total += TRANSFER_PENALTY_MIN * transfers
-        cur = options.get(key)
-        if cur is None or total < cur["total_minutes"]:
-            options[key] = {
-                "legs": [l for l in legs if l["type"] != "walk" or l["distance_m"] > 0],
-                "total_minutes": round(total),
-                "wait_minutes": round(wait),
-                "transfers": transfers,
-                "walk_m": round(sum(l["distance_m"] for l in legs if l["type"] == "walk")),
-                "is_demo": any(l.get("is_demo") for l in legs),
-            }
-
-    # direct
-    for ri in idx:
-        for o_stop, o_walk in o_cands:
-            a = ri.by_stop.get(o_stop.id)
-            if not a:
+        for o in o_c:
+            if r.stop_index(o["id"]) is None:
                 continue
-            for d_stop, d_walk in d_cands:
-                b = ri.by_stop.get(d_stop.id)
-                if not b or b.sequence <= a.sequence:
+            for d in d_c:
+                if d["id"] == o["id"] or r.stop_index(d["id"]) is None:
                     continue
-                legs = [_walk_leg(o_pt, _stop_json(o_stop), o_walk), _ride_leg(ri, a, b),
-                        _walk_leg(_stop_json(d_stop), d_pt, d_walk)]
-                add((ri.route.id,), legs, ri.headway / 2)
+                ride = _ride_leg(r, o["id"], d["id"])
+                wait = ride["next_bus"]["eta_s"] or 600
+                walk_m = o["distance_m"] + d["distance_m"]
+                walk_s = o["distance_m"] / WALK_MPS
+                wait = max(0, wait - walk_s)
+                total = walk_m / WALK_MPS + wait + ride["ride_min"] * 60
+                legs = [_walk(origin, o, o["distance_m"]), ride, _walk(d, dest, d["distance_m"])]
+                consider(("D", r.id), total, legs, walk_m, "direct")
 
-    # one transfer at a shared stop
-    for ra in idx:
-        for o_stop, o_walk in o_cands:
-            a = ra.by_stop.get(o_stop.id)
-            if not a:
-                continue
-            for rb in idx:
-                if rb.route.id == ra.route.id:
+    if len(best) < 2:  # look for one-transfer journeys
+        for r1 in routes:
+            for r2 in routes:
+                if r1.id == r2.id:
                     continue
-                for d_stop, d_walk in d_cands:
-                    d = rb.by_stop.get(d_stop.id)
-                    if not d:
+                shared = {s.stop_id for s in r1.stops} & {s.stop_id for s in r2.stops}
+                if not shared:
+                    continue
+                for o in o_c:
+                    if r1.stop_index(o["id"]) is None:
                         continue
-                    for x in ra.ordered:
-                        if x.sequence <= a.sequence:
+                    for d in d_c:
+                        if r2.stop_index(d["id"]) is None:
                             continue
-                        xb = rb.by_stop.get(x.stop_id)
-                        if not xb or xb.sequence >= d.sequence:
-                            continue
-                        legs = [_walk_leg(o_pt, _stop_json(o_stop), o_walk), _ride_leg(ra, a, x),
-                                _ride_leg(rb, xb, d), _walk_leg(_stop_json(d_stop), d_pt, d_walk)]
-                        add((ra.route.id, rb.route.id), legs, ra.headway / 2 + rb.headway / 2)
+                        for t in shared:
+                            if t in (o["id"], d["id"]):
+                                continue
+                            l1, l2 = _ride_leg(r1, o["id"], t), _ride_leg(r2, t, d["id"])
+                            walk_m = o["distance_m"] + d["distance_m"]
+                            wait1 = max(0, (l1["next_bus"]["eta_s"] or 600) - o["distance_m"] / WALK_MPS)
+                            total = walk_m / WALK_MPS + wait1 + (l1["ride_min"] + l2["ride_min"]) * 60 + TRANSFER_PENALTY_S + 300
+                            legs = [_walk(origin, o, o["distance_m"]), l1,
+                                    {"kind": "transfer", "at": l1["alight"]["name"], "wait_min": 5}, l2,
+                                    _walk(d, dest, d["distance_m"])]
+                            consider(("T", r1.id, r2.id), total, legs, walk_m, "transfer")
 
-    ranked = sorted(options.values(), key=lambda o: (o["total_minutes"], o["transfers"]))
-    # drop transfer options that are not better than the best direct one
-    best_direct = next((o["total_minutes"] for o in ranked if o["transfers"] == 0), None)
-    if best_direct is not None:
-        ranked = [o for o in ranked if o["transfers"] == 0 or o["total_minutes"] < best_direct]
-    nearest_boarding = _stop_json(o_cands[0][0]) | {"walk_m": round(o_cands[0][1])} if o_cands else None
-    nearest_alight = _stop_json(d_cands[0][0]) | {"walk_m": round(d_cands[0][1])} if d_cands else None
-    return {
-        "origin": o_pt,
-        "destination": d_pt,
-        "nearest_boarding_stop": nearest_boarding,
-        "nearest_destination_stop": nearest_alight,
-        "options": ranked[:max_options],
-        "straight_line_m": round(haversine_m(origin.lat, origin.lng, dest.lat, dest.lng)),
-    }
+    opts = sorted(best.values(), key=lambda x: x["total_s"])[:max_options]
+    for opt in opts:
+        opt["total_min"] = round(opt.pop("total_s") / 60)
+        opt["route_codes"] = [l["route"]["code"] for l in opt["legs"] if l["kind"] == "ride"]
+    result["options"] = opts
+    if not opts:
+        result["message"] = "No Speedo route connects these places (with at most one transfer)."
+    else:
+        db = get_db()
+        now = utcnow().isoformat()
+        for l in opts[0]["legs"]:
+            if l["kind"] == "ride":
+                db.insert("route_usage", {"route_id": l["route"]["id"], "event": "planned", "created_at": now})
+    return result

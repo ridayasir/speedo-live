@@ -1,0 +1,172 @@
+"""End-to-end UI flows in headless Chrome against the running server."""
+import os, sys
+from playwright.sync_api import sync_playwright, expect
+
+B = os.environ.get("SPEEDO_URL", "http://127.0.0.1:8000")
+OUT = sys.argv[1] if len(sys.argv) > 1 else "flows"
+os.makedirs(OUT, exist_ok=True)
+results = []
+
+
+def check(name, cond):
+    results.append((name, bool(cond)))
+    print(("PASS " if cond else "FAIL ") + name)
+
+
+def ctx_for(b, mobile=False):
+    ctx = b.new_context(viewport={"width": 390, "height": 844} if mobile else {"width": 1440, "height": 900},
+                        device_scale_factor=2 if mobile else 1, is_mobile=mobile, has_touch=mobile)
+    ctx.route("**/*", lambda r: r.abort() if not r.request.url.startswith(B) else r.continue_())
+    return ctx
+
+
+with sync_playwright() as p:
+    b = p.chromium.launch(args=["--no-sandbox"])
+
+    # ---------------- passenger
+    ctx = ctx_for(b)
+    page = ctx.new_page()
+    errs = []
+    page.on("pageerror", lambda e: errs.append(str(e)))
+    page.goto(B + "/#/home")
+    page.wait_for_selector(".stat strong")
+    page.wait_for_timeout(1500)
+    check("passenger: live counters filled", int(page.locator(".stat strong").first.inner_text()) > 0)
+    # search with autocomplete
+    page.locator(".place-input input").nth(0).click()
+    page.locator(".place-input input").nth(0).fill("Punjab")
+    page.locator(".suggest-item", has_text="Punjab University").first.click()
+    page.locator(".place-input input").nth(1).click()
+    page.locator(".place-input input").nth(1).fill("Regal")
+    page.locator(".suggest-item", has_text="Regal Chowk").first.click()
+    page.get_by_role("button", name="Find my bus").click()
+    page.wait_for_selector(".option")
+    check("passenger: plan shows direct DEMO-1 option", "DEMO-1" in page.locator(".option").first.inner_text())
+    page.screenshot(path=f"{OUT}/p_plan.png")
+    # register
+    page.goto(B + "/#/profile")
+    page.get_by_role("tab", name="Create account").click()
+    page.get_by_label("Full name").fill("Ayesha Khan")
+    import random
+    page.get_by_label("Email").fill(f"ayesha{random.randint(1000,99999)}@example.com")
+    page.get_by_label("Password").fill("lahore2026")
+    page.get_by_role("button", name="Create account").last.click()
+    page.wait_for_url("**/#/home")
+    page.wait_for_timeout(500)
+    check("passenger: registered and signed in", page.locator("#user-chip").inner_text() == "Ayesha")
+    # favorite a stop and set an alert
+    page.goto(B + "/#/stop/6")
+    page.wait_for_selector(".eta-big")
+    page.locator(".panel-head .fav").click()
+    page.wait_for_timeout(500)
+    check("passenger: stop favorited", "on" in page.locator(".panel-head .fav").get_attribute("class"))
+    page.get_by_role("button", name="Notify me", exact=True).click()
+    page.get_by_role("button", name="Set alert").click()
+    page.wait_for_timeout(600)
+    check("passenger: alert set toast", "Alert set" in page.locator("#toasts").inner_text())
+    page.goto(B + "/#/favorites")
+    page.wait_for_selector(".list-row")
+    check("passenger: favorites lists Shadman Chowk", "Shadman Chowk" in page.locator(".panel").inner_text())
+    page.goto(B + "/#/profile")
+    page.wait_for_selector("text=Notifications")
+    page.screenshot(path=f"{OUT}/p_profile.png")
+    page.goto(B + "/#/timetable?route=1&stop=5")
+    page.wait_for_selector(".times")
+    check("passenger: timetable stop times", page.locator(".times span").count() > 50)
+    page.goto(B + "/#/routes/2")
+    page.wait_for_selector(".route-stops li")
+    check("passenger: route detail stops", page.locator(".route-stops li").count() == 6)
+    check("passenger: no page errors", not errs)
+    if errs: print(errs)
+    ctx.close()
+
+    # ---------------- admin
+    ctx = ctx_for(b)
+    page = ctx.new_page()
+    errs = []
+    page.on("pageerror", lambda e: errs.append(str(e)))
+    page.goto(B + "/admin")
+    page.get_by_label("Email or phone").fill("admin@speedo.demo")
+    page.get_by_label("Password").fill("Demo@12345")
+    page.get_by_role("button", name="Sign in").click()
+    page.wait_for_selector(".metric")
+    check("admin: overview metrics", page.locator(".metric").count() >= 8)
+    page.screenshot(path=f"{OUT}/a_overview.png")
+    page.goto(B + "/admin#/fleet")
+    page.wait_for_selector(".fleet-map svg, .fleet-map .leaflet-container")
+    page.wait_for_timeout(1500)
+    page.locator(".table a", has_text="DEMO-201").click()
+    page.wait_for_timeout(400)
+    check("admin: fleet live + bus detail", "Simulator (DEMO)" in page.locator(".card").first.inner_text() and page.locator("#fleet-state").inner_text() == "Live")
+    page.screenshot(path=f"{OUT}/a_fleet.png")
+    # add a bus via modal
+    page.goto(B + "/admin#/buses")
+    page.get_by_role("button", name="Add bus").click()
+    page.get_by_label("Bus number").fill(f"LHR-{random.randint(100,999)}")
+    page.get_by_label("Assigned route").select_option(label="DEMO-3 — DEMO Route 3 · Packages Mall ↔ Regal Chowk")
+    page.get_by_role("button", name="Save").click()
+    page.wait_for_timeout(800)
+    check("admin: bus added", "LHR-" in page.locator(".panel").inner_text())
+    page.goto(B + "/admin#/routes/1")
+    page.wait_for_selector(".stop-order .item")
+    check("admin: route editor stops", page.locator(".stop-order .item").count() == 9)
+    page.screenshot(path=f"{OUT}/a_route.png")
+    page.goto(B + "/admin#/reports")
+    page.wait_for_selector(".metric")
+    page.screenshot(path=f"{OUT}/a_reports.png")
+    page.goto(B + "/admin#/alerts")
+    page.get_by_role("button", name="Publish alert").click()
+    page.get_by_label("Title").fill("Road works on Jail Road")
+    page.get_by_label("Type").select_option("disruption")
+    page.get_by_role("button", name="Save").click()
+    page.wait_for_timeout(800)
+    check("admin: alert published", "Road works on Jail Road" in page.locator(".panel").inner_text())
+    page.goto(B + "/admin#/settings")
+    page.wait_for_selector("text=Operating mode")
+    check("admin: no page errors", not errs)
+    if errs: print(errs)
+    ctx.close()
+
+    # ---------------- driver (mobile)
+    ctx = ctx_for(b, mobile=True)
+    ctx.grant_permissions(["geolocation"], origin=B)
+    ctx.set_geolocation({"latitude": 31.4718, "longitude": 74.2405, "accuracy": 12})
+    page = ctx.new_page()
+    errs = []
+    page.on("pageerror", lambda e: errs.append(str(e)))
+    page.goto(B + "/driver")
+    page.get_by_label("Phone or email").fill("03000000001")
+    page.get_by_label("Password").fill("Demo@12345")
+    page.get_by_role("button", name="Sign in").click()
+    page.wait_for_selector(".trip-card")
+    if page.get_by_role("button", name="I agree — enable location sharing").count():
+        page.get_by_role("button", name="I agree — enable location sharing").click()
+        page.wait_for_selector("text=Start trip")
+    page.screenshot(path=f"{OUT}/d_ready.png")
+    page.get_by_role("button", name="Start trip").click()
+    page.wait_for_selector("#gps-live")
+    page.wait_for_timeout(2500)
+    ctx.set_geolocation({"latitude": 31.4705, "longitude": 74.2470, "accuracy": 12})
+    page.wait_for_timeout(6500)
+    sent = page.locator(".gps-grid > div", has_text="Sent").locator("strong").inner_text()
+    check("driver: GPS fixes sent", int(sent) >= 1)
+    page.screenshot(path=f"{OUT}/d_trip.png")
+    page.goto(B + "/driver#/route")
+    page.wait_for_selector(".timeline li")
+    page.goto(B + "/driver#/dashboard")
+    page.wait_for_selector("text=End trip")
+    page.get_by_role("button", name="End trip").first.click()
+    page.get_by_role("button", name="End trip").last.click()
+    page.wait_for_selector("text=Start trip")
+    check("driver: trip ended", page.locator(".trip-state").inner_text().lower().startswith("off duty"))
+    page.goto(B + "/driver#/history")
+    page.wait_for_selector(".list-row")
+    check("driver: history lists trip", "completed" in page.locator(".list").inner_text())
+    check("driver: no page errors", not errs)
+    if errs: print(errs)
+    ctx.close()
+    b.close()
+
+failed = [n for n, ok in results if not ok]
+print(f"\n{len(results) - len(failed)}/{len(results)} UI checks passed")
+sys.exit(1 if failed else 0)

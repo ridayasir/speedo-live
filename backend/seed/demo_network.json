@@ -1,0 +1,48 @@
+{
+  "_notice": "DEMONSTRATION DATA ONLY. These are NOT official Speedo routes, bus numbers, stops or timetables. Stop names are well-known Lahore landmarks with approximate coordinates; route lines are straight segments between stops. Replace with verified data from the Punjab Mass Transit Authority via Admin > Import.",
+  "stops": [
+    {"code": "DS01", "name": "Thokar Niaz Baig", "name_ur": "ٹھوکر نیاز بیگ", "lat": 31.4718, "lon": 74.2405},
+    {"code": "DS02", "name": "Emporium Mall (Johar Town)", "name_ur": "ایمپوریم مال", "lat": 31.4672, "lon": 74.2660},
+    {"code": "DS03", "name": "Punjab University New Campus", "name_ur": "پنجاب یونیورسٹی نیو کیمپس", "lat": 31.4815, "lon": 74.3035},
+    {"code": "DS04", "name": "Muslim Town Mor", "name_ur": "مسلم ٹاؤن موڑ", "lat": 31.5140, "lon": 74.3150},
+    {"code": "DS05", "name": "Ichhra", "name_ur": "اچھرہ", "lat": 31.5330, "lon": 74.3185},
+    {"code": "DS06", "name": "Shadman Chowk", "name_ur": "شادمان چوک", "lat": 31.5440, "lon": 74.3262},
+    {"code": "DS07", "name": "Regal Chowk (Mall Road)", "name_ur": "ریگل چوک", "lat": 31.5605, "lon": 74.3175},
+    {"code": "DS08", "name": "GPO Chowk", "name_ur": "جی پی او چوک", "lat": 31.5665, "lon": 74.3135},
+    {"code": "DS09", "name": "Lahore Railway Station", "name_ur": "ریلوے اسٹیشن", "lat": 31.5772, "lon": 74.3366},
+    {"code": "DS10", "name": "Allama Iqbal Airport", "name_ur": "علامہ اقبال ایئرپورٹ", "lat": 31.5204, "lon": 74.4036},
+    {"code": "DS11", "name": "Fortress Stadium", "name_ur": "فورٹریس اسٹیڈیم", "lat": 31.5296, "lon": 74.3690},
+    {"code": "DS12", "name": "Services Hospital (Jail Road)", "name_ur": "سروسز ہسپتال", "lat": 31.5370, "lon": 74.3360},
+    {"code": "DS13", "name": "Data Darbar", "name_ur": "داتا دربار", "lat": 31.5790, "lon": 74.3045},
+    {"code": "DS14", "name": "Minar-e-Pakistan", "name_ur": "مینار پاکستان", "lat": 31.5925, "lon": 74.3095},
+    {"code": "DS15", "name": "Packages Mall", "name_ur": "پیکجز مال", "lat": 31.4712, "lon": 74.3555},
+    {"code": "DS16", "name": "Model Town", "name_ur": "ماڈل ٹاؤن", "lat": 31.4835, "lon": 74.3255},
+    {"code": "DS17", "name": "Kalma Chowk", "name_ur": "کلمہ چوک", "lat": 31.5040, "lon": 74.3310},
+    {"code": "DS18", "name": "Liberty Market", "name_ur": "لبرٹی مارکیٹ", "lat": 31.5103, "lon": 74.3445}
+  ],
+  "routes": [
+    {"code": "Thokar – Railway", "name": "Thokar Niaz Baig ↔ Railway Station", "color": "#D0102B", "avg_speed_kmh": 18,
+     "stops": ["DS01", "DS02", "DS03", "DS04", "DS05", "DS06", "DS07", "DS08", "DS09"],
+     "schedule": {"days": "MON,TUE,WED,THU,FRI,SAT,SUN", "first_departure": "06:30", "last_departure": "22:00", "headway_min": 10}},
+    {"code": "Airport – Minar", "name": "Airport ↔ Minar-e-Pakistan", "color": "#EA580C", "avg_speed_kmh": 20,
+     "stops": ["DS10", "DS11", "DS12", "DS06", "DS13", "DS14"],
+     "schedule": {"days": "MON,TUE,WED,THU,FRI,SAT,SUN", "first_departure": "07:00", "last_departure": "21:30", "headway_min": 15}},
+    {"code": "Packages – Regal", "name": "Packages Mall ↔ Regal Chowk", "color": "#0F766E", "avg_speed_kmh": 17,
+     "stops": ["DS15", "DS16", "DS17", "DS18", "DS12", "DS07"],
+     "schedule": {"days": "MON,TUE,WED,THU,FRI,SAT", "first_departure": "07:00", "last_departure": "21:00", "headway_min": 12}}
+  ],
+  "buses": [
+    {"bus_number": "SP-101", "route": "Thokar – Railway", "device": "SIM-NORMAL-101"},
+    {"bus_number": "SP-102", "route": "Thokar – Railway", "device": "SIM-SLOW-102"},
+    {"bus_number": "SP-103", "route": "Thokar – Railway", "device": null, "driver": "driver1"},
+    {"bus_number": "SP-201", "route": "Airport – Minar", "device": "SIM-NORMAL-201"},
+    {"bus_number": "SP-202", "route": "Airport – Minar", "device": "SIM-DROPOUT-202"},
+    {"bus_number": "SP-203", "route": "Airport – Minar", "device": null, "status": "maintenance"},
+    {"bus_number": "SP-301", "route": "Packages – Regal", "device": "SIM-NORMAL-301"},
+    {"bus_number": "SP-302", "route": "Packages – Regal", "device": "SIM-NORMAL-302"}
+  ],
+  "drivers": [
+    {"key": "driver1", "name": "Ali Raza", "email": "driver@speedo.demo", "phone": "03000000001", "employee_code": "SP-DRV-01"},
+    {"key": "driver2", "name": "Usman Tariq", "email": "driver2@speedo.demo", "phone": "03000000002", "employee_code": "SP-DRV-02"}
+  ]
+}

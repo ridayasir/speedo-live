@@ -2,198 +2,93 @@
 
 **Your Bus, Your Route, Your Time.** Live Speedo bus tracking and route navigation for Lahore.
 
-| Part | Folder | Stack |
+A passenger opens the app, picks a destination, sees which Speedo route to take and the nearest stop, watches the bus on the map and gets an arrival time. A driver starts a trip and shares the bus's GPS. An administrator manages buses, routes, stops, drivers, timetables and alerts, and watches the whole fleet live.
+
+> **DEMO MODE by default.** The routes, buses, stops and timetables that ship with the app are sample data, not official Speedo information, and buses are moved by a simulator. Everything demo is labelled DEMO in the app. Load verified routes through Admin → Import before real use. See [docs/ROUTE_DATA.md](docs/ROUTE_DATA.md).
+
+## Quick start
+
+```bash
+./run.sh            # Python 3.10+; installs requirements and starts on http://localhost:8000
+```
+
+| App | URL | Demo sign-in (password `Demo@12345`) |
 |---|---|---|
-| Backend API + real-time feed | `backend/` | Python FastAPI, PostgreSQL + PostGIS, Redis, WebSockets, JWT |
-| Passenger web app + Admin dashboard | `web/` | Next.js 15 (static export), TypeScript, Tailwind, Leaflet + OpenStreetMap |
-| Passenger Android app | `mobile/passenger/` | React Native + Expo SDK 52, Leaflet map in a WebView, FCM push |
-| Driver Android app | `mobile/driver/` | React Native + Expo SDK 52, background GPS (foreground service) |
+| Passenger web app | http://localhost:8000 | `passenger@speedo.demo` (or browse without an account) |
+| Admin dashboard | http://localhost:8000/admin | `admin@speedo.demo` |
+| Driver web app | http://localhost:8000/driver | `driver@speedo.demo` / `03000000001` |
+| API docs (Swagger) | http://localhost:8000/docs | |
 
-> **DEMO MODE.** The project ships with *demonstration* data only: 8 sample routes, 20 stops at approximate
-> Lahore landmark positions and 16 simulated buses, all flagged `is_demo` and labeled **DEMO** in every app.
-> These are **not** official Speedo routes, bus numbers or timetables. Load verified PMA/PTC data through
-> **Admin → Routes → Import CSV / Excel** before any public use.
+## What's included
 
----
-
-## 1. Quick start (Docker, everything in one command)
-
-```bash
-docker compose up --build
-# open http://localhost:8000          passenger web app
-#      http://localhost:8000/admin/   admin dashboard
-#      http://localhost:8000/docs     API documentation (Swagger)
-```
-
-Demo accounts (created by the seed; change the passwords with `SEED_*_PASSWORD` env vars):
-
-| Role | Login | Password |
+| Module | Where | Highlights |
 |---|---|---|
-| Admin | `admin@speedolive.demo` | `Admin@12345` |
-| Driver | `driver@speedolive.demo` or `+923000000001` | `Driver@12345` |
-| Passenger | `passenger@speedolive.demo` | `Passenger@123` |
+| Backend API | `backend/app` | 70 REST endpoints, JWT auth with roles, SSE + WebSocket live feed, ETA engine, journey planner, timetables, notifications, reports, CSV/Excel import |
+| Database | `backend/migrations` | PostgreSQL schema (20 tables, FKs, indexes), PostGIS geography columns + GiST indexes, SQLite for local dev |
+| Passenger web | `web/src/passenger.ts` | Home with search, nearby stops, live status, popular/recent/favourite; Live Tracking; Routes; stop arrivals; journey planner; Timetable; Favorites; Profile with alerts inbox |
+| Admin web | `web/src/admin.ts` | Overview, Buses, Routes (editor with stop ordering + map), Stops, Drivers, Live Fleet, Schedules, Alerts, Reports (CSV export), Settings |
+| Driver web | `web/src/driver.ts` | Consent, start/end trip, GPS sharing with offline queue, GPS status, route, trip history |
+| Passenger Android | `mobile/passenger` | Expo app: Home, Explore, Live Map, Favorites, Profile, FCM push |
+| Driver Android | `mobile/driver` | Expo app with a background foreground-service location task and offline queue |
+| Deployment | `deploy/` | Dockerfile, docker-compose (PostGIS + Redis), Render blueprint |
+| Docs | `docs/` | [API](docs/API.md), [testing report](docs/TESTING.md), [deployment](docs/DEPLOYMENT.md), [route data](docs/ROUTE_DATA.md), [screenshots](docs/screenshots) |
 
-The demo driver is assigned bus **DRV-001** (not simulated), so you can drive it with the driver app.
+## How it works
 
-## 2. Running the parts separately (development)
-
-**Requirements:** Python 3.12+, Node 20+, PostgreSQL 16 with PostGIS 3, Redis 7 (optional; without it, live updates work within one API process).
-
-```bash
-# database
-createuser -s speedo; createdb -O speedo speedo
-psql speedo -c "ALTER USER speedo PASSWORD 'speedo'"
-
-# backend
-cd backend
-cp .env.example .env            # set JWT_SECRET etc.
-pip install -r requirements-dev.txt
-alembic upgrade head            # schema + PostGIS extension
-python -m app.seed              # DEMO data and demo accounts
-uvicorn app.main:app --reload   # http://localhost:8000/docs
-
-# web
-cd web
-cp .env.example .env.local      # NEXT_PUBLIC_API_URL=http://localhost:8000
-npm install
-npm run dev                     # http://localhost:3000  (admin at /admin/)
-
-# Android apps (Expo)
-cd mobile/passenger             # or mobile/driver
-npm install
-EXPO_PUBLIC_API_URL=http://<your-computer-LAN-IP>:8000 npx expo start
+```
+Driver app ──GPS every 5 s──▶ POST /api/driver/location(/batch)
+                                   │ validate: driver ↔ assigned bus ↔ active trip,
+                                   │ coordinates in Lahore area, timestamp, accuracy,
+                                   │ duplicates, impossible jumps
+                                   ▼
+                         gps_locations + buses.last_* (+ Redis cache)
+                                   │
+                                   ▼  in-process hub
+                 SSE /api/live/stream  ·  WebSocket /ws/live
+                                   ▼
+                    Passenger web / Android, Admin fleet map
 ```
 
-Open the app on a phone with a **development build** (`npx expo run:android`) or on an emulator. The default API
-URL `http://10.0.2.2:8000` reaches the host machine from the Android emulator. The driver app's background
-location needs a development or production build; Expo Go does not support it.
+**Status of each bus:** `active` (fresh GPS), `delayed` (≥ 5 min behind the timetable pace), `stale` (no fix for 45 s), `offline` (no fix for 3 min), `out_of_service`. A bus standing still at a stop with fresh GPS stays `active`; only missing GPS makes it stale.
 
-### Local mode without Postgres or Docker (Windows)
+**ETA:** the bus position is snapped onto the route geometry; remaining distance to the stop along the route is divided by a blended speed (recent observed speed from the last fixes, historical speed for that route/direction/hour, the route's average speed, and a traffic factor hook), plus dwell time at intermediate stops. If GPS is stale there is no live ETA; the app shows the timetable estimate and labels it **Scheduled**.
 
-For trying the app on one machine, the backend can run on SQLite. Set `DATABASE_URL=sqlite:///./speedo_local.db`
-and `REDIS_URL=` in `backend/.env`, create `backend/.venv` and install `requirements-dev.txt`, run `npm install` in
-`web/`, then double-click `start.bat`. Tables are created by `python -m app.seed` (Alembic is not used here).
-Nearby-stop search uses plain lat/lng instead of PostGIS. This mode is for local development only; production uses PostGIS.
+**Journey planner:** finds stops within 1.5 km walking of start and destination, then direct routes in the right direction, or one-transfer journeys through shared stops, ranked by total time including the live wait for the next bus.
 
-## 3. Building the Android apps
+**DEMO vs real-world mode:** `SPEEDO_MODE=demo` seeds labelled sample data and runs the simulator, which feeds positions through the same validation pipeline as a driver's phone (one bus runs slow to show delays, one drops GPS to show stale/offline). `SPEEDO_MODE=live` never seeds or simulates; positions come only from authorised drivers or an authorised GPS provider feed (`GPS_SOURCE=provider`).
 
-Using EAS (Expo's build service, free tier available):
+## Security & privacy
 
-```bash
-npm install -g eas-cli
-eas login
-cd mobile/passenger
-# set your API host in eas.json (EXPO_PUBLIC_API_URL) first
-eas build -p android --profile preview      # installable .apk
-eas build -p android --profile production   # .aab for Google Play
-```
+scrypt password hashing · JWT with revocation on logout · role checks on every admin/driver endpoint · drivers can only post for their assigned bus during their own trip · pydantic validation on all input · global and per-endpoint rate limits · security headers (+HSTS in production) · no driver details on public endpoints · admin live stream uses short-lived tickets · recorded driver consent before any location sharing, withdrawable · GPS retention limit (30 days default) · secrets only from environment variables.
 
-Repeat in `mobile/driver`. To build locally instead: `npx expo prebuild -p android && cd android && ./gradlew assembleRelease`
-(needs Android Studio / SDK 34).
+## Differences from the requested stack
 
-**Push notifications (Firebase Cloud Messaging):**
-1. Create a Firebase project, add an Android app with package `pk.speedolive.passenger`, download `google-services.json` into `mobile/passenger/`.
-2. Create a service-account key (Project settings → Service accounts) and give the API `FCM_PROJECT_ID` and `FCM_CREDENTIALS_FILE`.
-Without these, notifications are still created and appear in the in-app inbox; they are just not pushed to the phone.
+The build workspace had no access to the npm or PyPI registries, so the app was built with what was installed:
 
-## 4. Deploying to the cloud
-
-The root `Dockerfile` builds one container that serves the API, WebSocket feed and website on a single port.
-
-**Render (blueprint included):** push this repo to GitHub, then in Render choose *New → Blueprint* and pick the repo.
-`render.yaml` creates the web service, a PostgreSQL database and Redis. Set `SEED_ADMIN_PASSWORD` when prompted.
-Render's Postgres supports PostGIS; the first migration runs `CREATE EXTENSION postgis`.
-
-**Any other container host** (Railway, Fly.io, Google Cloud Run, a VPS): run the image with these environment variables:
-
-| Variable | Required | Notes |
+| Requested | Delivered | Why / how to change |
 |---|---|---|
-| `DATABASE_URL` | yes | PostgreSQL with PostGIS. `postgres://` URLs are accepted. |
-| `JWT_SECRET` | yes | long random string; the app refuses to start in production with the default |
-| `ENVIRONMENT` | yes | `production` |
-| `REDIS_URL` | recommended | needed when running more than one instance |
-| `DATA_SOURCE` | | `demo` (default), `driver` or `provider` |
-| `CORS_ORIGINS` | | comma-separated origins if the website is hosted elsewhere |
-| `FCM_PROJECT_ID`, `FCM_CREDENTIALS_FILE` | | push notifications |
-| `SEED_ADMIN_PASSWORD` etc. | | passwords for seeded accounts |
+| FastAPI | **Starlette** (the framework FastAPI runs on) + pydantic, with a hand-built OpenAPI/Swagger page | FastAPI wasn't installable. Handlers are small functions, so moving to FastAPI routers is mechanical. |
+| React/Next.js + Tailwind | **TypeScript** compiled with `tsc`, no framework; hand-written CSS with the same design tokens | React/Next/Tailwind weren't installable. |
+| PostgreSQL + PostGIS | PostgreSQL schema + PostGIS migration; **ran on SQLite** in the workspace | No Postgres driver was installable. Schema and all queries were checked on PostgreSQL 16 (see testing report). |
+| WebSockets | **SSE** (tested) and a WebSocket endpoint (untested here) | WebSocket needs `uvicorn[standard]`, which is in `requirements.txt`. |
+| Leaflet | Leaflet + OpenStreetMap in the browser, with a built-in offline fallback map | |
+| React Native / Expo | As requested | Written but not built here. |
 
-HTTPS: every host above terminates HTTPS for you. **Backups:** enable your database provider's automated daily
-backups (Render, Railway, Cloud SQL and Neon all offer them); for a self-hosted database run
-`pg_dump -Fc "$DATABASE_URL" > speedo-$(date +%F).dump` daily from cron.
-
-To host the website separately (Vercel, Netlify, Cloudflare Pages): build `web/` with
-`NEXT_PUBLIC_API_URL=https://your-api-host` and upload `web/out/`.
-
-## 5. Demo mode and real-world mode
-
-| `DATA_SOURCE` | Where bus positions come from |
-|---|---|
-| `demo` | The built-in simulator moves buses flagged `is_demo` along DEMO routes. Driver apps work too. |
-| `driver` | Only authorised driver apps. The simulator is off. |
-| `provider` | An approved external GPS feed, via `backend/app/services/gps_provider.py` (match buses by *GPS device ID*). |
-
-Going live: import verified routes, add real buses and drivers in the admin dashboard, delete the demo
-data (`python -m app.seed --reset` removes demo routes, stops and buses), then set `DATA_SOURCE=driver` or `provider`.
-No government system is accessed without authorisation; the provider adapter is an empty interface until one is approved.
-
-## 6. How live tracking works
+## Project layout
 
 ```
-Driver app (GPS every 5 s, foreground service, offline queue)
-   → POST /api/driver/trips/{id}/locations        (JWT, driver must own the bus and the active trip)
-   → validate: coordinates, Lahore service area, timestamp, accuracy ≤ 100 m, speed and jump plausibility, duplicates
-   → PostgreSQL/PostGIS (thinned history: a point every 15 m or 30 s) + latest position on the bus
-   → Redis pub/sub → WebSocket /ws/live → passenger web and Android apps
+backend/   app/ (main, http, config, db, security, cache, realtime, geo, schemas, seed)
+           app/api/ (account, public, driver, admin)   app/services/ (tracking, eta, planner,
+           schedule, network, notify, simulator, provider, importer, reports)
+           migrations/  seed/  tests/
+web/       src/*.ts → public/js   public/{index,admin,driver}.html   tests/ui_flows.py
+mobile/    passenger/  driver/
+deploy/    Dockerfile  docker-compose.yml  render.yaml
+docs/      API.md  TESTING.md  DEPLOYMENT.md  ROUTE_DATA.md  openapi.json  screenshots/
 ```
 
-* **Stale vs stopped:** a bus with no update for 60 s is *GPS signal lost* (stale) and after 5 min *offline*. A bus
-  sending updates at speed < 0.8 m/s is *stopped*. These are never confused. A trip with no updates for 30 min is
-  marked *interrupted*.
-* **ETA:** the bus is snapped to the route line; remaining distance ÷ a blend of recent movement and the route's
-  historical speed (learned from completed trips), plus ~20 s per intermediate stop. A traffic hook
-  (`traffic_factor`) is ready for a traffic feed. Without fresh GPS, only **scheduled** times are shown, labeled as such.
-* **Delays:** compared with the route's scheduled stop offsets from the trip start. Followers of the route get one delay notification per trip.
+## Known gaps
 
-## 7. Route data import format
-
-Download templates from Admin → Routes → Import. `routes.csv` (one row per stop, in order):
-
-```
-route_code,route_name,sequence,stop_code,stop_name,lat,lng,offset_minutes,is_major,color,stop_name_ur
-```
-
-`schedules.csv`: `route_code,days,first_departure,last_departure,frequency_minutes,notes` (days like `mon,tue,wed`).
-Optional `shapes.csv` (`route_code,sequence,lat,lng`) gives the road geometry; without it, lines run straight between stops.
-Every import must state its source, which is stored on each route and stop.
-
-## 8. Security and privacy
-
-* bcrypt password hashing, JWT bearer tokens, role-based access (passenger / driver / admin) on every endpoint.
-* Drivers can only post GPS for the bus assigned to them and only during a trip they started with explicit consent.
-* Public endpoints never return driver names, phone numbers or licence numbers (covered by a test).
-* Input validation with Pydantic; rate limiting (120 req/min per IP, 10/min on login and registration).
-* GPS history is deleted after `GPS_RETENTION_DAYS` (30 by default). Admin actions are recorded in an audit log.
-* Secrets only come from environment variables; `.env` files are git-ignored.
-
-## 9. Tests
-
-```bash
-cd backend && createdb -O speedo speedo_test && pytest -q
-```
-
-See [TESTING.md](TESTING.md) for what is covered and what has not been tested yet.
-
-## 10. Project layout
-
-```
-backend/app/
-  main.py               app, background loops (simulator, stale detection, alerts, retention)
-  models.py             SQLAlchemy models (18 tables)        migrations/  Alembic
-  routers/              auth, public (passenger), me, driver, admin, ws
-  services/tracking.py  GPS ingestion, status, ETA          services/planner.py  journey planning
-  services/simulator.py DEMO buses                          services/gps_provider.py  real GPS adapter
-  services/importer.py  CSV/XLSX import                     services/notifications.py FCM
-web/src/app/            pages: / live routes route stop timetable favorites profile admin
-mobile/passenger/       Expo passenger app                  mobile/driver/  Expo driver app
-docs/openapi.json       API specification
-```
+- No official route data is included (by design); a real Speedo deployment needs PMA data and authorisation for any GPS feed.
+- Phone OTP sign-in is not implemented (phone + password is); plug an SMS provider into `api/account.py` if needed.
+- Android apps, WebSocket, PostGIS, FCM push and Redis are implemented but were not run in the build workspace. Details in [docs/TESTING.md](docs/TESTING.md).

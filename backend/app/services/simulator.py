@@ -1,101 +1,145 @@
-"""DEMO MODE bus simulator.
+"""DEMO MODE GPS simulator.
 
-Moves buses that are flagged is_demo along DEMO routes. Every simulated position goes through the
-same ingestion path as a driver app, and every bus, route and event it touches carries is_demo=True,
-so the apps can show a DEMO badge. It never touches non-demo buses.
+Moves demo buses (is_demo AND gps_device_id starting with 'SIM-') along their routes
+and feeds the positions through exactly the same validation/ingestion pipeline a
+driver's phone uses. Every simulated bus, route and trip is flagged is_demo and the
+UI shows a DEMO badge. The simulator never runs in live mode.
+
+Profiles (from the bus's gps_device_id suffix):
+  SIM-NORMAL   typical running speed with stop dwell
+  SIM-SLOW     runs slow → shows the "delayed" state
+  SIM-DROPOUT  stops sending GPS for 4 minutes every 12 minutes → stale/offline handling
 """
 from __future__ import annotations
 
+import datetime as dt
 import logging
+import math
 import random
 from dataclasses import dataclass
 
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-
-from ..config import get_settings
-from ..models import Bus, BusStatus, DataSource, Trip, TripStatus
-from .geo import point_at_distance
-from .tracking import GpsPoint, clear_progress, ingest_points, route_geom, update_route_history, utcnow
+from ..config import settings
+from ..db import get_db, iso, utcnow
+from ..errors import ApiError
+from .network import network
+from .tracking import active_trip, end_trip, ingest_points, scheduled_seconds_to, start_trip
 
 log = logging.getLogger("speedo.sim")
+rng = random.Random(42)
 
 
 @dataclass
 class SimBus:
-    speed: float  # m/s cruising
+    bus_id: int
+    route_id: int
+    profile: str
+    trip_id: int | None = None
+    direction: str = "outbound"
+    progress: float = 0.0
     dwell_left: float = 0.0
-    last_stop_seq: int = -1
+    layover_left: float = 0.0
+    passed_stops: int = 0
+    clock: float = 0.0
 
 
-_state: dict[int, SimBus] = {}
-_rng = random.Random(42)
+class Simulator:
+    def __init__(self) -> None:
+        self.buses: dict[int, SimBus] = {}
+        self.started = False
 
+    def setup(self) -> None:
+        db = get_db()
+        rows = db.all("SELECT * FROM buses WHERE is_demo = ? AND status = 'active' AND gps_device_id LIKE 'SIM-%'", (True,))
+        for b in rows:
+            route = network.get(b["route_id"])
+            if not route or not route.polyline:
+                continue
+            old = active_trip(b["id"])
+            if old:
+                end_trip(old["id"], "interrupted", "simulator_restart")
+            sb = SimBus(b["id"], route.id, b["gps_device_id"].split("-")[1].upper())
+            sb.direction = rng.choice(["outbound", "inbound"])
+            sb.progress = rng.uniform(0.05, 0.7) * route.length
+            sb.clock = rng.uniform(0, 600)
+            self._begin_trip(sb, backdate=True)
+            self.buses[b["id"]] = sb
+        self.started = True
+        log.info("DEMO simulator running %d buses", len(self.buses))
 
-def _start_trip(db: Session, bus: Bus, start_m: float = 0.0) -> Trip:
-    trip = Trip(bus_id=bus.id, route_id=bus.route_id, status=TripStatus.active, source=DataSource.demo,
-                started_at=utcnow(), progress_m=start_m)
-    db.add(trip)
-    db.flush()
-    clear_progress(bus.id)
-    return trip
+    def _begin_trip(self, sb: SimBus, backdate: bool = False) -> None:
+        route = network.get(sb.route_id)
+        trip = start_trip(sb.bus_id, None, sb.direction, "simulator")
+        sb.trip_id = trip["id"]
+        if backdate:
+            # a bus placed mid-route "left the terminal" when the timetable says it should have
+            behind = scheduled_seconds_to(route, sb.direction, sb.progress) + (420 if sb.profile == "SLOW" else 0)
+            get_db().execute("UPDATE trips SET started_at = ? WHERE id = ?", (iso(utcnow() - dt.timedelta(seconds=behind)), trip["id"]))
 
+    def _speed(self, sb: SimBus) -> float:
+        route = network.get(sb.route_id)
+        base = route.avg_speed_mps * (0.55 if sb.profile == "SLOW" else 1.15)
+        wave = 1 + 0.25 * math.sin(sb.clock / 47.0) + rng.uniform(-0.1, 0.1)
+        return max(1.0, base * wave)
 
-def tick(db: Session, dt: float | None = None) -> int:
-    s = get_settings()
-    if not s.is_demo:
-        return 0
-    dt = dt or s.simulator_tick_seconds
-    buses = db.execute(
-        select(Bus).where(Bus.is_demo.is_(True), Bus.status == BusStatus.active, Bus.route_id.is_not(None))
-    ).scalars().all()
-    moved = 0
-    for bus in buses:
-        trip = db.execute(
-            select(Trip).where(Trip.bus_id == bus.id, Trip.status == TripStatus.active)
-        ).scalars().first()
-        geom = route_geom(db, bus.route_id)
-        if geom.length_m <= 0:
-            continue
-        st = _state.get(bus.id)
-        if st is None:
-            st = _state[bus.id] = SimBus(speed=_rng.uniform(6.0, 10.0))
-        if trip is None:
-            # stagger demo buses along their route the first time
-            start = _rng.uniform(0, geom.length_m * 0.8) if bus.last_gps_at is None else 0.0
-            trip = _start_trip(db, bus, start)
-            if start:
-                # backdate the start so the schedule comparison is fair
-                from datetime import timedelta
+    def step(self, dt_s: float | None = None) -> None:
+        if settings.mode != "demo":
+            return
+        dt_s = (dt_s or settings.sim_interval_s) * settings.sim_time_scale
+        for sb in list(self.buses.values()):
+            try:
+                self._step_bus(sb, dt_s)
+            except Exception:  # never let one bus kill the loop
+                log.exception("simulator step failed for bus %s", sb.bus_id)
 
-                trip.started_at = utcnow() - timedelta(minutes=geom.offset_at(start))
-        d = trip.progress_m
-        if st.last_stop_seq < 0 and d > 0:
-            st.last_stop_seq = max((x.sequence for x in geom.stops if x.distance_m <= d), default=-1)
-        if st.dwell_left > 0:
-            st.dwell_left -= dt
-            speed = 0.0
+    def _step_bus(self, sb: SimBus, dt_s: float) -> None:
+        route = network.get(sb.route_id)
+        if route is None or route.polyline is None:
+            return
+        sb.clock += dt_s
+        if sb.layover_left > 0:
+            sb.layover_left -= dt_s
+            if sb.layover_left <= 0:
+                sb.direction = "inbound" if sb.direction == "outbound" else "outbound"
+                sb.progress, sb.passed_stops = 0.0, 0
+                self._begin_trip(sb)
+            return
+        speed = 0.0
+        if sb.dwell_left > 0:
+            sb.dwell_left -= dt_s
         else:
-            # occasional slow-downs to make ETAs and delays visible
-            speed = max(0.0, st.speed * _rng.uniform(0.55, 1.15))
-            d = min(geom.length_m, d + speed * dt)
-            ns = next((x for x in geom.stops if x.sequence > st.last_stop_seq and x.distance_m <= d), None)
-            if ns:
-                d = ns.distance_m
-                st.last_stop_seq = ns.sequence
-                st.dwell_left = _rng.uniform(10, 25)
-                speed = 0.0
-        lat, lng, heading = point_at_distance(geom.path, geom.cum, d)
-        trip.progress_m = d  # simulator owns progress exactly
-        res = ingest_points(db, trip, [GpsPoint(lat, lng, utcnow(), accuracy_m=8.0, speed_mps=speed, heading=heading)])
-        moved += res.accepted
-        if d >= geom.length_m - 1 and st.dwell_left <= 0:
-            trip.status = TripStatus.completed
-            trip.ended_at = utcnow()
-            trip.end_reason = "route_end"
-            update_route_history(db, trip)
-            _state.pop(bus.id, None)
-            db.commit()
-            _start_trip(db, bus)
-            db.commit()
-    return moved
+            speed = self._speed(sb)
+            before = sb.progress
+            sb.progress = min(route.length, sb.progress + speed * dt_s)
+            for s in route.stops:
+                sp = s.chainage if sb.direction == "outbound" else route.length - s.chainage
+                if before < sp <= sb.progress and 0 < sp < route.length:
+                    sb.dwell_left = s.dwell_s
+                    sb.progress = sp
+                    break
+        ch = sb.progress if sb.direction == "outbound" else route.length - sb.progress
+        lat, lon, heading = route.polyline.point_at(ch)
+        if sb.direction == "inbound":
+            heading = (heading + 180) % 360
+        # small GPS noise
+        lat += rng.gauss(0, 0.00003)
+        lon += rng.gauss(0, 0.00003)
+        dropout = sb.profile == "DROPOUT" and (sb.clock % 720) > 480
+        if not dropout and sb.trip_id:
+            point = [{"lat": lat, "lon": lon, "speed_mps": speed, "heading": heading,
+                      "accuracy_m": rng.uniform(6, 18), "recorded_at": iso()}]
+            try:
+                ingest_points(sb.bus_id, sb.trip_id, point, source="simulator")
+            except ApiError as e:
+                if e.code != "trip_not_active":
+                    raise
+                # the trip was closed server-side (e.g. no-GPS timeout on a long route): carry on with a fresh trip
+                self._begin_trip(sb)
+                ingest_points(sb.bus_id, sb.trip_id, point, source="simulator")
+        if sb.progress >= route.length - 1 and sb.trip_id:
+            end_trip(sb.trip_id, "completed", "reached_terminal")
+            sb.trip_id = None
+            sb.layover_left = 60
+
+
+simulator = Simulator()
+

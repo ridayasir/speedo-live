@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Speedo Live</title>
+  <meta name="description" content="Live Speedo bus tracking and route navigation for Lahore.">
+  <meta name="theme-color" content="#B80D25">
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@500&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="css/app.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+  <script type="module" src="js/passenger.js"></script>
+</head>
+<body class="app passenger">
+  <a class="skip" href="#panel">Skip to content</a>
+  <header class="topbar">
+    <a class="brand" href="#/home" aria-label="Speedo Live home">
+      <img src="img/logo.svg" alt="" width="34" height="34">
+      <span><strong>Speedo Live</strong><small>Your Bus, Your Route, Your Time.</small></span>
+    </a>
+    <span id="feed-state" class="feed-state" aria-live="polite">Connecting…</span>
+    <a class="user-chip" href="#/profile"><span class="icon-user" aria-hidden="true"></span><span id="user-chip">Sign in</span></a>
+  </header>
+  <div id="demo-banner" class="demo-banner" hidden>
+    <strong>DEMO MODE</strong> Routes, timetables and bus positions are simulated sample data, not real Speedo information.
+  </div>
+  <div class="layout">
+    <nav id="nav" class="nav" aria-label="Main"></nav>
+    <main id="panel" class="panel" tabindex="-1"><div class="loading"><span class="spinner"></span>Loading Speedo Live…</div></main>
+    <div id="map" class="map-wrap" aria-label="Map of Lahore"></div>
+  </div>
+  <noscript>Speedo Live needs JavaScript to show live buses.</noscript>
+</body>
+</html>

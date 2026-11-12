@@ -1,0 +1,28 @@
+# Render.com blueprint (managed Postgres + web service). Other hosts: see docs/DEPLOYMENT.md.
+databases:
+  - name: speedo-db
+    databaseName: speedo
+    plan: basic-256mb
+services:
+  - type: web
+    name: speedo-live
+    runtime: docker
+    dockerfilePath: ./deploy/Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: SPEEDO_MODE
+        value: demo            # switch to "live" once verified routes and drivers are set up
+      - key: JWT_SECRET
+        generateValue: true
+      - key: TRUST_PROXY
+        value: "true"
+      - key: ENABLE_POSTGIS
+        value: "false"         # set true if your Postgres has the PostGIS extension
+      - key: DATABASE_URL
+        fromDatabase: { name: speedo-db, property: connectionString }
+      - key: BOOTSTRAP_ADMIN_EMAIL
+        sync: false
+      - key: BOOTSTRAP_ADMIN_PASSWORD
+        sync: false

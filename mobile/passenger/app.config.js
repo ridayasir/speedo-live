@@ -1,30 +1,28 @@
-// Expo config. Set EXPO_PUBLIC_API_URL to your API (default: Android emulator -> host machine).
-// Put Firebase's google-services.json next to this file to enable push notifications.
-const fs = require("fs");
-const hasFirebase = fs.existsSync("./google-services.json");
-
+// Expo config. Set EXPO_PUBLIC_API_URL to your deployed backend (https://...).
+// react-native-maps on Android needs a Google Maps SDK key: GOOGLE_MAPS_ANDROID_API_KEY.
+// Push notifications need google-services.json from your Firebase project (FCM).
 module.exports = {
   expo: {
     name: "Speedo Live",
     slug: "speedo-live",
-    scheme: "speedolive",
     version: "1.0.0",
     orientation: "portrait",
+    scheme: "speedolive",
     userInterfaceStyle: "light",
-    icon: "./assets/icon.png",
-    splash: { image: "./assets/icon.png", resizeMode: "contain", backgroundColor: "#173693" },
+    primaryColor: "#0B3B8C",
+    splash: { backgroundColor: "#0B3B8C" },
     android: {
-      package: "pk.speedolive.passenger",
+      package: "pk.speedolive.app",
       versionCode: 1,
-      adaptiveIcon: { foregroundImage: "./assets/icon.png", backgroundColor: "#173693" },
+      adaptiveIcon: { backgroundColor: "#0B3B8C" },
       permissions: ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION", "POST_NOTIFICATIONS"],
-      ...(hasFirebase ? { googleServicesFile: "./google-services.json" } : {}),
+      googleServicesFile: process.env.GOOGLE_SERVICES_JSON || undefined,
+      config: { googleMaps: { apiKey: process.env.GOOGLE_MAPS_ANDROID_API_KEY || "" } },
     },
     plugins: [
-      ["expo-location", { locationWhenInUsePermission: "Speedo Live uses your location to find nearby bus stops." }],
-      ["expo-notifications", { color: "#f97316" }],
-      "expo-secure-store",
+      ["expo-location", { locationWhenInUsePermission: "Speedo Live uses your location to show nearby bus stops." }],
+      ["expo-notifications", { color: "#F97316" }],
     ],
-    extra: { apiUrl: process.env.EXPO_PUBLIC_API_URL || "http://10.0.2.2:8000", pushEnabled: hasFirebase },
+    extra: { apiUrl: process.env.EXPO_PUBLIC_API_URL || "http://10.0.2.2:8000" },
   },
 };

@@ -1,0 +1,26 @@
+# Full stack: API + web, PostgreSQL with PostGIS, Redis.
+#   cd deploy && cp ../.env.example .env  (set JWT_SECRET, passwords)  && docker compose up --build
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: speedo
+      POSTGRES_USER: speedo
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U speedo"], interval: 5s, retries: 10 }
+  redis:
+    image: redis:7-alpine
+  api:
+    build: { context: .., dockerfile: deploy/Dockerfile }
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://speedo:${POSTGRES_PASSWORD:-change-me}@db:5432/speedo
+      ENABLE_POSTGIS: "true"
+      REDIS_URL: redis://redis:6379/0
+      TRUST_PROXY: "true"
+    ports: ["8000:8000"]
+    depends_on: { db: { condition: service_healthy }, redis: { condition: service_started } }
+    restart: unless-stopped
+volumes:
+  pgdata:

@@ -1,16 +1,9 @@
-fastapi>=0.115
-uvicorn[standard]>=0.30
-sqlalchemy>=2.0,<2.1
-geoalchemy2>=0.15
-psycopg[binary]>=3.2
-alembic>=1.13
-redis>=5.0
-pydantic-settings>=2.4
-email-validator>=2.2
+# Speedo Live backend
+starlette>=0.41
+uvicorn[standard]>=0.30      # [standard] adds the WebSocket support used by /ws/live
+sse-starlette>=2.1
+pydantic>=2.7
+PyJWT[crypto]>=2.8           # crypto extra signs FCM service-account tokens (RS256)
 python-multipart>=0.0.9
-bcrypt>=4.1
-PyJWT>=2.9
-slowapi>=0.1.9
-httpx>=0.27
 openpyxl>=3.1
-google-auth>=2.30
+psycopg[binary]>=3.2         # PostgreSQL driver (not needed for SQLite development)

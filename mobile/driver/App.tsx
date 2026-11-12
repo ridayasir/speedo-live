@@ -1,366 +1,253 @@
-import "./src/lib/tracking"; // registers the background task before anything else
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { Alert, AppState, Linking, ScrollView, Text, View } from "react-native";
+// Speedo Live Driver — Android app for authorised bus drivers.
+import "./src/tracking"; // registers the background location task at startup (must be top-level)
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { Alert, AppState, RefreshControl, ScrollView, Text, View } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
-import LiveMap from "./src/components/LiveMap";
-import { Btn, Card, Demo, DemoBanner, ErrorText, Field, Loading, Muted, RouteChip, Section, StatusPill, Title, s } from "./src/components/ui";
-import { api, loadToken, setToken } from "./src/lib/api";
-import { ago, effectiveStatus, km } from "./src/lib/format";
-import { C } from "./src/lib/theme";
-import * as T from "./src/lib/tracking";
-import type { BusState, RouteDetail, User } from "./src/lib/types";
+import MapView, { Marker, Polyline, UrlTile } from "react-native-maps";
+import { auth, fmtAgo, get, post } from "./src/api";
+import { ensurePermissions, flush, getQueue, getStats, isTracking, startTracking, stopTracking, Stats } from "./src/tracking";
+import { Badge, Button, C, Card, DemoBadge, ErrorText, Field, H, Loading, Muted, RouteChip, s, Section, StatusBadge } from "./src/ui";
 
-interface TripOut { id: number; status: string; started_at: string; ended_at: string | null; route_code: string; route_name: string; bus_number: string; progress_m: number; route_length_m: number; max_delay_minutes: number; gps_points: number; end_reason: string | null }
-interface DriverMe {
-  driver: { id: number; full_name: string; phone: string | null; license_number: string; employee_code: string | null; location_consent_at: string | null };
-  bus: { id: number; bus_number: string; status: string; registration_number: string | null } | null;
-  route: RouteDetail | null;
-  active_trip: TripOut | null;
-  bus_state: BusState | null;
-  demo_mode: boolean;
-}
+type Ctx = { me: any; reload: () => Promise<void>; signOut: () => Promise<void> };
+const MeCtx = createContext<Ctx>(null as any);
+const useMe = () => useContext(MeCtx);
 
-/* ---------------------------------------------------------------- shared state */
-interface Ctx { me: DriverMe | null; reload: () => Promise<void>; tracking: boolean; setTracking: (v: boolean) => void; signOut: () => Promise<void> }
-const DriverCtx = createContext<Ctx | null>(null);
-const useDriver = () => useContext(DriverCtx)!;
-
-/* ---------------------------------------------------------------- Login */
-function Login({ onIn }: { onIn: () => void }) {
-  const [id, setId] = useState("");
-  const [pw, setPw] = useState("");
-  const [err, setErr] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-  const submit = async () => {
-    setBusy(true);
-    setErr(null);
-    try {
-      const r = await api<{ access_token: string; user: User }>("/api/auth/login", { method: "POST", json: { identifier: id.trim(), password: pw } });
-      if (r.user.role !== "driver") throw new Error("This app is for Speedo drivers. Passengers should use the Speedo Live app.");
-      await setToken(r.access_token);
-      onIn();
-    } catch (e) {
-      setErr((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  };
-  return (
-    <ScrollView contentContainerStyle={{ padding: 24, paddingTop: 60 }} style={{ backgroundColor: C.bg }} keyboardShouldPersistTaps="handled">
-      <Title>Speedo Live Driver</Title>
-      <Muted style={{ marginBottom: 20 }}>Sign in with the account your administrator gave you.</Muted>
-      <Field label="Mobile number or email" autoCapitalize="none" value={id} onChangeText={setId} />
-      <Field label="Password" secureTextEntry value={pw} onChangeText={setPw} />
-      {err && <ErrorText error={err} />}
-      <Btn title="Sign in" onPress={submit} loading={busy} />
-    </ScrollView>
-  );
-}
-
-/* ---------------------------------------------------------------- Dashboard */
-function Dashboard() {
-  const { me, reload, tracking, setTracking } = useDriver();
-  const [busy, setBusy] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
-  const [perm, setPerm] = useState<T.PermissionState | null>(null);
+function useStats() {
+  const [st, setSt] = useState<{ stats: Stats; queue: number; tracking: boolean } | null>(null);
   useFocusEffect(useCallback(() => {
-    reload();
-    T.checkPermissions().then(setPerm);
-  }, [reload]));
-  if (!me) return <Loading />;
-  const trip = me.active_trip;
-  const interrupted = !!trip && !tracking;
-
-  const start = () => {
-    Alert.alert(
-      "Share bus location?",
-      `While this trip runs, the location of bus ${me.bus?.bus_number} is shared with passengers and stored for service records. Sharing stops when you end the trip.`,
-      [{ text: "Cancel", style: "cancel" }, { text: "I agree, start", onPress: doStart }],
-    );
-  };
-  const doStart = async () => {
-    setBusy(true);
-    setErr(null);
-    try {
-      let p = await T.requestPermissions();
-      setPerm(p);
-      if (!p.servicesEnabled) throw new Error("GPS is turned off. Turn on Location in your phone settings.");
-      if (!p.foreground) throw new Error("Location permission is needed to share the bus position.");
-      if (!p.background) {
-        Alert.alert("Allow location all the time", "To keep sharing with the screen off, choose 'Allow all the time' for Speedo Live Driver.", [
-          { text: "Open settings", onPress: () => Linking.openSettings() },
-          { text: "Continue anyway" },
-        ]);
-      }
-      const t = await api<TripOut>("/api/driver/trips/start", { method: "POST", json: { consent: true } });
-      await T.startTracking(t.id);
-      setTracking(true);
-      await reload();
-    } catch (e) {
-      setErr((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  };
-  const end = () =>
-    Alert.alert("End trip?", "Location sharing will stop.", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "End trip",
-        style: "destructive",
-        onPress: async () => {
-          setBusy(true);
-          try {
-            await T.flush();
-            await api(`/api/driver/trips/${trip!.id}/end`, { method: "POST", json: { reason: "completed" } });
-          } catch (e) {
-            setErr((e as Error).message);
-          } finally {
-            await T.stopTracking();
-            setTracking(false);
-            await reload();
-            setBusy(false);
-          }
-        },
-      },
-    ]);
-
-  const st = me.bus_state ? effectiveStatus(me.bus_state) : null;
-  return (
-    <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ padding: 14 }}>
-      <Card>
-        <Muted>Driver</Muted>
-        <Text style={{ fontSize: 20, fontWeight: "800", color: C.brandDark }}>{me.driver.full_name}</Text>
-        <Muted>Licence {me.driver.license_number}{me.driver.employee_code ? ` · ${me.driver.employee_code}` : ""}</Muted>
-      </Card>
-      <Card>
-        <View style={[s.row, { justifyContent: "space-between" }]}>
-          <View>
-            <Muted>Assigned bus</Muted>
-            <Text style={{ fontSize: 22, fontWeight: "800" }}>{me.bus?.bus_number || "None"}</Text>
-          </View>
-          {st && <StatusPill status={st} />}
-        </View>
-        {me.route ? (
-          <View style={[s.row, { gap: 8, marginTop: 8 }]}>
-            <RouteChip code={me.route.code} color={me.route.color} />
-            <Text style={{ flex: 1, fontSize: 13 }}>{me.route.name}</Text>
-            {me.route.is_demo && <Demo />}
-          </View>
-        ) : <Muted>No route assigned. Contact your administrator.</Muted>}
-      </Card>
-      <Card style={{ borderColor: tracking ? C.green : C.border }}>
-        <Section>Trip</Section>
-        {trip ? (
-          <>
-            <Text style={{ fontWeight: "700", color: tracking ? C.green : C.amber }}>{tracking ? "● Trip in progress, sharing location" : "Trip interrupted: location is NOT being shared"}</Text>
-            <Muted>Started {ago(trip.started_at)} · {km(trip.progress_m)} of {km(trip.route_length_m)}</Muted>
-            {me.bus_state?.next_stop && <Muted>Next stop: {me.bus_state.next_stop.name} ({km(me.bus_state.next_stop.distance_m)})</Muted>}
-          </>
-        ) : <Muted>No active trip.</Muted>}
-        <View style={{ marginTop: 12, gap: 8 }}>
-          {!trip && <Btn title="Start Trip" variant="accent" onPress={start} loading={busy} disabled={!me.bus || !me.route} />}
-          {interrupted && <Btn title="Resume sharing" variant="accent" onPress={doStart} loading={busy} />}
-          {trip && <Btn title="End Trip" variant="danger" onPress={end} loading={busy} />}
-        </View>
-        {err && <ErrorText error={err} />}
-      </Card>
-      <Card>
-        <Section>GPS connectivity</Section>
-        <Muted>Location services: {perm?.servicesEnabled ? "on" : "OFF"}</Muted>
-        <Muted>Permission: {perm?.foreground ? (perm.background ? "allowed all the time" : "only while app is open") : "not granted"}</Muted>
-        <Muted>Last update received by server: {ago(me.bus_state?.last_gps_at)}</Muted>
-      </Card>
-    </ScrollView>
-  );
+    let on = true;
+    const tick = async () => { const [stats, q, tracking] = await Promise.all([getStats(), getQueue(), isTracking()]); if (on) setSt({ stats, queue: q.length, tracking }); };
+    tick(); const t = setInterval(tick, 2000);
+    return () => { on = false; clearInterval(t); };
+  }, []));
+  return st;
 }
 
-/* ---------------------------------------------------------------- My Route */
-function MyRoute() {
-  const { me, reload } = useDriver();
-  useFocusEffect(useCallback(() => { reload(); }, [reload]));
-  if (!me) return <Loading />;
-  if (!me.route) return <View style={{ padding: 20 }}><Muted>No route assigned.</Muted></View>;
-  const r = me.route;
-  const progress = me.active_trip?.progress_m ?? -1;
+function GpsGrid() {
+  const st = useStats();
+  if (!st) return <Loading />;
+  const acc = st.stats.lastAccuracy;
+  const cell = (label: string, value: string, warn = false) => (
+    <View style={{ width: "48%", backgroundColor: C.bg, borderRadius: 12, padding: 10, marginBottom: 8 }}>
+      <Muted>{label}</Muted><Text style={{ fontSize: 16, fontWeight: "700", color: warn ? C.warn : C.ink }}>{value}</Text>
+    </View>
+  );
   return (
-    <View style={{ flex: 1, backgroundColor: C.bg }}>
-      <LiveMap height={280} lines={[{ id: r.id, color: r.color, path: r.path }]} stops={r.stops} buses={me.bus_state ? [me.bus_state] : []} fitKey={`r${r.id}`} />
-      <ScrollView contentContainerStyle={{ padding: 14 }}>
-        <View style={[s.row, { gap: 8, marginBottom: 8 }]}><RouteChip code={r.code} color={r.color} /><Text style={{ fontWeight: "700", flex: 1 }}>{r.name}</Text></View>
-        {r.stops.map((st) => {
-          const passed = progress >= 0 && st.distance_m <= progress + 25;
-          return (
-            <View key={st.id} style={[s.row, { paddingVertical: 7, opacity: passed ? 0.45 : 1 }]}>
-              <View style={{ width: 12, height: 12, borderRadius: 6, borderWidth: 2, borderColor: r.color, backgroundColor: passed ? r.color : "#fff", marginRight: 10 }} />
-              <Text style={{ flex: 1, fontWeight: st.is_major ? "700" : "400" }}>{st.name}</Text>
-              <Muted>+{Math.round(st.offset_minutes)} min</Muted>
-            </View>
-          );
-        })}
-      </ScrollView>
+    <View>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", marginTop: 12 }}>
+        {cell("GPS sharing", st.tracking ? "On" : "Off")}
+        {cell("Accuracy", acc ? `±${Math.round(acc)} m${acc > 50 ? " (weak)" : ""}` : "—", !!acc && acc > 50)}
+        {cell("Last fix", fmtAgo(st.stats.lastFixAt))}
+        {cell("Sent", String(st.stats.sent))}
+        {cell("Waiting to send", String(st.queue), st.queue > 0)}
+        {cell("Rejected", String(st.stats.rejected), st.stats.rejected > 0)}
+      </View>
+      <ErrorText text={st.stats.lastError} />
     </View>
   );
 }
 
-/* ---------------------------------------------------------------- GPS Status */
-function GpsStatus() {
-  const { tracking } = useDriver();
-  const [stats, setStats] = useState<T.Stats | null>(null);
-  const [perm, setPerm] = useState<T.PermissionState | null>(null);
-  useEffect(() => {
-    const load = () => { T.readStats().then(setStats); T.checkPermissions().then(setPerm); };
-    load();
-    const t = setInterval(load, 3000);
-    return () => clearInterval(t);
-  }, []);
-  const rows: [string, string][] = [
-    ["Sharing", tracking ? "Yes" : "No"],
-    ["Location services", perm?.servicesEnabled ? "On" : "Off"],
-    ["Background permission", perm?.background ? "Granted" : "Not granted"],
-    ["Last GPS fix", ago(stats?.lastFixAt)],
-    ["Accuracy", stats?.lastAccuracy != null ? `${Math.round(stats.lastAccuracy)} m` : "–"],
-    ["Last sent to server", ago(stats?.lastSentAt)],
-    ["Fixes sent", String(stats?.sent ?? 0)],
-    ["Waiting to send (offline)", String(stats?.queued ?? 0)],
-    ["Skipped: low accuracy", String(stats?.lowAccuracy ?? 0)],
-    ["Rejected by server", String(stats?.rejected ?? 0)],
-    ["Update interval", `${T.INTERVAL_MS / 1000} s`],
-  ];
+function Dashboard() {
+  const { me, reload } = useMe();
+  const [direction, setDirection] = useState<"outbound" | "inbound">("outbound");
+  const [busy, setBusy] = useState(false);
+  if (!me.bus) return <View style={[s.screen, s.pad]}><H>Salaam, {me.driver.name.split(" ")[0]}</H><Card><Muted>No bus is assigned to you. Contact your depot administrator.</Muted></Card></View>;
+  const trip = me.trip;
+  const start = async () => {
+    setBusy(true);
+    try {
+      const problem = await ensurePermissions();
+      if (problem) { Alert.alert("Location needed", problem); return; }
+      await post("/api/driver/trips/start", { direction });
+      await startTracking(me.settings.gps_interval_s);
+      await reload();
+    } catch (e: any) { Alert.alert("Couldn't start trip", e.message); } finally { setBusy(false); }
+  };
+  const end = () => Alert.alert("End trip?", "Location sharing will stop and passengers will no longer see this bus.", [
+    { text: "Keep driving", style: "cancel" },
+    { text: "End trip", style: "destructive", onPress: async () => {
+      setBusy(true);
+      try { await flush(); await post("/api/driver/trips/end", { reason: "completed" }); } catch (e: any) { Alert.alert(e.message); }
+      await stopTracking(); await reload(); setBusy(false);
+    } }]);
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ padding: 14 }}>
+    <ScrollView style={s.screen} contentContainerStyle={s.pad} refreshControl={<RefreshControl refreshing={false} onRefresh={reload} />}>
+      <View style={[s.row, { justifyContent: "space-between" }]}><H>Salaam, {me.driver.name.split(" ")[0]}</H><DemoBadge show={me.driver.is_demo} /></View>
       <Card>
-        {rows.map(([k, v]) => (
-          <View key={k} style={[s.row, { justifyContent: "space-between", paddingVertical: 6, borderBottomWidth: 1, borderColor: "#f1f5f9" }]}>
-            <Text>{k}</Text><Text style={{ fontWeight: "700" }}>{v}</Text>
+        <Text style={{ fontWeight: "800", color: trip ? C.ok : C.ink3, letterSpacing: 0.5 }}>{trip ? "● TRIP IN PROGRESS — SHARING LOCATION" : "OFF DUTY — LOCATION NOT SHARED"}</Text>
+        <View style={[s.row, { marginTop: 10 }]}>{me.route && <RouteChip code={me.route.code} color={me.route.color} />}<Text style={[s.title, { fontSize: 20 }]}>Bus {me.bus.bus_number}</Text><DemoBadge show={me.bus.is_demo} /></View>
+        <Muted>{me.route?.name || "No route assigned"}</Muted>
+        {me.live && <View style={{ marginTop: 6 }}><StatusBadge status={me.live.status} /></View>}
+        {!me.driver.location_consent_at ? <Consent /> : !trip ? <>
+          <Section>Direction</Section>
+          <View style={s.row}>
+            {(["outbound", "inbound"] as const).map(d => <View key={d} style={{ flex: 1 }}><Button kind={direction === d ? "primary" : "plain"} title={`To ${d === "outbound" ? me.route?.last_stop : me.route?.first_stop}`} onPress={() => setDirection(d)} /></View>)}
           </View>
-        ))}
-        {stats?.lastError && <ErrorText error={`Last problem: ${stats.lastError}`} />}
+          {me.bus.status !== "active" && <Text style={{ color: C.warn }}>This bus is marked {me.bus.status} and cannot start a trip.</Text>}
+          <Button kind="accent" title="▶  Start trip" onPress={start} disabled={busy || me.bus.status !== "active"} />
+        </> : <>
+          <GpsGrid />
+          <Button kind="danger" title="■  End trip" onPress={end} disabled={busy} />
+        </>}
       </Card>
-      {!perm?.servicesEnabled && <Btn title="Open location settings" onPress={() => Linking.openSettings()} />}
-      <Muted style={{ marginTop: 10 }}>If the internet drops, fixes are kept on the phone (up to 1 hour) and sent when the connection returns.</Muted>
     </ScrollView>
   );
 }
 
-/* ---------------------------------------------------------------- History */
-function History() {
-  const [trips, setTrips] = useState<TripOut[] | null>(null);
-  const [err, setErr] = useState<string | null>(null);
-  useFocusEffect(useCallback(() => {
-    api<TripOut[]>("/api/driver/trips").then(setTrips).catch((e) => setErr(e.message));
-  }, []));
+function Consent() {
+  const { reload } = useMe();
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ padding: 14 }}>
-      {err && <ErrorText error={err} />}
-      {!trips && !err && <Loading />}
-      {trips?.length === 0 && <Muted>No trips yet.</Muted>}
-      {trips?.map((t) => (
+    <View style={{ marginTop: 12, backgroundColor: "#FFF4EC", borderRadius: 12, padding: 12 }}>
+      <Text style={s.title}>Location sharing consent</Text>
+      <Muted>While a trip is active, this app sends your bus's GPS location every few seconds so passengers can see where the bus is. Location is only shared during trips you start and stops when you end the trip or sign out. Trip locations are kept for a limited time for service reports.</Muted>
+      <Button title="I agree — enable location sharing" onPress={async () => { await post("/api/driver/consent", { accepted: true }); await reload(); }} />
+    </View>
+  );
+}
+
+function MyRoute() {
+  const { me } = useMe();
+  const r = me.route;
+  if (!r) return <View style={[s.screen, s.pad]}><Muted>No route assigned.</Muted></View>;
+  const mid = r.stops[Math.floor(r.stops.length / 2)];
+  return (
+    <ScrollView style={s.screen}>
+      <MapView style={{ height: 280 }} mapType="none" showsUserLocation initialRegion={{ latitude: mid.lat, longitude: mid.lon, latitudeDelta: 0.14, longitudeDelta: 0.14 }}>
+        <UrlTile urlTemplate="https://tile.openstreetmap.org/{z}/{x}/{y}.png" maximumZ={19} />
+        <Polyline coordinates={r.shape.map((p: number[]) => ({ latitude: p[0], longitude: p[1] }))} strokeColor={r.color} strokeWidth={5} />
+        {r.stops.map((st: any) => <Marker key={st.id} coordinate={{ latitude: st.lat, longitude: st.lon }} title={st.name} pinColor="navy" />)}
+      </MapView>
+      <View style={s.pad}>
+        <View style={s.row}><RouteChip code={r.code} color={r.color} /><Text style={s.title}>{r.name}</Text></View>
+        <Section>Stops</Section>
+        {r.stops.map((st: any, i: number) => <Card key={st.id}><Text style={s.title}>{i + 1}. {st.name}</Text>{st.name_ur ? <Muted>{st.name_ur}</Muted> : null}</Card>)}
+      </View>
+    </ScrollView>
+  );
+}
+
+function GpsStatus() {
+  return (
+    <ScrollView style={s.screen} contentContainerStyle={s.pad}>
+      <H>GPS status</H>
+      <Card><GpsGrid /><Button kind="plain" title="Send saved locations now" onPress={() => flush()} /></Card>
+      <Card>
+        <Text style={s.title}>Troubleshooting</Text>
+        <Muted>• Turn on Location / GPS in phone settings.{"\n"}• Allow location “all the time” for Speedo Live Driver.{"\n"}• Turn off battery optimisation for this app so Android doesn't stop tracking.{"\n"}• Weak accuracy (over 50 m)? Move away from tall buildings or flyovers.{"\n"}• No internet? Locations are stored on the phone and sent automatically later.</Muted>
+      </Card>
+    </ScrollView>
+  );
+}
+
+function History() {
+  const [rows, setRows] = useState<any[] | null>(null);
+  useFocusEffect(useCallback(() => { get("/api/driver/trips?limit=30").then(setRows).catch(() => setRows([])); }, []));
+  if (!rows) return <Loading />;
+  return (
+    <ScrollView style={s.screen} contentContainerStyle={s.pad}>
+      <H>Trip history</H>
+      {rows.map(t => (
         <Card key={t.id}>
-          <View style={[s.row, { justifyContent: "space-between" }]}>
-            <Text style={{ fontWeight: "700" }}>{t.route_code} · {t.bus_number}</Text>
-            <Text style={{ color: t.status === "completed" ? C.green : t.status === "active" ? C.brand : C.amber, fontWeight: "600" }}>{t.status}</Text>
-          </View>
-          <Muted>{new Date(t.started_at).toLocaleString()} · {km(t.progress_m)} · {t.gps_points} GPS fixes</Muted>
-          {t.max_delay_minutes >= 5 && <Muted>Max delay {Math.round(t.max_delay_minutes)} min</Muted>}
-          {t.end_reason && t.status !== "completed" && <Muted>Reason: {t.end_reason.replace(/_/g, " ")}</Muted>}
+          <View style={[s.row, { justifyContent: "space-between" }]}><Text style={s.title}>{t.route_code} · {t.bus_number} · {t.direction}</Text>
+            <Badge text={t.status} fg={t.status === "completed" ? C.ok : C.ink2} bg={t.status === "completed" ? C.okBg : "#EEF1F5"} /></View>
+          <Muted>{new Date(t.started_at).toLocaleString()} · {(t.distance_m / 1000).toFixed(1)} km · {t.gps_points} GPS fixes</Muted>
         </Card>
       ))}
+      {!rows.length && <Muted>No trips yet.</Muted>}
     </ScrollView>
   );
 }
 
-/* ---------------------------------------------------------------- Profile */
 function Profile() {
-  const { me, signOut, tracking } = useDriver();
-  const out = () => {
-    if (tracking || me?.active_trip)
-      return Alert.alert("Trip in progress", "End your trip on the Dashboard before logging out.");
-    signOut();
-  };
+  const { me, reload, signOut } = useMe();
+  const d = me.driver;
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ padding: 14 }}>
+    <ScrollView style={s.screen} contentContainerStyle={s.pad}>
+      <H>{d.name}</H>
       <Card>
-        <Text style={{ fontSize: 20, fontWeight: "800" }}>{me?.driver.full_name}</Text>
-        <Muted>{me?.driver.phone}</Muted>
-        <Muted>Licence: {me?.driver.license_number}</Muted>
-        <Muted>Location consent last given: {me?.driver.location_consent_at ? new Date(me.driver.location_consent_at).toLocaleString() : "never"}</Muted>
+        <Muted>Employee code</Muted><Text style={s.title}>{d.employee_code}</Text>
+        <Muted>Phone</Muted><Text style={s.title}>{d.phone || "—"}</Text>
+        <Muted>Bus</Muted><Text style={s.title}>{me.bus?.bus_number || "Unassigned"}</Text>
+        <Muted>Location consent</Muted><Text style={s.title}>{d.location_consent_at ? `Given ${fmtAgo(d.location_consent_at)}` : "Not given"}</Text>
       </Card>
-      <Card>
-        <Section>Privacy</Section>
-        <Muted>Your bus's location is shared only while a trip is running. Passengers see the bus number and position, never your name or phone number. GPS history is kept for a limited period for service reports.</Muted>
-      </Card>
-      <Btn title="Log out" variant="outline" onPress={out} />
+      {d.location_consent_at && <Button kind="plain" title="Withdraw location consent" onPress={() => Alert.alert("Withdraw consent?", "Any active trip will end and you can't start trips until you agree again.", [
+        { text: "Cancel", style: "cancel" },
+        { text: "Withdraw", style: "destructive", onPress: async () => { await post("/api/driver/consent", { accepted: false }); await stopTracking(); await reload(); } }])} />}
+      <Button kind="plain" title="Sign out" onPress={() => Alert.alert("Sign out?", me.trip ? "Your active trip will end." : "", [{ text: "Cancel", style: "cancel" }, { text: "Sign out", onPress: signOut }])} />
     </ScrollView>
   );
 }
 
-/* ---------------------------------------------------------------- App */
+function Login({ onDone }: { onDone: () => void }) {
+  const [id, setId] = useState(""); const [pw, setPw] = useState(""); const [err, setErr] = useState<string | null>(null);
+  return (
+    <ScrollView style={s.screen} contentContainerStyle={[s.pad, { paddingTop: 60 }]} keyboardShouldPersistTaps="handled">
+      <H>Driver sign in</H>
+      <Muted>For authorised Speedo drivers only.</Muted>
+      <View style={{ height: 16 }} />
+      <Field label="Phone or email" value={id} onChangeText={setId} autoCapitalize="none" keyboardType="phone-pad" />
+      <Field label="Password" value={pw} onChangeText={setPw} secureTextEntry />
+      <ErrorText text={err} />
+      <Button title="Sign in" onPress={async () => {
+        setErr(null);
+        try {
+          const r = await post("/api/auth/login", { identifier: id, password: pw });
+          if (r.user.role !== "driver") return setErr("This account is not a driver account.");
+          await auth.set(r.token); onDone();
+        } catch (e: any) { setErr(e.message); }
+      }} />
+    </ScrollView>
+  );
+}
+
 const Tab = createBottomTabNavigator();
-const ICONS: Record<string, string> = { Dashboard: "⌂", "My Route": "⇄", "GPS Status": "◉", "Trip History": "☰", Profile: "☺" };
+const ic = (g: string) => ({ color }: { color: string }) => <Text style={{ fontSize: 20, color }}>{g}</Text>;
 
 export default function App() {
-  const [signedIn, setSignedIn] = useState<boolean | null>(null);
-  const [me, setMe] = useState<DriverMe | null>(null);
-  const [tracking, setTracking] = useState(false);
-
+  const [me, setMe] = useState<any>(undefined);
+  const [cfg, setCfg] = useState<any>(null);
   const reload = useCallback(async () => {
+    if (!auth.token) { setMe(null); return; }
     try {
-      setMe(await api<DriverMe>("/api/driver/me"));
-      setTracking(await T.isTracking());
-    } catch (e) {
-      if ((e as { status?: number }).status === 401 || (e as { status?: number }).status === 403) setSignedIn(false);
+      const m = await get("/api/driver/me");
+      setMe(m);
+      // trip active on the server but tracking stopped (phone restarted / app killed): resume it
+      if (m.trip && m.driver.location_consent_at && !(await isTracking()) && !(await ensurePermissions())) await startTracking(m.settings.gps_interval_s);
+      if (!m.trip && (await isTracking())) await stopTracking();
+    } catch (e: any) {
+      if (e.status === 401 || e.status === 403) { await auth.clear(); setMe(null); } else setMe((x: any) => x ?? null);
     }
   }, []);
-
-  useEffect(() => {
-    loadToken().then((t) => setSignedIn(!!t));
+  const signOut = useCallback(async () => {
+    await flush();
+    try { await post("/api/auth/logout"); } catch { /* offline: token expires anyway */ }
+    await stopTracking(); await auth.clear(); setMe(null);
   }, []);
-  useEffect(() => {
-    if (signedIn) reload();
-  }, [signedIn, reload]);
-  useEffect(() => {
-    const sub = AppState.addEventListener("change", (s) => s === "active" && signedIn && (T.flush(), reload()));
-    return () => sub.remove();
-  }, [signedIn, reload]);
-
-  const signOut = async () => {
-    await T.stopTracking();
-    await api("/api/auth/logout", { method: "POST" }).catch(() => {});
-    await setToken(null);
-    setMe(null);
-    setSignedIn(false);
-  };
-
+  useEffect(() => { auth.load().then(reload); get("/api/config").then(setCfg).catch(() => {}); }, []);
+  useEffect(() => { const sub = AppState.addEventListener("change", st => { if (st === "active") { reload(); flush(); } }); return () => sub.remove(); }, []);
+  if (me === undefined) return <View style={{ flex: 1, backgroundColor: C.blue }} />;
   return (
     <SafeAreaProvider>
-      <SafeAreaView edges={["top"]} style={{ flex: 0, backgroundColor: me?.demo_mode ? C.accent : C.brand }} />
       <StatusBar style="light" />
-      {signedIn === null ? <Loading /> : !signedIn ? (
-        <Login onIn={() => setSignedIn(true)} />
-      ) : (
-        <DriverCtx.Provider value={{ me, reload, tracking, setTracking, signOut }}>
-          <DemoBanner show={!!me?.demo_mode} />
-          <SafeAreaProvider style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: C.blue }} edges={["top"]}>
+        {cfg?.demo && <View style={s.demoBanner}><Text style={s.demoText}>DEMO MODE · demo buses and routes, not for real service</Text></View>}
+        {!me ? <Login onDone={reload} /> : (
+          <MeCtx.Provider value={{ me, reload, signOut }}>
             <NavigationContainer>
-              <Tab.Navigator screenOptions={({ route }) => ({
-                headerStyle: { backgroundColor: C.brand }, headerTintColor: "#fff",
-                tabBarActiveTintColor: C.brand,
-                tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>{ICONS[route.name]}</Text>,
-              })}>
-                <Tab.Screen name="Dashboard" component={Dashboard} />
-                <Tab.Screen name="My Route" component={MyRoute} />
-                <Tab.Screen name="GPS Status" component={GpsStatus} />
-                <Tab.Screen name="Trip History" component={History} />
-                <Tab.Screen name="Profile" component={Profile} />
+              <Tab.Navigator screenOptions={{ tabBarActiveTintColor: C.blue, headerStyle: { backgroundColor: C.blue }, headerTintColor: "#fff" }}>
+                <Tab.Screen name="Dashboard" component={Dashboard} options={{ tabBarIcon: ic("⌂") }} />
+                <Tab.Screen name="My Route" component={MyRoute} options={{ tabBarIcon: ic("⤳") }} />
+                <Tab.Screen name="GPS Status" component={GpsStatus} options={{ tabBarIcon: ic("📡") }} />
+                <Tab.Screen name="Trip History" component={History} options={{ tabBarIcon: ic("🕘"), tabBarLabel: "Trips" }} />
+                <Tab.Screen name="Profile" component={Profile} options={{ tabBarIcon: ic("◉") }} />
               </Tab.Navigator>
             </NavigationContainer>
-          </SafeAreaProvider>
-        </DriverCtx.Provider>
-      )}
+          </MeCtx.Provider>
+        )}
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }

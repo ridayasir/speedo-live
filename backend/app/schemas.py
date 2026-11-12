@@ -1,339 +1,392 @@
-"""Request bodies (validated by pydantic) and response serializers."""
+"""Request models (pydantic) — used for validation and the OpenAPI document."""
 from __future__ import annotations
 
-from datetime import datetime, time
+import datetime as dt
+import re
+from typing import Literal
 
-from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-from .models import (
-    AlertSeverity,
-    Bus,
-    BusStatus,
-    BusStop,
-    Driver,
-    Route,
-    RouteStatus,
-    Schedule,
-    ServiceAlert,
-    Trip,
-    User,
-)
-
-PHONE_PATTERN = r"^\+?[0-9]{10,15}$"
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$")
+PK_PHONE_RE = re.compile(r"^(?:\+92|0)3\d{9}$")
+HM_RE = r"^([01]\d|2[0-3]):[0-5]\d$"
+HEX_RE = r"^#[0-9A-Fa-f]{6}$"
+DAYS_RE = r"^(MON|TUE|WED|THU|FRI|SAT|SUN)(,(MON|TUE|WED|THU|FRI|SAT|SUN))*$"
 
 
-# ----------------------------------------------------------------------------- auth
-class RegisterIn(BaseModel):
-    full_name: str = Field(min_length=2, max_length=120)
-    email: EmailStr | None = None
-    phone: str | None = Field(default=None, pattern=PHONE_PATTERN)
+class Strict(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+
+def normalize_phone(v: str) -> str:
+    v = re.sub(r"[\s-]", "", v)
+    if not PK_PHONE_RE.match(v):
+        raise ValueError("enter a Pakistani mobile number like 03001234567")
+    return "0" + v[3:] if v.startswith("+92") else v
+
+
+# ---------------------------------------------------------------- auth
+class RegisterIn(Strict):
+    name: str = Field(min_length=2, max_length=120)
+    email: str | None = Field(default=None, max_length=255)
+    phone: str | None = None
     password: str = Field(min_length=8, max_length=128)
 
+    @field_validator("email")
+    @classmethod
+    def _email(cls, v):
+        if v is None or v == "":
+            return None
+        if not EMAIL_RE.match(v):
+            raise ValueError("enter a valid email address")
+        return v.lower()
+
+    @field_validator("phone")
+    @classmethod
+    def _phone(cls, v):
+        return normalize_phone(v) if v else None
+
+    @field_validator("password")
+    @classmethod
+    def _pw(cls, v):
+        if not (re.search(r"[A-Za-z]", v) and re.search(r"\d", v)):
+            raise ValueError("password must contain letters and numbers")
+        return v
+
     @model_validator(mode="after")
-    def need_contact(self):
+    def _one_contact(self):
         if not self.email and not self.phone:
-            raise ValueError("Provide an email or a phone number")
+            raise ValueError("provide an email address or a phone number")
         return self
 
 
-class LoginIn(BaseModel):
-    identifier: str = Field(description="Email or phone number", min_length=3, max_length=255)
+class LoginIn(Strict):
+    identifier: str = Field(min_length=3, max_length=255, description="Email address or phone number")
     password: str = Field(min_length=1, max_length=128)
 
 
-class TokenOut(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
-    user: dict
+class ProfileIn(Strict):
+    name: str | None = Field(default=None, min_length=2, max_length=120)
+    phone: str | None = None
+    current_password: str | None = None
+    new_password: str | None = Field(default=None, min_length=8, max_length=128)
+
+    @field_validator("phone")
+    @classmethod
+    def _phone(cls, v):
+        return normalize_phone(v) if v else None
 
 
-class ProfileIn(BaseModel):
-    full_name: str | None = Field(default=None, min_length=2, max_length=120)
-    phone: str | None = Field(default=None, pattern=PHONE_PATTERN)
+# --------------------------------------------------------------- public
+class StopSearchQ(BaseModel):
+    q: str | None = Field(default=None, max_length=80, description="Text to match in stop name or code")
+    lat: float | None = Field(default=None, ge=-90, le=90)
+    lon: float | None = Field(default=None, ge=-180, le=180)
+    radius_m: int = Field(default=2000, ge=50, le=20000)
+    limit: int = Field(default=20, ge=1, le=100)
 
 
-class PasswordIn(BaseModel):
-    current_password: str
-    new_password: str = Field(min_length=8, max_length=128)
-
-
-class PrefsIn(BaseModel):
-    bus_approaching: bool | None = None
-    arrival_minutes_before: int | None = Field(default=None, ge=1, le=30)
-    delays: bool | None = None
-    disruptions: bool | None = None
-    schedule_changes: bool | None = None
-
-
-class DeviceTokenIn(BaseModel):
-    token: str = Field(min_length=10, max_length=512)
-    platform: str = Field(default="android", pattern="^(android|web|ios)$")
-
-
-class WatchIn(BaseModel):
-    stop_id: int
-    route_id: int
-    bus_id: int | None = None
-    minutes_before: int = Field(default=5, ge=1, le=30)
-
-
-class JourneyIn(BaseModel):
-    route_id: int
-    from_stop_id: int | None = None
-    to_stop_id: int | None = None
-
-
-# ----------------------------------------------------------------------------- planner
-class PlanIn(BaseModel):
-    from_lat: float | None = Field(default=None, ge=-90, le=90)
-    from_lng: float | None = Field(default=None, ge=-180, le=180)
-    from_stop_id: int | None = None
-    to_lat: float | None = Field(default=None, ge=-90, le=90)
-    to_lng: float | None = Field(default=None, ge=-180, le=180)
-    to_stop_id: int | None = None
-    from_label: str | None = None
-    to_label: str | None = None
+class Place(Strict):
+    stop_id: int | None = None
+    lat: float | None = Field(default=None, ge=-90, le=90)
+    lon: float | None = Field(default=None, ge=-180, le=180)
+    label: str | None = Field(default=None, max_length=160)
 
     @model_validator(mode="after")
-    def need_ends(self):
-        if self.from_stop_id is None and (self.from_lat is None or self.from_lng is None):
-            raise ValueError("Provide a starting stop or starting coordinates")
-        if self.to_stop_id is None and (self.to_lat is None or self.to_lng is None):
-            raise ValueError("Provide a destination stop or destination coordinates")
+    def _any(self):
+        if self.stop_id is None and (self.lat is None or self.lon is None):
+            raise ValueError("give a stop_id or both lat and lon")
         return self
 
 
-# ----------------------------------------------------------------------------- driver
-class GpsPointIn(BaseModel):
-    lat: float
-    lng: float
-    recorded_at: datetime
-    accuracy_m: float | None = Field(default=None, ge=0)
-    speed_mps: float | None = None
-    heading: float | None = Field(default=None, ge=0, le=360)
+class PlanIn(Strict):
+    origin: Place
+    destination: Place
+    save_history: bool = True
 
 
-class GpsBatchIn(BaseModel):
-    points: list[GpsPointIn] = Field(min_length=1, max_length=500)
-
-
-class TripStartIn(BaseModel):
-    consent: bool = Field(description="Driver confirms consent to share the bus location during this trip")
-
-
-class TripEndIn(BaseModel):
-    reason: str = Field(default="completed", max_length=64)
-
-
-# ----------------------------------------------------------------------------- admin
-class BusIn(BaseModel):
-    bus_number: str = Field(min_length=1, max_length=32)
-    registration_number: str | None = Field(default=None, max_length=32)
-    capacity: int | None = Field(default=None, ge=1, le=300)
-    status: BusStatus = BusStatus.active
+class BusesQ(BaseModel):
     route_id: int | None = None
-    gps_device_id: str | None = Field(default=None, max_length=64)
-    is_demo: bool = False
+    include_idle: bool = False
 
 
-class BusPatch(BaseModel):
-    bus_number: str | None = Field(default=None, min_length=1, max_length=32)
-    registration_number: str | None = None
-    capacity: int | None = Field(default=None, ge=1, le=300)
-    status: BusStatus | None = None
+class StreamQ(BaseModel):
+    route_id: str | None = Field(default=None, description="Comma-separated route ids")
+    bus_id: str | None = Field(default=None, description="Comma-separated bus ids")
+    ticket: str | None = Field(default=None, description="Admin stream ticket")
+
+
+class TimetableQ(BaseModel):
+    route_id: int
+    stop_id: int | None = None
+    date: dt.date | None = None
+
+
+class ArrivalsQ(BaseModel):
     route_id: int | None = None
-    gps_device_id: str | None = None
-    driver_id: int | None = Field(default=None, description="Set to 0 to unassign the driver")
 
 
-class StopIn(BaseModel):
-    code: str = Field(min_length=1, max_length=32)
-    name: str = Field(min_length=2, max_length=160)
-    name_ur: str | None = None
+# --------------------------------------------------------------- driver
+class TripStartIn(Strict):
+    direction: Literal["outbound", "inbound"] = "outbound"
+
+
+class TripEndIn(Strict):
+    reason: Literal["completed", "interrupted"] = "completed"
+
+
+class GpsPointIn(Strict):
     lat: float = Field(ge=-90, le=90)
-    lng: float = Field(ge=-180, le=180)
-    is_demo: bool = False
-    source_reference: str | None = None
+    lon: float = Field(ge=-180, le=180)
+    accuracy_m: float | None = Field(default=None, ge=0, le=10000)
+    speed_mps: float | None = Field(default=None, ge=0, le=100)
+    heading: float | None = Field(default=None, ge=0, le=360)
+    recorded_at: dt.datetime
 
-
-class StopPatch(BaseModel):
-    code: str | None = None
-    name: str | None = None
-    name_ur: str | None = None
-    lat: float | None = Field(default=None, ge=-90, le=90)
-    lng: float | None = Field(default=None, ge=-180, le=180)
-    source_reference: str | None = None
-
-
-class RouteStopIn(BaseModel):
-    stop_id: int
-    offset_minutes: float = Field(default=0, ge=0)
-    is_major: bool = False
-
-
-class RouteIn(BaseModel):
-    code: str = Field(min_length=1, max_length=32)
-    name: str = Field(min_length=2, max_length=200)
-    color: str = Field(default="#1d4ed8", pattern=r"^#[0-9a-fA-F]{6}$")
-    status: RouteStatus = RouteStatus.active
-    fare_pkr: float | None = Field(default=None, ge=0)
-    path: list[list[float]] | None = Field(default=None, description="[[lat, lng], ...] road geometry")
-    stops: list[RouteStopIn] = Field(default_factory=list, description="Ordered stops; first is the start, last the end")
-    is_demo: bool = False
-    source_reference: str | None = None
-
-    @field_validator("path")
+    @field_validator("recorded_at")
     @classmethod
-    def check_path(cls, v):
-        if v is None:
-            return v
-        for p in v:
-            if len(p) != 2 or not (-90 <= p[0] <= 90 and -180 <= p[1] <= 180):
-                raise ValueError("path points must be [lat, lng]")
+    def _tz(cls, v: dt.datetime):
+        if v.tzinfo is None:
+            raise ValueError("recorded_at must include a timezone (ISO 8601, e.g. 2026-11-04T10:00:00Z)")
         return v
 
 
-class RoutePatch(BaseModel):
-    code: str | None = None
-    name: str | None = None
-    color: str | None = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
-    status: RouteStatus | None = None
-    fare_pkr: float | None = None
-    path: list[list[float]] | None = None
-    stops: list[RouteStopIn] | None = None
-    source_reference: str | None = None
+class GpsBatchIn(Strict):
+    points: list[GpsPointIn] = Field(min_length=1, max_length=100)
 
 
-class ScheduleIn(BaseModel):
+class ConsentIn(Strict):
+    accepted: bool
+
+
+# ------------------------------------------------------------ passenger
+class FavoriteIn(Strict):
+    id: int
+
+
+class PrefsIn(Strict):
+    approaching: bool = True
+    approaching_lead_min: int = Field(default=5, ge=1, le=30)
+    delays: bool = True
+    disruptions: bool = True
+    schedule_changes: bool = True
+
+
+class DeviceTokenIn(Strict):
+    token: str = Field(min_length=10, max_length=512)
+    platform: Literal["android", "ios", "web"] = "android"
+
+
+class WatchIn(Strict):
     route_id: int
-    days: str = Field(default="mon,tue,wed,thu,fri,sat,sun", pattern=r"^(mon|tue|wed|thu|fri|sat|sun)(,(mon|tue|wed|thu|fri|sat|sun))*$")
-    first_departure: time
-    last_departure: time
-    frequency_minutes: int = Field(default=15, ge=1, le=240)
-    notes: str | None = None
-    is_demo: bool = False
+    stop_id: int
+    bus_id: int | None = None
+    lead_min: int = Field(default=5, ge=1, le=30)
+    hours: float = Field(default=2, gt=0, le=12, description="How long the watch stays active")
+
+
+class HistoryIn(Strict):
+    origin_label: str = Field(min_length=1, max_length=160)
+    dest_label: str = Field(min_length=1, max_length=160)
+    route_codes: str | None = Field(default=None, max_length=120)
+
+
+# ---------------------------------------------------------------- admin
+class StopIn(Strict):
+    code: str = Field(min_length=1, max_length=32)
+    name: str = Field(min_length=2, max_length=160)
+    name_ur: str | None = Field(default=None, max_length=160)
+    lat: float = Field(ge=-90, le=90)
+    lon: float = Field(ge=-180, le=180)
+    status: Literal["active", "closed"] = "active"
+
+
+class RouteIn(Strict):
+    code: str = Field(min_length=1, max_length=32)
+    name: str = Field(min_length=2, max_length=160)
+    description: str | None = Field(default=None, max_length=2000)
+    color: str = Field(default="#1D4ED8", pattern=HEX_RE)
+    status: Literal["active", "suspended", "inactive"] = "active"
+    avg_speed_kmh: float = Field(default=18, ge=5, le=60)
+    verified: bool = False
+    source: str | None = Field(default=None, max_length=255)
+    stop_ids: list[int] = Field(default_factory=list, description="Ordered stop ids (first = start, last = end)")
+    shape: list[tuple[float, float]] | None = Field(default=None, description="Optional [[lat,lon],...] road geometry")
 
     @model_validator(mode="after")
-    def order(self):
-        if self.last_departure < self.first_departure:
-            raise ValueError("last_departure must be after first_departure")
+    def _check(self):
+        if len(set(self.stop_ids)) != len(self.stop_ids):
+            raise ValueError("a stop can only appear once on a route")
+        if self.verified and not self.source:
+            raise ValueError("verified routes need a source (e.g. the official notice they come from)")
         return self
 
 
-class DriverIn(BaseModel):
-    full_name: str = Field(min_length=2, max_length=120)
-    email: EmailStr | None = None
-    phone: str = Field(pattern=PHONE_PATTERN)
+class RoutePatch(Strict):
+    name: str | None = Field(default=None, min_length=2, max_length=160)
+    description: str | None = None
+    color: str | None = Field(default=None, pattern=HEX_RE)
+    status: Literal["active", "suspended", "inactive"] | None = None
+    avg_speed_kmh: float | None = Field(default=None, ge=5, le=60)
+    verified: bool | None = None
+    source: str | None = Field(default=None, max_length=255)
+    stop_ids: list[int] | None = None
+    shape: list[tuple[float, float]] | None = None
+
+
+class BusIn(Strict):
+    bus_number: str = Field(min_length=1, max_length=32)
+    registration_no: str | None = Field(default=None, max_length=32)
+    capacity: int | None = Field(default=None, ge=1, le=300)
+    route_id: int | None = None
+    driver_id: int | None = None
+    status: Literal["active", "inactive", "maintenance"] = "active"
+    gps_device_id: str | None = Field(default=None, max_length=64)
+
+
+class BusPatch(Strict):
+    bus_number: str | None = Field(default=None, min_length=1, max_length=32)
+    registration_no: str | None = None
+    capacity: int | None = Field(default=None, ge=1, le=300)
+    route_id: int | None = None
+    driver_id: int | None = None
+    status: Literal["active", "inactive", "maintenance"] | None = None
+    gps_device_id: str | None = None
+    clear_route: bool = False
+    clear_driver: bool = False
+
+
+class DriverIn(Strict):
+    name: str = Field(min_length=2, max_length=120)
+    email: str | None = None
+    phone: str
     password: str = Field(min_length=8, max_length=128)
-    license_number: str = Field(min_length=3, max_length=64)
-    employee_code: str | None = None
+    employee_code: str = Field(min_length=1, max_length=32)
+    license_no: str | None = Field(default=None, max_length=40)
     bus_id: int | None = None
 
+    @field_validator("phone")
+    @classmethod
+    def _phone(cls, v):
+        return normalize_phone(v)
 
-class DriverPatch(BaseModel):
-    full_name: str | None = None
-    phone: str | None = Field(default=None, pattern=PHONE_PATTERN)
-    license_number: str | None = None
-    employee_code: str | None = None
+    @field_validator("email")
+    @classmethod
+    def _email(cls, v):
+        if not v:
+            return None
+        if not EMAIL_RE.match(v):
+            raise ValueError("enter a valid email address")
+        return v.lower()
+
+
+class DriverPatch(Strict):
+    name: str | None = Field(default=None, min_length=2, max_length=120)
+    phone: str | None = None
+    license_no: str | None = None
     is_active: bool | None = None
-    bus_id: int | None = Field(default=None, description="Set to 0 to unassign")
-    route_id: int | None = Field(default=None, description="Assigns this route to the driver's bus")
-    password: str | None = Field(default=None, min_length=8, max_length=128)
+    bus_id: int | None = None
+    clear_bus: bool = False
+    new_password: str | None = Field(default=None, min_length=8, max_length=128)
+
+    @field_validator("phone")
+    @classmethod
+    def _phone(cls, v):
+        return normalize_phone(v) if v else None
 
 
-class AlertIn(BaseModel):
+class ScheduleIn(Strict):
+    route_id: int
+    days: str = Field(default="MON,TUE,WED,THU,FRI,SAT,SUN", pattern=DAYS_RE)
+    first_departure: str = Field(pattern=HM_RE)
+    last_departure: str = Field(pattern=HM_RE)
+    headway_min: int = Field(ge=1, le=240)
+    valid_from: dt.date | None = None
+    valid_to: dt.date | None = None
+    notes: str | None = Field(default=None, max_length=255)
+
+    @model_validator(mode="after")
+    def _order(self):
+        if self.last_departure < self.first_departure:
+            raise ValueError("last_departure must be after first_departure")
+        if self.valid_from and self.valid_to and self.valid_to < self.valid_from:
+            raise ValueError("valid_to must be on or after valid_from")
+        return self
+
+
+class AlertIn(Strict):
+    title: str = Field(min_length=3, max_length=160)
+    body: str | None = Field(default=None, max_length=2000)
+    severity: Literal["info", "delay", "disruption", "suspension", "schedule_change"] = "info"
     route_id: int | None = None
     stop_id: int | None = None
-    severity: AlertSeverity = AlertSeverity.info
-    title: str = Field(min_length=3, max_length=200)
-    message: str = Field(min_length=3, max_length=2000)
-    starts_at: datetime | None = None
-    ends_at: datetime | None = None
-    is_active: bool = True
+    starts_at: dt.datetime | None = None
+    ends_at: dt.datetime | None = None
+    notify: bool = True
 
 
-# ----------------------------------------------------------------------------- serializers
-def iso(dt: datetime | None) -> str | None:
-    return dt.isoformat() if dt else None
+class AlertPatch(Strict):
+    is_active: bool | None = None
+    ends_at: dt.datetime | None = None
+    title: str | None = Field(default=None, min_length=3, max_length=160)
+    body: str | None = None
 
 
-def user_out(u: User) -> dict:
-    return {
-        "id": u.id, "full_name": u.full_name, "email": u.email, "phone": u.phone, "role": u.role.value,
-        "is_active": u.is_active, "notification_prefs": u.notification_prefs, "created_at": iso(u.created_at),
-    }
+class ImportQ(BaseModel):
+    dry_run: bool = True
+    verified: bool = False
+    source: str = Field(min_length=3, max_length=255, description="Where the data comes from (official notice, date)")
 
 
-def stop_out(s: BusStop) -> dict:
-    return {"id": s.id, "code": s.code, "name": s.name, "name_ur": s.name_ur, "lat": s.lat, "lng": s.lng,
-            "is_demo": s.is_demo, "source_reference": s.source_reference}
+class ReportQ(BaseModel):
+    date: dt.date | None = None
+    format: Literal["json", "csv"] = "json"
 
 
-def route_out(r: Route, detail: bool = False) -> dict:
-    d = {
-        "id": r.id, "code": r.code, "name": r.name, "color": r.color, "status": r.status.value,
-        "start_stop": stop_out(r.start_stop) if r.start_stop else None,
-        "end_stop": stop_out(r.end_stop) if r.end_stop else None,
-        "length_m": round(r.length_m or 0), "stop_count": len(r.stops), "fare_pkr": r.fare_pkr,
-        "avg_speed_kmh": round(r.avg_speed_kmh, 1) if r.avg_speed_kmh else None,
-        "is_demo": r.is_demo, "source_reference": r.source_reference,
-    }
-    if detail:
-        d["path"] = r.path
-        d["stops"] = [
-            stop_out(rs.stop) | {"sequence": rs.sequence, "distance_m": round(rs.distance_from_start_m),
-                                 "offset_minutes": rs.offset_minutes, "is_major": rs.is_major}
-            for rs in sorted(r.stops, key=lambda x: x.sequence)
-        ]
-        d["schedules"] = [schedule_out(s) for s in r.schedules]
-    return d
+COMPLAINT_CATEGORIES = Literal["rash_driving", "rude_behaviour", "harassment", "overcharging", "skipped_stop",
+                               "phone_smoking", "late", "bus_condition", "other"]
 
 
-def schedule_out(s: Schedule) -> dict:
-    return {
-        "id": s.id, "route_id": s.route_id, "days": s.days.split(","),
-        "first_departure": s.first_departure.strftime("%H:%M"), "last_departure": s.last_departure.strftime("%H:%M"),
-        "frequency_minutes": s.frequency_minutes, "notes": s.notes, "is_demo": s.is_demo,
-    }
+class ComplaintIn(Strict):
+    bus_number: str = Field(min_length=1, max_length=32, description="Number painted on the bus, e.g. SP-101")
+    category: COMPLAINT_CATEGORIES
+    description: str = Field(min_length=10, max_length=2000)
+    location: str | None = Field(default=None, max_length=160, description="Stop or place where it happened")
+    incident_at: dt.datetime | None = Field(default=None, description="When it happened (default: now)")
+    contact_name: str | None = Field(default=None, max_length=120)
+    contact_phone: str | None = None
+
+    @field_validator("contact_phone")
+    @classmethod
+    def _phone(cls, v):
+        return normalize_phone(v) if v else None
+
+    @field_validator("incident_at")
+    @classmethod
+    def _when(cls, v):
+        if v is None:
+            return None
+        if v.tzinfo is None:
+            v = v.replace(tzinfo=dt.timezone(dt.timedelta(hours=5)))  # local Pakistan time
+        now = dt.datetime.now(dt.timezone.utc)
+        if v > now + dt.timedelta(minutes=10):
+            raise ValueError("the incident time can't be in the future")
+        if v < now - dt.timedelta(days=30):
+            raise ValueError("complaints must be filed within 30 days of the incident")
+        return v
 
 
-def bus_admin_out(b: Bus) -> dict:
-    return {
-        "id": b.id, "bus_number": b.bus_number, "registration_number": b.registration_number,
-        "capacity": b.capacity, "status": b.status.value, "route_id": b.route_id,
-        "route_code": b.route.code if b.route else None, "gps_device_id": b.gps_device_id, "is_demo": b.is_demo,
-        "driver": {"id": b.driver.id, "name": b.driver.user.full_name} if b.driver else None,
-        "last_gps_at": iso(b.last_gps_at),
-    }
+class ComplaintPatch(Strict):
+    status: Literal["new", "in_review", "resolved", "rejected"] | None = None
+    admin_note: str | None = Field(default=None, max_length=2000, description="Reply shown to the passenger")
 
 
-def driver_out(d: Driver, private: bool = True) -> dict:
-    out = {
-        "id": d.id, "user_id": d.user_id, "full_name": d.user.full_name, "is_active": d.is_active and d.user.is_active,
-        "assigned_bus": {"id": d.assigned_bus.id, "bus_number": d.assigned_bus.bus_number,
-                         "route_id": d.assigned_bus.route_id} if d.assigned_bus else None,
-        "location_consent_at": iso(d.location_consent_at),
-    }
-    if private:
-        out |= {"email": d.user.email, "phone": d.user.phone, "license_number": d.license_number,
-                "employee_code": d.employee_code}
-    return out
+class ComplaintsQ(BaseModel):
+    status: Literal["new", "in_review", "resolved", "rejected", "open", "all"] = "open"
+    driver_id: int | None = None
+    bus_id: int | None = None
+    limit: int = Field(default=200, ge=1, le=1000)
 
 
-def trip_out(t: Trip) -> dict:
-    return {
-        "id": t.id, "bus_id": t.bus_id, "bus_number": t.bus.bus_number, "route_id": t.route_id,
-        "route_code": t.route.code, "route_name": t.route.name, "driver_id": t.driver_id,
-        "status": t.status.value, "source": t.source.value, "started_at": iso(t.started_at),
-        "ended_at": iso(t.ended_at), "last_update_at": iso(t.last_update_at), "progress_m": round(t.progress_m),
-        "route_length_m": round(t.route.length_m or 0), "max_delay_minutes": round(t.max_delay_minutes, 1),
-        "gps_points": t.gps_points, "end_reason": t.end_reason,
-    }
-
-
-def alert_out(a: ServiceAlert) -> dict:
-    return {
-        "id": a.id, "route_id": a.route_id, "stop_id": a.stop_id, "severity": a.severity.value, "title": a.title,
-        "message": a.message, "starts_at": iso(a.starts_at), "ends_at": iso(a.ends_at), "is_active": a.is_active,
-        "created_at": iso(a.created_at),
-    }
+class PageQ(BaseModel):
+    limit: int = Field(default=50, ge=1, le=500)

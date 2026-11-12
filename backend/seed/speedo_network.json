@@ -1,0 +1,4717 @@
+{
+ "_notice": "Speedo network (routes, stops, timetables) imported from the Punjab Mass Transit Authority e-Transit route planner (etransit.punjab.gov.pk, line 42 'LFR- Speedo'). Imported 2026-11-11. Bus positions are simulated until real GPS is connected.",
+ "source": "Punjab Mass Transit Authority · e-Transit",
+ "skipped_stops": [
+  "Mull Adda to Jinnah Bus Terminal: UMT Stop Lfr Up",
+  "Purana Kahna to R.A Bazar: Ghazi Chowk 2 Lfr Up",
+  "Railway Station to Gulshan Ravi OL Station: LDA Plaza Lfr Up",
+  "Rana Town to Railway Station: Bhatta Chowk Lfr Up"
+ ],
+ "stops": [
+  {
+   "code": "ET110",
+   "name": "Shahdara Metro Station Lmbs",
+   "name_ur": null,
+   "lat": 31.6156135,
+   "lon": 74.29122241
+  },
+  {
+   "code": "ET118",
+   "name": "4. Azadi Chowk",
+   "name_ur": null,
+   "lat": 31.590645,
+   "lon": 74.306455
+  },
+  {
+   "code": "ET1353",
+   "name": "Jinnah terminal",
+   "name_ur": null,
+   "lat": 31.467455,
+   "lon": 74.226003
+  },
+  {
+   "code": "ET1361",
+   "name": "Main Market Gulberg",
+   "name_ur": null,
+   "lat": 31.524405,
+   "lon": 74.346414
+  },
+  {
+   "code": "ET1383",
+   "name": "Qartaba Chowk",
+   "name_ur": null,
+   "lat": 31.549176,
+   "lon": 74.3149354
+  },
+  {
+   "code": "ET1384",
+   "name": "Surayya Azeem Hospital",
+   "name_ur": null,
+   "lat": 31.553096,
+   "lon": 74.305701
+  },
+  {
+   "code": "ET1459",
+   "name": "Khaira Pull",
+   "name_ur": null,
+   "lat": 31.58733,
+   "lon": 74.497952
+  },
+  {
+   "code": "ET149",
+   "name": "Depot Chowk",
+   "name_ur": null,
+   "lat": 31.430981,
+   "lon": 74.31142
+  },
+  {
+   "code": "ET15",
+   "name": "5. Bhatti Chowk",
+   "name_ur": null,
+   "lat": 31.580652,
+   "lon": 74.306254
+  },
+  {
+   "code": "ET1529",
+   "name": "Adda Plot Gol Chakkar",
+   "name_ur": null,
+   "lat": 31.362614,
+   "lon": 74.232729
+  },
+  {
+   "code": "ET1584",
+   "name": "Haroon Terminal",
+   "name_ur": null,
+   "lat": 31.462458,
+   "lon": 74.224439
+  },
+  {
+   "code": "ET167",
+   "name": "14. Qaddafi Stadium",
+   "name_ur": null,
+   "lat": 31.51198304,
+   "lon": 74.32884266
+  },
+  {
+   "code": "ET181",
+   "name": "Canal View Gate 1",
+   "name_ur": null,
+   "lat": 31.47276681,
+   "lon": 74.25048011
+  },
+  {
+   "code": "ET19",
+   "name": "6. Kachehry",
+   "name_ur": null,
+   "lat": 31.574589,
+   "lon": 74.306481
+  },
+  {
+   "code": "ET21",
+   "name": "7. Civil Secretariat",
+   "name_ur": null,
+   "lat": 31.568849,
+   "lon": 74.304411
+  },
+  {
+   "code": "ET220",
+   "name": "McDonalds 1",
+   "name_ur": null,
+   "lat": 31.52739242,
+   "lon": 74.34990905
+  },
+  {
+   "code": "ET222",
+   "name": "McDonalds 2",
+   "name_ur": null,
+   "lat": 31.52715944,
+   "lon": 74.35103592
+  },
+  {
+   "code": "ET24",
+   "name": "M.A.O. College",
+   "name_ur": null,
+   "lat": 31.561725,
+   "lon": 74.306683
+  },
+  {
+   "code": "ET269",
+   "name": "Nasir Bagh",
+   "name_ur": null,
+   "lat": 31.571753,
+   "lon": 74.305574
+  },
+  {
+   "code": "ET29",
+   "name": "9. Janazgah",
+   "name_ur": null,
+   "lat": 31.553796,
+   "lon": 74.311643
+  },
+  {
+   "code": "ET297",
+   "name": "Kalma Chowk",
+   "name_ur": null,
+   "lat": 31.5043402,
+   "lon": 74.3316103
+  },
+  {
+   "code": "ET298",
+   "name": "Purana Kahna",
+   "name_ur": null,
+   "lat": 31.351773,
+   "lon": 74.373349
+  },
+  {
+   "code": "ET34",
+   "name": "10. Qartaba Chowk",
+   "name_ur": null,
+   "lat": 31.548778,
+   "lon": 74.315099
+  },
+  {
+   "code": "ET352",
+   "name": "R.A Bazar",
+   "name_ur": null,
+   "lat": 31.50603049,
+   "lon": 74.38528521
+  },
+  {
+   "code": "ET38",
+   "name": "11. Shama",
+   "name_ur": null,
+   "lat": 31.539032,
+   "lon": 74.319157
+  },
+  {
+   "code": "ET4011",
+   "name": "Rana Town",
+   "name_ur": null,
+   "lat": 31.685383,
+   "lon": 74.276377
+  },
+  {
+   "code": "ET4013",
+   "name": "Haider Road",
+   "name_ur": null,
+   "lat": 31.672836,
+   "lon": 74.279013
+  },
+  {
+   "code": "ET4014",
+   "name": "College Road",
+   "name_ur": null,
+   "lat": 31.66735,
+   "lon": 74.280183
+  },
+  {
+   "code": "ET4015",
+   "name": "Rachna Town",
+   "name_ur": null,
+   "lat": 31.659162,
+   "lon": 74.281851
+  },
+  {
+   "code": "ET4016",
+   "name": "Feroz Wala",
+   "name_ur": null,
+   "lat": 31.652603,
+   "lon": 74.283335
+  },
+  {
+   "code": "ET4017",
+   "name": "Imamia Colony",
+   "name_ur": null,
+   "lat": 31.647401,
+   "lon": 74.284527
+  },
+  {
+   "code": "ET4018",
+   "name": "Kala Khatai Road",
+   "name_ur": null,
+   "lat": 31.64459,
+   "lon": 74.285152
+  },
+  {
+   "code": "ET4019",
+   "name": "Barkat Town",
+   "name_ur": null,
+   "lat": 31.642429,
+   "lon": 74.285497
+  },
+  {
+   "code": "ET4020",
+   "name": "Machas Factory",
+   "name_ur": null,
+   "lat": 31.637809,
+   "lon": 74.286324
+  },
+  {
+   "code": "ET4021",
+   "name": "Kashmir Park",
+   "name_ur": null,
+   "lat": 31.633128,
+   "lon": 74.287271
+  },
+  {
+   "code": "ET4022",
+   "name": "Wandala Road",
+   "name_ur": null,
+   "lat": 31.630076,
+   "lon": 74.287953
+  },
+  {
+   "code": "ET4023",
+   "name": "Shahdra Railway Station",
+   "name_ur": null,
+   "lat": 31.627539,
+   "lon": 74.28847
+  },
+  {
+   "code": "ET4024",
+   "name": "Kot Shahab-ud-Din",
+   "name_ur": null,
+   "lat": 31.6244532,
+   "lon": 74.2890803
+  },
+  {
+   "code": "ET4025",
+   "name": "Shahdra Lari Adda",
+   "name_ur": null,
+   "lat": 31.61892,
+   "lon": 74.290235
+  },
+  {
+   "code": "ET4026",
+   "name": "Shahdara Metro Station",
+   "name_ur": null,
+   "lat": 31.615577,
+   "lon": 74.291228
+  },
+  {
+   "code": "ET4027",
+   "name": "Niazi Interchange",
+   "name_ur": null,
+   "lat": 31.604008,
+   "lon": 74.299597
+  },
+  {
+   "code": "ET4028",
+   "name": "Niazi Chowk",
+   "name_ur": null,
+   "lat": 31.601538,
+   "lon": 74.29953
+  },
+  {
+   "code": "ET4029",
+   "name": "Metro",
+   "name_ur": null,
+   "lat": 31.597478,
+   "lon": 74.299716
+  },
+  {
+   "code": "ET4030",
+   "name": "Timber Market",
+   "name_ur": null,
+   "lat": 31.595194,
+   "lon": 74.301645
+  },
+  {
+   "code": "ET4031",
+   "name": "Azadi Chowk",
+   "name_ur": null,
+   "lat": 31.5911534,
+   "lon": 74.3066753
+  },
+  {
+   "code": "ET4032",
+   "name": "Texali Chowk",
+   "name_ur": null,
+   "lat": 31.5863313,
+   "lon": 74.3072296
+  },
+  {
+   "code": "ET4033",
+   "name": "Bhatti Chowk",
+   "name_ur": null,
+   "lat": 31.5813405,
+   "lon": 74.3065642
+  },
+  {
+   "code": "ET4034",
+   "name": "Bhatti Chowk-2",
+   "name_ur": null,
+   "lat": 31.5826072,
+   "lon": 74.3059711
+  },
+  {
+   "code": "ET4035",
+   "name": "texali Chowk 2",
+   "name_ur": null,
+   "lat": 31.5855537,
+   "lon": 74.3062723
+  },
+  {
+   "code": "ET4036",
+   "name": "Lari Adda Gol Chakar",
+   "name_ur": null,
+   "lat": 31.5957143,
+   "lon": 74.314919
+  },
+  {
+   "code": "ET4037",
+   "name": "Lari Adda",
+   "name_ur": null,
+   "lat": 31.592788,
+   "lon": 74.316926
+  },
+  {
+   "code": "ET4038",
+   "name": "Kashmiri Gate",
+   "name_ur": null,
+   "lat": 31.587819,
+   "lon": 74.321152
+  },
+  {
+   "code": "ET4039",
+   "name": "Sheranwala Gate",
+   "name_ur": null,
+   "lat": 31.587297,
+   "lon": 74.32389
+  },
+  {
+   "code": "ET4040",
+   "name": "Nawaz Sharif Hospital",
+   "name_ur": null,
+   "lat": 31.585975,
+   "lon": 74.327363
+  },
+  {
+   "code": "ET4041",
+   "name": "Railway Station-2",
+   "name_ur": null,
+   "lat": 31.576296,
+   "lon": 74.335913
+  },
+  {
+   "code": "ET4074",
+   "name": "R A Bazar",
+   "name_ur": null,
+   "lat": 31.506021,
+   "lon": 74.38468
+  },
+  {
+   "code": "ET4075",
+   "name": "Chungi Amar Sidhu",
+   "name_ur": null,
+   "lat": 31.449822,
+   "lon": 74.353557
+  },
+  {
+   "code": "ET4078",
+   "name": "Shadbagh Underpass",
+   "name_ur": null,
+   "lat": 31.60795,
+   "lon": 74.33611
+  },
+  {
+   "code": "ET4082",
+   "name": "Rangers Wing Headquarter",
+   "name_ur": null,
+   "lat": 31.393522,
+   "lon": 74.499506
+  },
+  {
+   "code": "ET4087",
+   "name": "Paragon City",
+   "name_ur": null,
+   "lat": 31.522827,
+   "lon": 74.451369
+  },
+  {
+   "code": "ET4089",
+   "name": "Adalat Ali Shah Darbar",
+   "name_ur": null,
+   "lat": 31.422803,
+   "lon": 74.171172
+  },
+  {
+   "code": "ET4091",
+   "name": "Kala Shah Kaku",
+   "name_ur": null,
+   "lat": 31.718919,
+   "lon": 74.26931
+  },
+  {
+   "code": "ET4093",
+   "name": "Askari 10",
+   "name_ur": null,
+   "lat": 31.540871,
+   "lon": 74.418487
+  },
+  {
+   "code": "ET4096",
+   "name": "Nazim Road",
+   "name_ur": null,
+   "lat": 31.678098,
+   "lon": 74.277901
+  },
+  {
+   "code": "ET4097",
+   "name": "Nadeem Chowk",
+   "name_ur": null,
+   "lat": 31.5064665,
+   "lon": 74.378352
+  },
+  {
+   "code": "ET4098",
+   "name": "T-Stop",
+   "name_ur": null,
+   "lat": 31.501553,
+   "lon": 74.378347
+  },
+  {
+   "code": "ET4099",
+   "name": "Defence Morr",
+   "name_ur": null,
+   "lat": 31.494455,
+   "lon": 74.373872
+  },
+  {
+   "code": "ET4100",
+   "name": "Korray Stop",
+   "name_ur": null,
+   "lat": 31.492226,
+   "lon": 74.371693
+  },
+  {
+   "code": "ET4101",
+   "name": "Shareef Market",
+   "name_ur": null,
+   "lat": 31.490368,
+   "lon": 74.370029
+  },
+  {
+   "code": "ET4102",
+   "name": "College Stop",
+   "name_ur": null,
+   "lat": 31.488457,
+   "lon": 74.368186
+  },
+  {
+   "code": "ET4103",
+   "name": "Walton",
+   "name_ur": null,
+   "lat": 31.48585,
+   "lon": 74.365739
+  },
+  {
+   "code": "ET4104",
+   "name": "Bab e Pakistan",
+   "name_ur": null,
+   "lat": 31.481994,
+   "lon": 74.362044
+  },
+  {
+   "code": "ET4105",
+   "name": "Workshop",
+   "name_ur": null,
+   "lat": 31.478821,
+   "lon": 74.359051
+  },
+  {
+   "code": "ET4106",
+   "name": "Rabia Basri Stop",
+   "name_ur": null,
+   "lat": 31.474919,
+   "lon": 74.355365
+  },
+  {
+   "code": "ET4107",
+   "name": "Packages",
+   "name_ur": null,
+   "lat": 31.4711637,
+   "lon": 74.351807
+  },
+  {
+   "code": "ET4108",
+   "name": "Qainchi",
+   "name_ur": null,
+   "lat": 31.466325,
+   "lon": 74.348835
+  },
+  {
+   "code": "ET4109",
+   "name": "Ghazi Chowk",
+   "name_ur": null,
+   "lat": 31.456512,
+   "lon": 74.351226
+  },
+  {
+   "code": "ET4120",
+   "name": "Lari Adda Gol Chakar 2",
+   "name_ur": null,
+   "lat": 31.5953979,
+   "lon": 74.3112075
+  },
+  {
+   "code": "ET4121",
+   "name": "Badami Bagh",
+   "name_ur": null,
+   "lat": 31.597661,
+   "lon": 74.314087
+  },
+  {
+   "code": "ET4122",
+   "name": "Sabzi Mandi",
+   "name_ur": null,
+   "lat": 31.600282,
+   "lon": 74.311984
+  },
+  {
+   "code": "ET4123",
+   "name": "Usman Chowk",
+   "name_ur": null,
+   "lat": 31.6002951,
+   "lon": 74.3177908
+  },
+  {
+   "code": "ET4124",
+   "name": "Lohay Wali Pulley",
+   "name_ur": null,
+   "lat": 31.60351,
+   "lon": 74.318874
+  },
+  {
+   "code": "ET4125",
+   "name": "Ali Hajvery Shadi Hall",
+   "name_ur": null,
+   "lat": 31.60286,
+   "lon": 74.32214
+  },
+  {
+   "code": "ET4126",
+   "name": "Masoom Shah Darbar",
+   "name_ur": null,
+   "lat": 31.601319,
+   "lon": 74.325675
+  },
+  {
+   "code": "ET4127",
+   "name": "Madina Chowk",
+   "name_ur": null,
+   "lat": 31.60073,
+   "lon": 74.3278
+  },
+  {
+   "code": "ET4128",
+   "name": "Rajput Park",
+   "name_ur": null,
+   "lat": 31.60311,
+   "lon": 74.3336
+  },
+  {
+   "code": "ET4137",
+   "name": "Pulley Bus Stop",
+   "name_ur": null,
+   "lat": 31.435786,
+   "lon": 74.314203
+  },
+  {
+   "code": "ET4138",
+   "name": "Keer Kalan",
+   "name_ur": null,
+   "lat": 31.43579,
+   "lon": 74.3142
+  },
+  {
+   "code": "ET4139",
+   "name": "Minhaj University",
+   "name_ur": null,
+   "lat": 31.443559,
+   "lon": 74.318321
+  },
+  {
+   "code": "ET4140",
+   "name": "Hamdard Chowk",
+   "name_ur": null,
+   "lat": 31.4464791,
+   "lon": 74.320939
+  },
+  {
+   "code": "ET4141",
+   "name": "Somi Center Bus Stop",
+   "name_ur": null,
+   "lat": 31.449801,
+   "lon": 74.321906
+  },
+  {
+   "code": "ET4142",
+   "name": "Nursery Bus Stop",
+   "name_ur": null,
+   "lat": 31.452807,
+   "lon": 74.323573
+  },
+  {
+   "code": "ET4143",
+   "name": "Rehmat Eye Hospital",
+   "name_ur": null,
+   "lat": 31.454615,
+   "lon": 74.324617
+  },
+  {
+   "code": "ET4144",
+   "name": "Pindi Stop",
+   "name_ur": null,
+   "lat": 31.459565,
+   "lon": 74.327906
+  },
+  {
+   "code": "ET4145",
+   "name": "Treet Stop",
+   "name_ur": null,
+   "lat": 31.457825,
+   "lon": 74.33245
+  },
+  {
+   "code": "ET4146",
+   "name": "Peco Mor",
+   "name_ur": null,
+   "lat": 31.456716,
+   "lon": 74.335253
+  },
+  {
+   "code": "ET4147",
+   "name": "Kot lakhpat Railway Station",
+   "name_ur": null,
+   "lat": 31.45914,
+   "lon": 74.337371
+  },
+  {
+   "code": "ET4148",
+   "name": "Phatki stop",
+   "name_ur": null,
+   "lat": 31.464117,
+   "lon": 74.340389
+  },
+  {
+   "code": "ET4149",
+   "name": "Phattak mandi Stop",
+   "name_ur": null,
+   "lat": 31.47097,
+   "lon": 74.344201
+  },
+  {
+   "code": "ET4150",
+   "name": "Model Town Katchery",
+   "name_ur": null,
+   "lat": 31.47341,
+   "lon": 74.344857
+  },
+  {
+   "code": "ET4151",
+   "name": "Qainchi stop",
+   "name_ur": null,
+   "lat": 31.466325,
+   "lon": 74.3481
+  },
+  {
+   "code": "ET4165",
+   "name": "Qaddafi Stadium",
+   "name_ur": null,
+   "lat": 31.512868,
+   "lon": 74.328808
+  },
+  {
+   "code": "ET4166",
+   "name": "Barkat Market",
+   "name_ur": null,
+   "lat": 31.50102,
+   "lon": 74.3208302
+  },
+  {
+   "code": "ET4167",
+   "name": "Campus Pull",
+   "name_ur": null,
+   "lat": 31.5039451,
+   "lon": 74.3119961
+  },
+  {
+   "code": "ET4168",
+   "name": "Gate No 4",
+   "name_ur": null,
+   "lat": 31.501185,
+   "lon": 74.309437
+  },
+  {
+   "code": "ET4169",
+   "name": "Hailey College",
+   "name_ur": null,
+   "lat": 31.496556,
+   "lon": 74.305125
+  },
+  {
+   "code": "ET4170",
+   "name": "IBA Stop",
+   "name_ur": null,
+   "lat": 31.493444,
+   "lon": 74.302032
+  },
+  {
+   "code": "ET4171",
+   "name": "Shah Di Khoi",
+   "name_ur": null,
+   "lat": 31.490479,
+   "lon": 74.298541
+  },
+  {
+   "code": "ET4172",
+   "name": "Jinnah Hospital",
+   "name_ur": null,
+   "lat": 31.485967,
+   "lon": 74.294309
+  },
+  {
+   "code": "ET4173",
+   "name": "Wafaqi Colony",
+   "name_ur": null,
+   "lat": 31.4845447,
+   "lon": 74.2896385
+  },
+  {
+   "code": "ET4174",
+   "name": "Doctor Hospital",
+   "name_ur": null,
+   "lat": 31.480138,
+   "lon": 74.280406
+  },
+  {
+   "code": "ET4175",
+   "name": "PCSIR 1",
+   "name_ur": null,
+   "lat": 31.478491,
+   "lon": 74.274875
+  },
+  {
+   "code": "ET4176",
+   "name": "G 4 Johar Town",
+   "name_ur": null,
+   "lat": 31.477306,
+   "lon": 74.27008
+  },
+  {
+   "code": "ET4177",
+   "name": "Hanjarwal",
+   "name_ur": null,
+   "lat": 31.476574,
+   "lon": 74.266931
+  },
+  {
+   "code": "ET4178",
+   "name": "Mughal Eye Hospital",
+   "name_ur": null,
+   "lat": 31.474393,
+   "lon": 74.257079
+  },
+  {
+   "code": "ET4179",
+   "name": "Canal View Gate1",
+   "name_ur": null,
+   "lat": 31.47279,
+   "lon": 74.25036
+  },
+  {
+   "code": "ET4180",
+   "name": "Judicial Colony",
+   "name_ur": null,
+   "lat": 31.469915,
+   "lon": 74.244401
+  },
+  {
+   "code": "ET4181",
+   "name": "Thokar Niaz Baig",
+   "name_ur": null,
+   "lat": 31.470415,
+   "lon": 74.240941
+  },
+  {
+   "code": "ET4182",
+   "name": "Daewoo Terminal",
+   "name_ur": null,
+   "lat": 31.470109,
+   "lon": 74.238883
+  },
+  {
+   "code": "ET4196",
+   "name": "Haji Camp",
+   "name_ur": null,
+   "lat": 31.5697841,
+   "lon": 74.3356996
+  },
+  {
+   "code": "ET4197",
+   "name": "Police Line",
+   "name_ur": null,
+   "lat": 31.5674724,
+   "lon": 74.3356905
+  },
+  {
+   "code": "ET4198",
+   "name": "Shimla Pahari",
+   "name_ur": null,
+   "lat": 31.564235,
+   "lon": 74.335428
+  },
+  {
+   "code": "ET4199",
+   "name": "Shimla Pahari-2",
+   "name_ur": null,
+   "lat": 31.5620897,
+   "lon": 74.3343419
+  },
+  {
+   "code": "ET4201",
+   "name": "Aiwan-E-Iqbal",
+   "name_ur": null,
+   "lat": 31.560749,
+   "lon": 74.329784
+  },
+  {
+   "code": "ET4202",
+   "name": "Lahore Zoo",
+   "name_ur": null,
+   "lat": 31.5579852,
+   "lon": 74.3271295
+  },
+  {
+   "code": "ET4203",
+   "name": "Charing Cross",
+   "name_ur": null,
+   "lat": 31.559106,
+   "lon": 74.324211
+  },
+  {
+   "code": "ET4204",
+   "name": "Ganga Ram Hospital",
+   "name_ur": null,
+   "lat": 31.555041,
+   "lon": 74.320951
+  },
+  {
+   "code": "ET4205",
+   "name": "Waris Road",
+   "name_ur": null,
+   "lat": 31.551675,
+   "lon": 74.318838
+  },
+  {
+   "code": "ET4206",
+   "name": "Chauburji Station",
+   "name_ur": null,
+   "lat": 31.553083,
+   "lon": 74.306089
+  },
+  {
+   "code": "ET4207",
+   "name": "Poonch House",
+   "name_ur": null,
+   "lat": 31.550689,
+   "lon": 74.299442
+  },
+  {
+   "code": "ET4221",
+   "name": "Multan Chungi",
+   "name_ur": null,
+   "lat": 31.496207,
+   "lon": 74.264866
+  },
+  {
+   "code": "ET4222",
+   "name": "Elephant Link road",
+   "name_ur": null,
+   "lat": 31.497604,
+   "lon": 74.269918
+  },
+  {
+   "code": "ET4223",
+   "name": "Mustafa Town",
+   "name_ur": null,
+   "lat": 31.49911,
+   "lon": 74.274093
+  },
+  {
+   "code": "ET4224",
+   "name": "Karim Block Market",
+   "name_ur": null,
+   "lat": 31.501702,
+   "lon": 74.28117
+  },
+  {
+   "code": "ET4225",
+   "name": "Sikander Block",
+   "name_ur": null,
+   "lat": 31.503491,
+   "lon": 74.286306
+  },
+  {
+   "code": "ET4226",
+   "name": "Raza Block",
+   "name_ur": null,
+   "lat": 31.50471,
+   "lon": 74.289946
+  },
+  {
+   "code": "ET4227",
+   "name": "PU Examination Hall",
+   "name_ur": null,
+   "lat": 31.505563,
+   "lon": 74.292067
+  },
+  {
+   "code": "ET4228",
+   "name": "Science College",
+   "name_ur": null,
+   "lat": 31.507364,
+   "lon": 74.296126
+  },
+  {
+   "code": "ET4229",
+   "name": "Bhekewal Morr 2",
+   "name_ur": null,
+   "lat": 31.510534,
+   "lon": 74.302454
+  },
+  {
+   "code": "ET4230",
+   "name": "Wahdat Colony",
+   "name_ur": null,
+   "lat": 31.511889,
+   "lon": 74.305414
+  },
+  {
+   "code": "ET4231",
+   "name": "School Stop",
+   "name_ur": null,
+   "lat": 31.5131987,
+   "lon": 74.3078794
+  },
+  {
+   "code": "ET4232",
+   "name": "Bank Stop",
+   "name_ur": null,
+   "lat": 31.514664,
+   "lon": 74.311031
+  },
+  {
+   "code": "ET4233",
+   "name": "Naqsha Stop",
+   "name_ur": null,
+   "lat": 31.5167215,
+   "lon": 74.3153185
+  },
+  {
+   "code": "ET4234",
+   "name": "Karma Abad",
+   "name_ur": null,
+   "lat": 31.518182,
+   "lon": 74.318378
+  },
+  {
+   "code": "ET4235",
+   "name": "Aab Para Market",
+   "name_ur": null,
+   "lat": 31.520151,
+   "lon": 74.321128
+  },
+  {
+   "code": "ET4236",
+   "name": "Canal",
+   "name_ur": null,
+   "lat": 31.520524,
+   "lon": 74.323334
+  },
+  {
+   "code": "ET4237",
+   "name": "Rehman Pura",
+   "name_ur": null,
+   "lat": 31.5239801,
+   "lon": 74.3236793
+  },
+  {
+   "code": "ET4238",
+   "name": "Shah Jamal",
+   "name_ur": null,
+   "lat": 31.52401,
+   "lon": 74.32402
+  },
+  {
+   "code": "ET4239",
+   "name": "Ichara",
+   "name_ur": null,
+   "lat": 31.5317,
+   "lon": 74.3213
+  },
+  {
+   "code": "ET4240",
+   "name": "Shama",
+   "name_ur": null,
+   "lat": 31.5391,
+   "lon": 74.3191
+  },
+  {
+   "code": "ET4241",
+   "name": "LOS",
+   "name_ur": null,
+   "lat": 31.542411,
+   "lon": 74.31762
+  },
+  {
+   "code": "ET4264",
+   "name": "Siddique Trade Center",
+   "name_ur": null,
+   "lat": 31.5306026,
+   "lon": 74.3523149
+  },
+  {
+   "code": "ET4266",
+   "name": "Main Market-2",
+   "name_ur": null,
+   "lat": 31.522577,
+   "lon": 74.347798
+  },
+  {
+   "code": "ET4267",
+   "name": "Mini market",
+   "name_ur": null,
+   "lat": 31.521003,
+   "lon": 74.34677
+  },
+  {
+   "code": "ET4268",
+   "name": "Hafeez Center",
+   "name_ur": null,
+   "lat": 31.5161,
+   "lon": 74.344
+  },
+  {
+   "code": "ET4269",
+   "name": "Liberty Chowk",
+   "name_ur": null,
+   "lat": 31.510884,
+   "lon": 74.34129
+  },
+  {
+   "code": "ET4270",
+   "name": "Center Point",
+   "name_ur": null,
+   "lat": 31.5064765,
+   "lon": 74.3367845
+  },
+  {
+   "code": "ET4271",
+   "name": "PU Campus",
+   "name_ur": null,
+   "lat": 31.505642,
+   "lon": 74.309596
+  },
+  {
+   "code": "ET4272",
+   "name": "Sheikh Zaid Hospital",
+   "name_ur": null,
+   "lat": 31.506596,
+   "lon": 74.308197
+  },
+  {
+   "code": "ET4273",
+   "name": "Bhekewal Morr 1",
+   "name_ur": null,
+   "lat": 31.509226,
+   "lon": 74.303196
+  },
+  {
+   "code": "ET4274",
+   "name": "Pilot School",
+   "name_ur": null,
+   "lat": 31.510187,
+   "lon": 74.301164
+  },
+  {
+   "code": "ET4275",
+   "name": "Farooq Hospital",
+   "name_ur": null,
+   "lat": 31.512561,
+   "lon": 74.299166
+  },
+  {
+   "code": "ET4276",
+   "name": "Gulshan-e-Iqbal",
+   "name_ur": null,
+   "lat": 31.515878,
+   "lon": 74.295187
+  },
+  {
+   "code": "ET4277",
+   "name": "Dubai Chowk",
+   "name_ur": null,
+   "lat": 31.519337,
+   "lon": 74.291189
+  },
+  {
+   "code": "ET4278",
+   "name": "Flat Stop",
+   "name_ur": null,
+   "lat": 31.521602,
+   "lon": 74.290238
+  },
+  {
+   "code": "ET4279",
+   "name": "Kali Kothi Stop",
+   "name_ur": null,
+   "lat": 31.524522,
+   "lon": 74.287975
+  },
+  {
+   "code": "ET4280",
+   "name": "Scheme Morr",
+   "name_ur": null,
+   "lat": 31.525381,
+   "lon": 74.284284
+  },
+  {
+   "code": "ET4281",
+   "name": "Grand Battery Stop",
+   "name_ur": null,
+   "lat": 31.5284,
+   "lon": 74.2848
+  },
+  {
+   "code": "ET4282",
+   "name": "Chowk Yateem Khana",
+   "name_ur": null,
+   "lat": 31.532478,
+   "lon": 74.285945
+  },
+  {
+   "code": "ET4283",
+   "name": "City Bus Stand",
+   "name_ur": null,
+   "lat": 31.533744,
+   "lon": 74.282621
+  },
+  {
+   "code": "ET4284",
+   "name": "Shezan Factory",
+   "name_ur": null,
+   "lat": 31.534955,
+   "lon": 74.279284
+  },
+  {
+   "code": "ET4285",
+   "name": "Niazi Adda",
+   "name_ur": null,
+   "lat": 31.536838,
+   "lon": 74.273074
+  },
+  {
+   "code": "ET4286",
+   "name": "Bilal Daewoo",
+   "name_ur": null,
+   "lat": 31.537177,
+   "lon": 74.271583
+  },
+  {
+   "code": "ET43",
+   "name": "12. Ichara",
+   "name_ur": null,
+   "lat": 31.531516,
+   "lon": 74.321426
+  },
+  {
+   "code": "ET430",
+   "name": "Mandiali Toll Plaza",
+   "name_ur": null,
+   "lat": 31.643656,
+   "lon": 74.18342
+  },
+  {
+   "code": "ET4307",
+   "name": "PAF Market",
+   "name_ur": null,
+   "lat": 31.51862,
+   "lon": 74.382475
+  },
+  {
+   "code": "ET4308",
+   "name": "Telephone Exchange",
+   "name_ur": null,
+   "lat": 31.521868,
+   "lon": 74.380621
+  },
+  {
+   "code": "ET4309",
+   "name": "Girja Chowk",
+   "name_ur": null,
+   "lat": 31.522995,
+   "lon": 74.379153
+  },
+  {
+   "code": "ET4310",
+   "name": "Alla-ud-Din Road 1",
+   "name_ur": null,
+   "lat": 31.525563,
+   "lon": 74.37928
+  },
+  {
+   "code": "ET4311",
+   "name": "Afshan Chowk",
+   "name_ur": null,
+   "lat": 31.527034,
+   "lon": 74.379334
+  },
+  {
+   "code": "ET4312",
+   "name": "Rahat Bakery",
+   "name_ur": null,
+   "lat": 31.529932,
+   "lon": 74.375455
+  },
+  {
+   "code": "ET4313",
+   "name": "Fortress Stradium",
+   "name_ur": null,
+   "lat": 31.530673,
+   "lon": 74.364772
+  },
+  {
+   "code": "ET4314",
+   "name": "Mian Mir",
+   "name_ur": null,
+   "lat": 31.537744,
+   "lon": 74.356504
+  },
+  {
+   "code": "ET4315",
+   "name": "Gymkhana",
+   "name_ur": null,
+   "lat": 31.540597,
+   "lon": 74.353337
+  },
+  {
+   "code": "ET4316",
+   "name": "Canal Bridge",
+   "name_ur": null,
+   "lat": 31.542562,
+   "lon": 74.351448
+  },
+  {
+   "code": "ET4317",
+   "name": "Aitchison College",
+   "name_ur": null,
+   "lat": 31.544737,
+   "lon": 74.348982
+  },
+  {
+   "code": "ET4318",
+   "name": "Club Road",
+   "name_ur": null,
+   "lat": 31.551474,
+   "lon": 74.34119
+  },
+  {
+   "code": "ET4319",
+   "name": "PC Hotel",
+   "name_ur": null,
+   "lat": 31.553559,
+   "lon": 74.337874
+  },
+  {
+   "code": "ET4320",
+   "name": "Governor House",
+   "name_ur": null,
+   "lat": 31.554606,
+   "lon": 74.334797
+  },
+  {
+   "code": "ET4321",
+   "name": "Regal Chowk",
+   "name_ur": null,
+   "lat": 31.562079,
+   "lon": 74.31885
+  },
+  {
+   "code": "ET4322",
+   "name": "GPO",
+   "name_ur": null,
+   "lat": 31.564401,
+   "lon": 74.315386
+  },
+  {
+   "code": "ET4323",
+   "name": "Anarkali",
+   "name_ur": null,
+   "lat": 31.567527,
+   "lon": 74.310805
+  },
+  {
+   "code": "ET4324",
+   "name": "PU Old Campus",
+   "name_ur": null,
+   "lat": 31.568814,
+   "lon": 74.308425
+  },
+  {
+   "code": "ET4325",
+   "name": "Government College",
+   "name_ur": null,
+   "lat": 31.571264,
+   "lon": 74.307284
+  },
+  {
+   "code": "ET4343",
+   "name": "Ameer Chowk",
+   "name_ur": null,
+   "lat": 31.43271,
+   "lon": 74.29975
+  },
+  {
+   "code": "ET4344",
+   "name": "Bagrian",
+   "name_ur": null,
+   "lat": 31.43271,
+   "lon": 74.29975
+  },
+  {
+   "code": "ET4345",
+   "name": "Muslim Chowk",
+   "name_ur": null,
+   "lat": 31.435416,
+   "lon": 74.293554
+  },
+  {
+   "code": "ET4346",
+   "name": "Ghazi Chowk 2",
+   "name_ur": null,
+   "lat": 31.436385,
+   "lon": 74.2913517
+  },
+  {
+   "code": "ET4347",
+   "name": "Gondal Chowk",
+   "name_ur": null,
+   "lat": 31.4397,
+   "lon": 74.292489
+  },
+  {
+   "code": "ET4348",
+   "name": "Butt Chowk",
+   "name_ur": null,
+   "lat": 31.442974,
+   "lon": 74.294163
+  },
+  {
+   "code": "ET4349",
+   "name": "Lajhna Chowk",
+   "name_ur": null,
+   "lat": 31.447203,
+   "lon": 74.2966689
+  },
+  {
+   "code": "ET4350",
+   "name": "UMT Stop",
+   "name_ur": null,
+   "lat": 31.451033,
+   "lon": 74.298512
+  },
+  {
+   "code": "ET4351",
+   "name": "Khokhar Chowk",
+   "name_ur": null,
+   "lat": 31.45375,
+   "lon": 74.299826
+  },
+  {
+   "code": "ET4352",
+   "name": "M. Ali Chowk",
+   "name_ur": null,
+   "lat": 31.458575,
+   "lon": 74.302536
+  },
+  {
+   "code": "ET4353",
+   "name": "Aslam Chowk",
+   "name_ur": null,
+   "lat": 31.463927,
+   "lon": 74.305269
+  },
+  {
+   "code": "ET4355",
+   "name": "Mochipura Morr",
+   "name_ur": null,
+   "lat": 31.465663,
+   "lon": 74.312297
+  },
+  {
+   "code": "ET4356",
+   "name": "Model Town Link Road",
+   "name_ur": null,
+   "lat": 31.46396,
+   "lon": 74.316614
+  },
+  {
+   "code": "ET4357",
+   "name": "Al-Habib Stop",
+   "name_ur": null,
+   "lat": 31.463119,
+   "lon": 74.318729
+  },
+  {
+   "code": "ET4358",
+   "name": "Phatak Mandi",
+   "name_ur": null,
+   "lat": 31.47097,
+   "lon": 74.344201
+  },
+  {
+   "code": "ET4359",
+   "name": "Traffic Police Station",
+   "name_ur": null,
+   "lat": 31.474603,
+   "lon": 74.344002
+  },
+  {
+   "code": "ET4360",
+   "name": "Ittefaq Hospital",
+   "name_ur": null,
+   "lat": 31.478715,
+   "lon": 74.342111
+  },
+  {
+   "code": "ET4361",
+   "name": "Gulab Devi Hospital",
+   "name_ur": null,
+   "lat": 31.4833495,
+   "lon": 74.3402042
+  },
+  {
+   "code": "ET4362",
+   "name": "Naseerabad",
+   "name_ur": null,
+   "lat": 31.48615,
+   "lon": 74.339034
+  },
+  {
+   "code": "ET4363",
+   "name": "Bhabra Stop",
+   "name_ur": null,
+   "lat": 31.491596,
+   "lon": 74.336762
+  },
+  {
+   "code": "ET4364",
+   "name": "Model Town",
+   "name_ur": null,
+   "lat": 31.497637,
+   "lon": 74.334321
+  },
+  {
+   "code": "ET4375",
+   "name": "Shouq Chowk",
+   "name_ur": null,
+   "lat": 31.470294,
+   "lon": 74.303296
+  },
+  {
+   "code": "ET4387",
+   "name": "Katchery",
+   "name_ur": null,
+   "lat": 31.57477,
+   "lon": 74.30663
+  },
+  {
+   "code": "ET4388",
+   "name": "Civil Secretariat",
+   "name_ur": null,
+   "lat": 31.56851,
+   "lon": 74.30432
+  },
+  {
+   "code": "ET4389",
+   "name": "M.A.O College",
+   "name_ur": null,
+   "lat": 31.56246,
+   "lon": 74.30564
+  },
+  {
+   "code": "ET4390",
+   "name": "Anarkali Metro Station",
+   "name_ur": null,
+   "lat": 31.561857,
+   "lon": 74.308593
+  },
+  {
+   "code": "ET4391",
+   "name": "Janazgah",
+   "name_ur": null,
+   "lat": 31.55425,
+   "lon": 74.31135
+  },
+  {
+   "code": "ET4392",
+   "name": "Mazang",
+   "name_ur": null,
+   "lat": 31.54654,
+   "lon": 74.31767
+  },
+  {
+   "code": "ET4393",
+   "name": "Roznama Pakistan",
+   "name_ur": null,
+   "lat": 31.54416,
+   "lon": 74.32083
+  },
+  {
+   "code": "ET4394",
+   "name": "Lahore College Women",
+   "name_ur": null,
+   "lat": 31.54291,
+   "lon": 74.32827
+  },
+  {
+   "code": "ET4395",
+   "name": "Services Hospital",
+   "name_ur": null,
+   "lat": 31.54106,
+   "lon": 74.33365
+  },
+  {
+   "code": "ET4396",
+   "name": "Punjab Institute of Cardiology",
+   "name_ur": null,
+   "lat": 31.53981,
+   "lon": 74.334927
+  },
+  {
+   "code": "ET4397",
+   "name": "Kinnaird College",
+   "name_ur": null,
+   "lat": 31.53706,
+   "lon": 74.33899
+  },
+  {
+   "code": "ET4398",
+   "name": "Zafar Ali Road",
+   "name_ur": null,
+   "lat": 31.53492,
+   "lon": 74.34487
+  },
+  {
+   "code": "ET4399",
+   "name": "McDonald Model Town",
+   "name_ur": null,
+   "lat": 31.466248,
+   "lon": 74.316114
+  },
+  {
+   "code": "ET4400",
+   "name": "Main Market",
+   "name_ur": null,
+   "lat": 31.522745,
+   "lon": 74.347848
+  },
+  {
+   "code": "ET4401",
+   "name": "Firdous Market",
+   "name_ur": null,
+   "lat": 31.503022,
+   "lon": 74.349419
+  },
+  {
+   "code": "ET4402",
+   "name": "Cavalry Road",
+   "name_ur": null,
+   "lat": 31.502593,
+   "lon": 74.36789
+  },
+  {
+   "code": "ET4403",
+   "name": "D Mess Stop",
+   "name_ur": null,
+   "lat": 31.506663,
+   "lon": 74.36964
+  },
+  {
+   "code": "ET4420",
+   "name": "Malik Pura",
+   "name_ur": null,
+   "lat": 31.355999,
+   "lon": 74.371255
+  },
+  {
+   "code": "ET4421",
+   "name": "5 Number Stop",
+   "name_ur": null,
+   "lat": 31.36021,
+   "lon": 74.3691
+  },
+  {
+   "code": "ET4422",
+   "name": "Railu Wali Masjid",
+   "name_ur": null,
+   "lat": 31.364276,
+   "lon": 74.367015
+  },
+  {
+   "code": "ET4423",
+   "name": "Kahna",
+   "name_ur": null,
+   "lat": 31.370012,
+   "lon": 74.365831
+  },
+  {
+   "code": "ET4424",
+   "name": "Darbar Barket Shah",
+   "name_ur": null,
+   "lat": 31.375051,
+   "lon": 74.364844
+  },
+  {
+   "code": "ET4425",
+   "name": "Ahlu Road",
+   "name_ur": null,
+   "lat": 31.379226,
+   "lon": 74.364246
+  },
+  {
+   "code": "ET4426",
+   "name": "Rehmat Park",
+   "name_ur": null,
+   "lat": 31.383053,
+   "lon": 74.363685
+  },
+  {
+   "code": "ET4427",
+   "name": "LDA Gol Chakar",
+   "name_ur": null,
+   "lat": 31.389292,
+   "lon": 74.362681
+  },
+  {
+   "code": "ET4428",
+   "name": "Gajjumatta",
+   "name_ur": null,
+   "lat": 31.397008,
+   "lon": 74.361441
+  },
+  {
+   "code": "ET4429",
+   "name": "Masjid Ibrahim",
+   "name_ur": null,
+   "lat": 31.400803,
+   "lon": 74.361057
+  },
+  {
+   "code": "ET4430",
+   "name": "Dullu Khurd",
+   "name_ur": null,
+   "lat": 31.406391,
+   "lon": 74.360214
+  },
+  {
+   "code": "ET4431",
+   "name": "Dulam",
+   "name_ur": null,
+   "lat": 31.408943,
+   "lon": 74.359865
+  },
+  {
+   "code": "ET4432",
+   "name": "Yohanabad",
+   "name_ur": null,
+   "lat": 31.413486,
+   "lon": 74.359165
+  },
+  {
+   "code": "ET4433",
+   "name": "Nishtar Colony",
+   "name_ur": null,
+   "lat": 31.42075,
+   "lon": 74.358104
+  },
+  {
+   "code": "ET4434",
+   "name": "Descon Headquarters",
+   "name_ur": null,
+   "lat": 31.426394,
+   "lon": 74.357301
+  },
+  {
+   "code": "ET4435",
+   "name": "Attari Saroba",
+   "name_ur": null,
+   "lat": 31.432014,
+   "lon": 74.356453
+  },
+  {
+   "code": "ET4436",
+   "name": "Venus Housing",
+   "name_ur": null,
+   "lat": 31.4386347,
+   "lon": 74.3554727
+  },
+  {
+   "code": "ET4437",
+   "name": "Kamahan",
+   "name_ur": null,
+   "lat": 31.441311,
+   "lon": 74.355027
+  },
+  {
+   "code": "ET4438",
+   "name": "Chungi Metro station",
+   "name_ur": null,
+   "lat": 31.450337,
+   "lon": 74.353091
+  },
+  {
+   "code": "ET4439",
+   "name": "Shoukat Town",
+   "name_ur": null,
+   "lat": 31.460385,
+   "lon": 74.357886
+  },
+  {
+   "code": "ET4440",
+   "name": "Naka Stop",
+   "name_ur": null,
+   "lat": 31.463447,
+   "lon": 74.367454
+  },
+  {
+   "code": "ET4441",
+   "name": "Chota Ishara Stop",
+   "name_ur": null,
+   "lat": 31.465853,
+   "lon": 74.375174
+  },
+  {
+   "code": "ET4442",
+   "name": "Sector C (Y-Block)",
+   "name_ur": null,
+   "lat": 31.46787,
+   "lon": 74.38138
+  },
+  {
+   "code": "ET4443",
+   "name": "LESCO",
+   "name_ur": null,
+   "lat": 31.47029,
+   "lon": 74.38919
+  },
+  {
+   "code": "ET4444",
+   "name": "Charar Pind",
+   "name_ur": null,
+   "lat": 31.472349,
+   "lon": 74.392281
+  },
+  {
+   "code": "ET4445",
+   "name": "DHA Nursery",
+   "name_ur": null,
+   "lat": 31.473483,
+   "lon": 74.393671
+  },
+  {
+   "code": "ET4446",
+   "name": "Defence Chowk",
+   "name_ur": null,
+   "lat": 31.477557,
+   "lon": 74.399058
+  },
+  {
+   "code": "ET4447",
+   "name": "PSO",
+   "name_ur": null,
+   "lat": 31.48274,
+   "lon": 74.40586
+  },
+  {
+   "code": "ET4448",
+   "name": "Bhatta Chowk",
+   "name_ur": null,
+   "lat": 31.486754,
+   "lon": 74.41115
+  },
+  {
+   "code": "ET4449",
+   "name": "Arifabad",
+   "name_ur": null,
+   "lat": 31.491213,
+   "lon": 74.408639
+  },
+  {
+   "code": "ET4450",
+   "name": "Nadirabad",
+   "name_ur": null,
+   "lat": 31.494008,
+   "lon": 74.405947
+  },
+  {
+   "code": "ET4451",
+   "name": "Ali View Garden",
+   "name_ur": null,
+   "lat": 31.494744,
+   "lon": 74.403265
+  },
+  {
+   "code": "ET4452",
+   "name": "Cantt. Bus Stop",
+   "name_ur": null,
+   "lat": 31.497754,
+   "lon": 74.398562
+  },
+  {
+   "code": "ET4453",
+   "name": "Fauji Foundation",
+   "name_ur": null,
+   "lat": 31.498989,
+   "lon": 74.394909
+  },
+  {
+   "code": "ET449",
+   "name": "Adda Plot",
+   "name_ur": null,
+   "lat": 31.36519,
+   "lon": 74.234884
+  },
+  {
+   "code": "ET4490",
+   "name": "Model Town Morr",
+   "name_ur": null,
+   "lat": 31.496164,
+   "lon": 74.332767
+  },
+  {
+   "code": "ET4491",
+   "name": "Pakistani Chowk",
+   "name_ur": null,
+   "lat": 31.491576,
+   "lon": 74.330113
+  },
+  {
+   "code": "ET4492",
+   "name": "Bank Square C-Block",
+   "name_ur": null,
+   "lat": 31.489163,
+   "lon": 74.327137
+  },
+  {
+   "code": "ET4493",
+   "name": "Ladies Club D-Block",
+   "name_ur": null,
+   "lat": 31.487752,
+   "lon": 74.322288
+  },
+  {
+   "code": "ET4494",
+   "name": "Girls College E-Block",
+   "name_ur": null,
+   "lat": 31.484593,
+   "lon": 74.320865
+  },
+  {
+   "code": "ET4495",
+   "name": "F-Block",
+   "name_ur": null,
+   "lat": 31.481569,
+   "lon": 74.322199
+  },
+  {
+   "code": "ET4496",
+   "name": "Club Chowk",
+   "name_ur": null,
+   "lat": 31.480128,
+   "lon": 74.323774
+  },
+  {
+   "code": "ET4497",
+   "name": "Quid-e-Azam Law College",
+   "name_ur": null,
+   "lat": 31.477596,
+   "lon": 74.322371
+  },
+  {
+   "code": "ET4498",
+   "name": "Shaheed Chowk",
+   "name_ur": null,
+   "lat": 31.472996,
+   "lon": 74.319879
+  },
+  {
+   "code": "ET4499",
+   "name": "Pace Shopping Centre",
+   "name_ur": null,
+   "lat": 31.470462,
+   "lon": 74.31849
+  },
+  {
+   "code": "ET4500",
+   "name": "Ayesha Heights",
+   "name_ur": null,
+   "lat": 31.46574,
+   "lon": 74.31174
+  },
+  {
+   "code": "ET4501",
+   "name": "Allah-Hoo Chowk",
+   "name_ur": null,
+   "lat": 31.468802,
+   "lon": 74.297997
+  },
+  {
+   "code": "ET4502",
+   "name": "Aleem Dar Stadium",
+   "name_ur": null,
+   "lat": 31.464627,
+   "lon": 74.290148
+  },
+  {
+   "code": "ET4503",
+   "name": "LDA Plaza",
+   "name_ur": null,
+   "lat": 31.460264,
+   "lon": 74.283151
+  },
+  {
+   "code": "ET4504",
+   "name": "Shadiwal Chowk",
+   "name_ur": null,
+   "lat": 31.455623,
+   "lon": 74.276917
+  },
+  {
+   "code": "ET4505",
+   "name": "Shaukat Khanum Hospital",
+   "name_ur": null,
+   "lat": 31.449685,
+   "lon": 74.270265
+  },
+  {
+   "code": "ET4506",
+   "name": "WAPDA Town Stop 1",
+   "name_ur": null,
+   "lat": 31.440323,
+   "lon": 74.266938
+  },
+  {
+   "code": "ET4507",
+   "name": "WAPDA Town Stop 2",
+   "name_ur": null,
+   "lat": 31.441025,
+   "lon": 74.26731
+  },
+  {
+   "code": "ET4508",
+   "name": "UCP",
+   "name_ur": null,
+   "lat": 31.448975,
+   "lon": 74.268913
+  },
+  {
+   "code": "ET4509",
+   "name": "PCSIR",
+   "name_ur": null,
+   "lat": 31.452454,
+   "lon": 74.267952
+  },
+  {
+   "code": "ET4510",
+   "name": "Abdalian Society",
+   "name_ur": null,
+   "lat": 31.456255,
+   "lon": 74.266921
+  },
+  {
+   "code": "ET4511",
+   "name": "Ayub Chowk",
+   "name_ur": null,
+   "lat": 31.458793,
+   "lon": 74.264034
+  },
+  {
+   "code": "ET4512",
+   "name": "Expo Centre",
+   "name_ur": null,
+   "lat": 31.462944,
+   "lon": 74.258068
+  },
+  {
+   "code": "ET4513",
+   "name": "Shan Chowk",
+   "name_ur": null,
+   "lat": 31.465768,
+   "lon": 74.252419
+  },
+  {
+   "code": "ET4514",
+   "name": "Ring Chowk",
+   "name_ur": null,
+   "lat": 31.471225,
+   "lon": 74.247918
+  },
+  {
+   "code": "ET4539",
+   "name": "Ali Murtaza Associates",
+   "name_ur": null,
+   "lat": 31.3965524,
+   "lon": 74.3688896
+  },
+  {
+   "code": "ET4540",
+   "name": "Nishat Mills",
+   "name_ur": null,
+   "lat": 31.399343,
+   "lon": 74.381187
+  },
+  {
+   "code": "ET4541",
+   "name": "Shafi Reso",
+   "name_ur": null,
+   "lat": 31.4001871,
+   "lon": 74.3906518
+  },
+  {
+   "code": "ET4542",
+   "name": "Ghankar Stop",
+   "name_ur": null,
+   "lat": 31.4003611,
+   "lon": 74.39376
+  },
+  {
+   "code": "ET4543",
+   "name": "Bhuller Village",
+   "name_ur": null,
+   "lat": 31.401011,
+   "lon": 74.396134
+  },
+  {
+   "code": "ET4544",
+   "name": "Transport Housing Society",
+   "name_ur": null,
+   "lat": 31.4015695,
+   "lon": 74.3978474
+  },
+  {
+   "code": "ET4545",
+   "name": "Hush Puppies",
+   "name_ur": null,
+   "lat": 31.401736,
+   "lon": 74.402018
+  },
+  {
+   "code": "ET4546",
+   "name": "Raja Bhula Pull",
+   "name_ur": null,
+   "lat": 31.402211,
+   "lon": 74.406283
+  },
+  {
+   "code": "ET4547",
+   "name": "Nishat Dying Mills",
+   "name_ur": null,
+   "lat": 31.402998,
+   "lon": 74.414619
+  },
+  {
+   "code": "ET4548",
+   "name": "Deo Pull",
+   "name_ur": null,
+   "lat": 31.407375,
+   "lon": 74.419364
+  },
+  {
+   "code": "ET4549",
+   "name": "Nishat Apparel",
+   "name_ur": null,
+   "lat": 31.415248,
+   "lon": 74.431086
+  },
+  {
+   "code": "ET4550",
+   "name": "Sora Stop",
+   "name_ur": null,
+   "lat": 31.417955,
+   "lon": 74.434998
+  },
+  {
+   "code": "ET4551",
+   "name": "Thethar Stop",
+   "name_ur": null,
+   "lat": 31.423237,
+   "lon": 74.456728
+  },
+  {
+   "code": "ET4552",
+   "name": "Avicina Hospital",
+   "name_ur": null,
+   "lat": 31.433635,
+   "lon": 74.468158
+  },
+  {
+   "code": "ET4553",
+   "name": "Dera Chahal",
+   "name_ur": null,
+   "lat": 31.440563,
+   "lon": 74.468018
+  },
+  {
+   "code": "ET4554",
+   "name": "Elite School",
+   "name_ur": null,
+   "lat": 31.445789,
+   "lon": 74.462061
+  },
+  {
+   "code": "ET4555",
+   "name": "Ramzan Nursery 1",
+   "name_ur": null,
+   "lat": 31.448182,
+   "lon": 74.457733
+  },
+  {
+   "code": "ET4556",
+   "name": "PKLI-1",
+   "name_ur": null,
+   "lat": 31.454503,
+   "lon": 74.461384
+  },
+  {
+   "code": "ET4557",
+   "name": "PKLI-2",
+   "name_ur": null,
+   "lat": 31.456982,
+   "lon": 74.463125
+  },
+  {
+   "code": "ET4558",
+   "name": "PKLI-1 (u-turn)",
+   "name_ur": null,
+   "lat": 31.4533244,
+   "lon": 74.462639
+  },
+  {
+   "code": "ET4559",
+   "name": "Ramzan Nursery 2",
+   "name_ur": null,
+   "lat": 31.447901,
+   "lon": 74.457788
+  },
+  {
+   "code": "ET4560",
+   "name": "Workshop Stop 1",
+   "name_ur": null,
+   "lat": 31.450999,
+   "lon": 74.4514
+  },
+  {
+   "code": "ET4561",
+   "name": "School Stop Lidher 1",
+   "name_ur": null,
+   "lat": 31.454353,
+   "lon": 74.446957
+  },
+  {
+   "code": "ET4562",
+   "name": "Shehbaz Sharif Hospital 1",
+   "name_ur": null,
+   "lat": 31.456938,
+   "lon": 74.44325
+  },
+  {
+   "code": "ET4563",
+   "name": "Lidher 1",
+   "name_ur": null,
+   "lat": 31.458958,
+   "lon": 74.439789
+  },
+  {
+   "code": "ET4564",
+   "name": "Nawaz Shareef Interchange",
+   "name_ur": null,
+   "lat": 31.4660684,
+   "lon": 74.4322516
+  },
+  {
+   "code": "ET4565",
+   "name": "Nawaz Shareef Interchange 2",
+   "name_ur": null,
+   "lat": 31.4664752,
+   "lon": 74.4326163
+  },
+  {
+   "code": "ET4566",
+   "name": "Lidher 2",
+   "name_ur": null,
+   "lat": 31.459003,
+   "lon": 74.439828
+  },
+  {
+   "code": "ET4567",
+   "name": "Shehbaz Sharif Hospital 2",
+   "name_ur": null,
+   "lat": 31.457106,
+   "lon": 74.4432832
+  },
+  {
+   "code": "ET4568",
+   "name": "School Stop Lidher 2",
+   "name_ur": null,
+   "lat": 31.4545924,
+   "lon": 74.4469586
+  },
+  {
+   "code": "ET4569",
+   "name": "Workshop Stop 2",
+   "name_ur": null,
+   "lat": 31.451161,
+   "lon": 74.451417
+  },
+  {
+   "code": "ET4570",
+   "name": "Elite School 2",
+   "name_ur": null,
+   "lat": 31.445533,
+   "lon": 74.462552
+  },
+  {
+   "code": "ET4571",
+   "name": "Dera Chahal 2",
+   "name_ur": null,
+   "lat": 31.440556,
+   "lon": 74.468203
+  },
+  {
+   "code": "ET4572",
+   "name": "Bankers Society",
+   "name_ur": null,
+   "lat": 31.426248,
+   "lon": 74.478756
+  },
+  {
+   "code": "ET4573",
+   "name": "Karbath",
+   "name_ur": null,
+   "lat": 31.426248,
+   "lon": 74.478756
+  },
+  {
+   "code": "ET4574",
+   "name": "Total Pump Heir",
+   "name_ur": null,
+   "lat": 31.417368,
+   "lon": 74.484452
+  },
+  {
+   "code": "ET4575",
+   "name": "Shareef Pura Market",
+   "name_ur": null,
+   "lat": 31.41428,
+   "lon": 74.486567
+  },
+  {
+   "code": "ET4576",
+   "name": "Masjid Ghosia Heir",
+   "name_ur": null,
+   "lat": 31.41065,
+   "lon": 74.489212
+  },
+  {
+   "code": "ET4577",
+   "name": "Heir Adda Lfrf",
+   "name_ur": null,
+   "lat": 31.405195,
+   "lon": 74.492266
+  },
+  {
+   "code": "ET46",
+   "name": "13. Canal",
+   "name_ur": null,
+   "lat": 31.519472,
+   "lon": 74.326709
+  },
+  {
+   "code": "ET4619",
+   "name": "Fazal Town",
+   "name_ur": null,
+   "lat": 31.640541,
+   "lon": 74.191313
+  },
+  {
+   "code": "ET4620",
+   "name": "Javaid Nagar",
+   "name_ur": null,
+   "lat": 31.639336,
+   "lon": 74.194219
+  },
+  {
+   "code": "ET4621",
+   "name": "Motorway City",
+   "name_ur": null,
+   "lat": 31.633967,
+   "lon": 74.207617
+  },
+  {
+   "code": "ET4622",
+   "name": "Al-Wahab Garden",
+   "name_ur": null,
+   "lat": 31.628128,
+   "lon": 74.223201
+  },
+  {
+   "code": "ET4623",
+   "name": "Main Bazar kot Abdul Malik",
+   "name_ur": null,
+   "lat": 31.624453,
+   "lon": 74.233479
+  },
+  {
+   "code": "ET4624",
+   "name": "kot Abdul Malik",
+   "name_ur": null,
+   "lat": 31.622267,
+   "lon": 74.239391
+  },
+  {
+   "code": "ET4625",
+   "name": "Dosako Chowk",
+   "name_ur": null,
+   "lat": 31.618281,
+   "lon": 74.247648
+  },
+  {
+   "code": "ET4626",
+   "name": "Nain Sukh",
+   "name_ur": null,
+   "lat": 31.610542,
+   "lon": 74.251517
+  },
+  {
+   "code": "ET4650",
+   "name": "Zila Katchery",
+   "name_ur": null,
+   "lat": 31.574929,
+   "lon": 74.306708
+  },
+  {
+   "code": "ET4651",
+   "name": "UVAS",
+   "name_ur": null,
+   "lat": 31.573369,
+   "lon": 74.300782
+  },
+  {
+   "code": "ET4652",
+   "name": "Corporation Chowk",
+   "name_ur": null,
+   "lat": 31.573484,
+   "lon": 74.291386
+  },
+  {
+   "code": "ET4653",
+   "name": "80 Foot Road",
+   "name_ur": null,
+   "lat": 31.57324,
+   "lon": 74.277227
+  },
+  {
+   "code": "ET4654",
+   "name": "Fatima Zahra Road",
+   "name_ur": null,
+   "lat": 31.582658,
+   "lon": 74.261539
+  },
+  {
+   "code": "ET4655",
+   "name": "Hazrat Ali Road",
+   "name_ur": null,
+   "lat": 31.588693,
+   "lon": 74.256802
+  },
+  {
+   "code": "ET4656",
+   "name": "Sui Gas Office",
+   "name_ur": null,
+   "lat": 31.594762,
+   "lon": 74.254841
+  },
+  {
+   "code": "ET4657",
+   "name": "Saggian Chowk",
+   "name_ur": null,
+   "lat": 31.608802,
+   "lon": 74.2503
+  },
+  {
+   "code": "ET4666",
+   "name": "Dograi",
+   "name_ur": null,
+   "lat": 31.526698,
+   "lon": 74.445793
+  },
+  {
+   "code": "ET4667",
+   "name": "Baoo Wala",
+   "name_ur": null,
+   "lat": 31.530801,
+   "lon": 74.440429
+  },
+  {
+   "code": "ET4668",
+   "name": "Mehfooz Shaheed Garrison",
+   "name_ur": null,
+   "lat": 31.533941,
+   "lon": 74.436207
+  },
+  {
+   "code": "ET4669",
+   "name": "Quaid Check post",
+   "name_ur": null,
+   "lat": 31.538525,
+   "lon": 74.431519
+  },
+  {
+   "code": "ET4670",
+   "name": "Ranger Headquarter",
+   "name_ur": null,
+   "lat": 31.541997,
+   "lon": 74.409026
+  },
+  {
+   "code": "ET4671",
+   "name": "Jawad Cheema Road",
+   "name_ur": null,
+   "lat": 31.542081,
+   "lon": 74.403349
+  },
+  {
+   "code": "ET4672",
+   "name": "Army Museum",
+   "name_ur": null,
+   "lat": 31.531451,
+   "lon": 74.399979
+  },
+  {
+   "code": "ET4673",
+   "name": "Ayub Stadium",
+   "name_ur": null,
+   "lat": 31.529306,
+   "lon": 74.39229
+  },
+  {
+   "code": "ET4674",
+   "name": "APS Sarfaraz Rafique Road",
+   "name_ur": null,
+   "lat": 31.52463,
+   "lon": 74.383647
+  },
+  {
+   "code": "ET4675",
+   "name": "Serwar Road",
+   "name_ur": null,
+   "lat": 31.506497,
+   "lon": 74.375001
+  },
+  {
+   "code": "ET4676",
+   "name": "D-Mess Khursheed Alam Rd",
+   "name_ur": null,
+   "lat": 31.507876,
+   "lon": 74.36807
+  },
+  {
+   "code": "ET4677",
+   "name": "F-Mess Shami Road",
+   "name_ur": null,
+   "lat": 31.514904,
+   "lon": 74.368336
+  },
+  {
+   "code": "ET4678",
+   "name": "Munir Road",
+   "name_ur": null,
+   "lat": 31.51856,
+   "lon": 74.368439
+  },
+  {
+   "code": "ET4679",
+   "name": "Abid Majeed Road",
+   "name_ur": null,
+   "lat": 31.520674,
+   "lon": 74.368513
+  },
+  {
+   "code": "ET468",
+   "name": "Railway Station",
+   "name_ur": null,
+   "lat": 31.575274,
+   "lon": 74.33544
+  },
+  {
+   "code": "ET4680",
+   "name": "Alla-Ud-Din Road 2",
+   "name_ur": null,
+   "lat": 31.525967,
+   "lon": 74.36867
+  },
+  {
+   "code": "ET4681",
+   "name": "Fotress Stadium",
+   "name_ur": null,
+   "lat": 31.529209,
+   "lon": 74.368752
+  },
+  {
+   "code": "ET4682",
+   "name": "Navy Selection Center",
+   "name_ur": null,
+   "lat": 31.534846,
+   "lon": 74.369049
+  },
+  {
+   "code": "ET4683",
+   "name": "CMH",
+   "name_ur": null,
+   "lat": 31.540756,
+   "lon": 74.36936
+  },
+  {
+   "code": "ET4684",
+   "name": "Infantry Road Mian Mir",
+   "name_ur": null,
+   "lat": 31.549506,
+   "lon": 74.362909
+  },
+  {
+   "code": "ET4685",
+   "name": "Dharampura Bridge",
+   "name_ur": null,
+   "lat": 31.552743,
+   "lon": 74.359121
+  },
+  {
+   "code": "ET4686",
+   "name": "Euro Store",
+   "name_ur": null,
+   "lat": 31.556337,
+   "lon": 74.354466
+  },
+  {
+   "code": "ET4687",
+   "name": "Police Station Ghari Shahu",
+   "name_ur": null,
+   "lat": 31.560107,
+   "lon": 74.349828
+  },
+  {
+   "code": "ET4688",
+   "name": "Ghari Shahu Bazar",
+   "name_ur": null,
+   "lat": 31.562635,
+   "lon": 74.346744
+  },
+  {
+   "code": "ET4689",
+   "name": "Ghari Shahu Chowk",
+   "name_ur": null,
+   "lat": 31.565462,
+   "lon": 74.3433
+  },
+  {
+   "code": "ET4690",
+   "name": "Railway HeadQuarters",
+   "name_ur": null,
+   "lat": 31.568379,
+   "lon": 74.340258
+  },
+  {
+   "code": "ET4691",
+   "name": "Bohar Wala Chowk",
+   "name_ur": null,
+   "lat": 31.57235,
+   "lon": 74.337891
+  },
+  {
+   "code": "ET4723",
+   "name": "Bhubhtian Chowk",
+   "name_ur": null,
+   "lat": 31.394744,
+   "lon": 74.229919
+  },
+  {
+   "code": "ET4724",
+   "name": "Bhubhtian Pind",
+   "name_ur": null,
+   "lat": 31.401267,
+   "lon": 74.229988
+  },
+  {
+   "code": "ET4725",
+   "name": "Mumtaz Bakhtawar Hospital",
+   "name_ur": null,
+   "lat": 31.405407,
+   "lon": 74.229943
+  },
+  {
+   "code": "ET4726",
+   "name": "Sher-Shah Road",
+   "name_ur": null,
+   "lat": 31.410425,
+   "lon": 74.229728
+  },
+  {
+   "code": "ET4727",
+   "name": "LDA Avenue Chowk",
+   "name_ur": null,
+   "lat": 31.421359,
+   "lon": 74.229771
+  },
+  {
+   "code": "ET4728",
+   "name": "University of South Asia",
+   "name_ur": null,
+   "lat": 31.424987,
+   "lon": 74.230143
+  },
+  {
+   "code": "ET4729",
+   "name": "P.U. Employees Society",
+   "name_ur": null,
+   "lat": 31.431096,
+   "lon": 74.231457
+  },
+  {
+   "code": "ET4730",
+   "name": "Ali-Raza Baad",
+   "name_ur": null,
+   "lat": 31.434096,
+   "lon": 74.2324142
+  },
+  {
+   "code": "ET4731",
+   "name": "Agrics Town",
+   "name_ur": null,
+   "lat": 31.441444,
+   "lon": 74.231965
+  },
+  {
+   "code": "ET4732",
+   "name": "Rahima Baad",
+   "name_ur": null,
+   "lat": 31.445545,
+   "lon": 74.236683
+  },
+  {
+   "code": "ET4733",
+   "name": "QazzalBash Chowk",
+   "name_ur": null,
+   "lat": 31.44906,
+   "lon": 74.242144
+  },
+  {
+   "code": "ET4734",
+   "name": "Katchi Kothi Stop",
+   "name_ur": null,
+   "lat": 31.451681,
+   "lon": 74.245636
+  },
+  {
+   "code": "ET4735",
+   "name": "Fatima Masjid",
+   "name_ur": null,
+   "lat": 31.459101,
+   "lon": 74.244701
+  },
+  {
+   "code": "ET4754",
+   "name": "Shalamar Chowk",
+   "name_ur": null,
+   "lat": 31.5834285,
+   "lon": 74.3819973
+  },
+  {
+   "code": "ET4755",
+   "name": "Angoori Bagh Scheme",
+   "name_ur": null,
+   "lat": 31.580359,
+   "lon": 74.3818146
+  },
+  {
+   "code": "ET4756",
+   "name": "Ganda Nala",
+   "name_ur": null,
+   "lat": 31.576634,
+   "lon": 74.381245
+  },
+  {
+   "code": "ET4757",
+   "name": "Shalamar Hospital",
+   "name_ur": null,
+   "lat": 31.573679,
+   "lon": 74.381114
+  },
+  {
+   "code": "ET4758",
+   "name": "Ramgarh",
+   "name_ur": null,
+   "lat": 31.569841,
+   "lon": 74.381022
+  },
+  {
+   "code": "ET4759",
+   "name": "Shah Kamal Road",
+   "name_ur": null,
+   "lat": 31.567356,
+   "lon": 74.380898
+  },
+  {
+   "code": "ET4760",
+   "name": "Gunj Bazar",
+   "name_ur": null,
+   "lat": 31.565029,
+   "lon": 74.380831
+  },
+  {
+   "code": "ET4761",
+   "name": "Mughal Pura",
+   "name_ur": null,
+   "lat": 31.562905,
+   "lon": 74.381589
+  },
+  {
+   "code": "ET4762",
+   "name": "Jafri Pull",
+   "name_ur": null,
+   "lat": 31.563612,
+   "lon": 74.385878
+  },
+  {
+   "code": "ET4763",
+   "name": "Lal Pull",
+   "name_ur": null,
+   "lat": 31.564756,
+   "lon": 74.39154
+  },
+  {
+   "code": "ET4764",
+   "name": "Nawan Pull",
+   "name_ur": null,
+   "lat": 31.566706,
+   "lon": 74.400692
+  },
+  {
+   "code": "ET4765",
+   "name": "Fateh Garh Pull",
+   "name_ur": null,
+   "lat": 31.567635,
+   "lon": 74.405753
+  },
+  {
+   "code": "ET4766",
+   "name": "Canal Bank Society",
+   "name_ur": null,
+   "lat": 31.569266,
+   "lon": 74.413616
+  },
+  {
+   "code": "ET4767",
+   "name": "Taj Bagh",
+   "name_ur": null,
+   "lat": 31.57052,
+   "lon": 74.419872
+  },
+  {
+   "code": "ET4768",
+   "name": "Harbanspura Morr",
+   "name_ur": null,
+   "lat": 31.571734,
+   "lon": 74.425984
+  },
+  {
+   "code": "ET4769",
+   "name": "Harbanspura Bridge",
+   "name_ur": null,
+   "lat": 31.573486,
+   "lon": 74.434056
+  },
+  {
+   "code": "ET4770",
+   "name": "Harbanspura Police Station",
+   "name_ur": null,
+   "lat": 31.574818,
+   "lon": 74.441139
+  },
+  {
+   "code": "ET4771",
+   "name": "Press Club Society",
+   "name_ur": null,
+   "lat": 31.576043,
+   "lon": 74.447542
+  },
+  {
+   "code": "ET4772",
+   "name": "Rani Pind",
+   "name_ur": null,
+   "lat": 31.57838,
+   "lon": 74.458438
+  },
+  {
+   "code": "ET4773",
+   "name": "TulsPura",
+   "name_ur": null,
+   "lat": 31.579538,
+   "lon": 74.464208
+  },
+  {
+   "code": "ET4774",
+   "name": "Rizwan Garden",
+   "name_ur": null,
+   "lat": 31.58128,
+   "lon": 74.472826
+  },
+  {
+   "code": "ET4775",
+   "name": "Jallo Park",
+   "name_ur": null,
+   "lat": 31.583216,
+   "lon": 74.482489
+  },
+  {
+   "code": "ET4776",
+   "name": "Sozo Water Park",
+   "name_ur": null,
+   "lat": 31.584305,
+   "lon": 74.4878
+  },
+  {
+   "code": "ET4829",
+   "name": "Khanpur",
+   "name_ur": null,
+   "lat": 31.457268,
+   "lon": 74.217398
+  },
+  {
+   "code": "ET4830",
+   "name": "Kot Gujra",
+   "name_ur": null,
+   "lat": 31.4506817,
+   "lon": 74.20794
+  },
+  {
+   "code": "ET4831",
+   "name": "Manowal",
+   "name_ur": null,
+   "lat": 31.432605,
+   "lon": 74.182849
+  },
+  {
+   "code": "ET4832",
+   "name": "Gourmet baker Chung",
+   "name_ur": null,
+   "lat": 31.426918,
+   "lon": 74.176334
+  },
+  {
+   "code": "ET4837",
+   "name": "Baoli Jamada",
+   "name_ur": null,
+   "lat": 31.710869,
+   "lon": 74.27096
+  },
+  {
+   "code": "ET4838",
+   "name": "Sham-k-Pind",
+   "name_ur": null,
+   "lat": 31.706695,
+   "lon": 74.271841
+  },
+  {
+   "code": "ET4839",
+   "name": "UET KSK Campus",
+   "name_ur": null,
+   "lat": 31.700655,
+   "lon": 74.273155
+  },
+  {
+   "code": "ET4840",
+   "name": "Labour Colony",
+   "name_ur": null,
+   "lat": 31.689698,
+   "lon": 74.275484
+  },
+  {
+   "code": "ET4846",
+   "name": "Dher Pindi",
+   "name_ur": null,
+   "lat": 31.529191,
+   "lon": 74.424286
+  },
+  {
+   "code": "ET4849",
+   "name": "Akbar Chowk",
+   "name_ur": null,
+   "lat": 31.466646,
+   "lon": 74.306799
+  },
+  {
+   "code": "ET4851",
+   "name": "McDonald",
+   "name_ur": null,
+   "lat": 31.52751,
+   "lon": 74.35026
+  },
+  {
+   "code": "ET498",
+   "name": "Ali Town Station North",
+   "name_ur": null,
+   "lat": 31.46513,
+   "lon": 74.243878
+  },
+  {
+   "code": "ET5",
+   "name": "2. Niazi Chowk",
+   "name_ur": null,
+   "lat": 31.60091,
+   "lon": 74.299247
+  },
+  {
+   "code": "ET507",
+   "name": "Wahdat Road Station South",
+   "name_ur": null,
+   "lat": 31.4952088,
+   "lon": 74.2639844
+  },
+  {
+   "code": "ET526",
+   "name": "Gulshan Ravi Station",
+   "name_ur": null,
+   "lat": 31.544948,
+   "lon": 74.296149
+  },
+  {
+   "code": "ET54",
+   "name": "15. Kalma Chowk",
+   "name_ur": null,
+   "lat": 31.50352531,
+   "lon": 74.33188819
+  },
+  {
+   "code": "ET542",
+   "name": "Shalamar Station South",
+   "name_ur": null,
+   "lat": 31.583801,
+   "lon": 74.380018
+  },
+  {
+   "code": "ET5524",
+   "name": "Rt 8 kalma chowk",
+   "name_ur": null,
+   "lat": 31.5037477,
+   "lon": 74.3304818
+  },
+  {
+   "code": "ET56",
+   "name": "16. Model Town",
+   "name_ur": null,
+   "lat": 31.49744125,
+   "lon": 74.33446559
+  },
+  {
+   "code": "ET5647",
+   "name": "Rabani Hospital",
+   "name_ur": null,
+   "lat": 31.466811,
+   "lon": 74.236899
+  },
+  {
+   "code": "ET5648",
+   "name": "Doctor Society",
+   "name_ur": null,
+   "lat": 31.462016,
+   "lon": 74.231481
+  },
+  {
+   "code": "ET5649",
+   "name": "Eden Canal Villa's",
+   "name_ur": null,
+   "lat": 31.459531,
+   "lon": 74.228899
+  },
+  {
+   "code": "ET5650",
+   "name": "Basco Society",
+   "name_ur": null,
+   "lat": 31.455626,
+   "lon": 74.22076
+  },
+  {
+   "code": "ET5651",
+   "name": "Muhafiz Town Market",
+   "name_ur": null,
+   "lat": 31.455448,
+   "lon": 74.217124
+  },
+  {
+   "code": "ET5652",
+   "name": "Rajput Town",
+   "name_ur": null,
+   "lat": 31.453429,
+   "lon": 74.212492
+  },
+  {
+   "code": "ET5653",
+   "name": "EME Society",
+   "name_ur": null,
+   "lat": 31.450511,
+   "lon": 74.208591
+  },
+  {
+   "code": "ET5654",
+   "name": "Aabpara Market",
+   "name_ur": null,
+   "lat": 31.447034,
+   "lon": 74.20504
+  },
+  {
+   "code": "ET5655",
+   "name": "Green Fort 2",
+   "name_ur": null,
+   "lat": 31.437901,
+   "lon": 74.195539
+  },
+  {
+   "code": "ET5656",
+   "name": "Saleem Memorial Hospital",
+   "name_ur": null,
+   "lat": 31.435641,
+   "lon": 74.192999
+  },
+  {
+   "code": "ET5657",
+   "name": "P & D Society",
+   "name_ur": null,
+   "lat": 31.430518,
+   "lon": 74.187354
+  },
+  {
+   "code": "ET5658",
+   "name": "NESPAK Society",
+   "name_ur": null,
+   "lat": 31.427085,
+   "lon": 74.183535
+  },
+  {
+   "code": "ET5659",
+   "name": "Izmir Town",
+   "name_ur": null,
+   "lat": 31.422996,
+   "lon": 74.179044
+  },
+  {
+   "code": "ET5660",
+   "name": "Jubliee Town",
+   "name_ur": null,
+   "lat": 31.408244,
+   "lon": 74.169824
+  },
+  {
+   "code": "ET5661",
+   "name": "Mian Chowk",
+   "name_ur": null,
+   "lat": 31.407326,
+   "lon": 74.183044
+  },
+  {
+   "code": "ET5662",
+   "name": "Indus Hospital",
+   "name_ur": null,
+   "lat": 31.403494,
+   "lon": 74.18393
+  },
+  {
+   "code": "ET5663",
+   "name": "Shahkam Chowk",
+   "name_ur": null,
+   "lat": 31.400575,
+   "lon": 74.171414
+  },
+  {
+   "code": "ET5664",
+   "name": "Canal Garden",
+   "name_ur": null,
+   "lat": 31.39652,
+   "lon": 74.16913
+  },
+  {
+   "code": "ET5665",
+   "name": "Alwaiz Tower",
+   "name_ur": null,
+   "lat": 31.390352,
+   "lon": 74.168749
+  },
+  {
+   "code": "ET5666",
+   "name": "Bahria Town",
+   "name_ur": null,
+   "lat": 31.384782,
+   "lon": 74.168431
+  },
+  {
+   "code": "ET5667",
+   "name": "Bail Chowk",
+   "name_ur": null,
+   "lat": 31.376038,
+   "lon": 74.165804
+  },
+  {
+   "code": "ET5668",
+   "name": "Bahria Masjid",
+   "name_ur": null,
+   "lat": 31.369666,
+   "lon": 74.183171
+  },
+  {
+   "code": "ET5669",
+   "name": "Bahria Masjid",
+   "name_ur": null,
+   "lat": 31.369666,
+   "lon": 74.183171
+  },
+  {
+   "code": "ET571",
+   "name": "Railway Station-1 North",
+   "name_ur": null,
+   "lat": 31.574131,
+   "lon": 74.33621
+  },
+  {
+   "code": "ET5791",
+   "name": "Sui Gas Society",
+   "name_ur": null,
+   "lat": 31.338527,
+   "lon": 74.205195
+  },
+  {
+   "code": "ET5792",
+   "name": "Army Welfare Trust",
+   "name_ur": null,
+   "lat": 31.354007,
+   "lon": 74.226216
+  },
+  {
+   "code": "ET5794",
+   "name": "Beacon House Society",
+   "name_ur": null,
+   "lat": 31.359178,
+   "lon": 74.23017
+  },
+  {
+   "code": "ET5801",
+   "name": "Shareef Medical City",
+   "name_ur": null,
+   "lat": 31.334723,
+   "lon": 74.199957
+  },
+  {
+   "code": "ET5802",
+   "name": "Faizaia Housing Society",
+   "name_ur": null,
+   "lat": 31.369226,
+   "lon": 74.240974
+  },
+  {
+   "code": "ET5803",
+   "name": "Lake City",
+   "name_ur": null,
+   "lat": 31.369944,
+   "lon": 74.251496
+  },
+  {
+   "code": "ET5804",
+   "name": "khayban-e-Amin",
+   "name_ur": null,
+   "lat": 31.369634,
+   "lon": 74.256457
+  },
+  {
+   "code": "ET5805",
+   "name": "Eden Abad",
+   "name_ur": null,
+   "lat": 31.373698,
+   "lon": 74.256167
+  },
+  {
+   "code": "ET5806",
+   "name": "Eden Villas",
+   "name_ur": null,
+   "lat": 31.381371,
+   "lon": 74.253123
+  },
+  {
+   "code": "ET5807",
+   "name": "DHA Rahber",
+   "name_ur": null,
+   "lat": 31.387776,
+   "lon": 74.250527
+  },
+  {
+   "code": "ET5808",
+   "name": "Pine Avenue",
+   "name_ur": null,
+   "lat": 31.392124,
+   "lon": 74.248764
+  },
+  {
+   "code": "ET5809",
+   "name": "University of Lahore",
+   "name_ur": null,
+   "lat": 31.39493,
+   "lon": 74.239699
+  },
+  {
+   "code": "ET5827",
+   "name": "Samanabad (Forward RT-28)",
+   "name_ur": null,
+   "lat": 31.539421,
+   "lon": 74.304643
+  },
+  {
+   "code": "ET5829",
+   "name": "Samanabad Gol Chakkar (Forward)",
+   "name_ur": null,
+   "lat": 31.542416,
+   "lon": 74.300847
+  },
+  {
+   "code": "ET5831",
+   "name": "Gulshan Ravi Market (Forward)",
+   "name_ur": null,
+   "lat": 31.545902,
+   "lon": 74.29178
+  },
+  {
+   "code": "ET5833",
+   "name": "Ganda Nala (Forward)",
+   "name_ur": null,
+   "lat": 31.547152,
+   "lon": 74.29085
+  },
+  {
+   "code": "ET5836",
+   "name": "Shehnai Palace (Forward)",
+   "name_ur": null,
+   "lat": 31.549752,
+   "lon": 74.285773
+  },
+  {
+   "code": "ET5838",
+   "name": "Moon Market (Forward)",
+   "name_ur": null,
+   "lat": 31.549967,
+   "lon": 74.282723
+  },
+  {
+   "code": "ET5840",
+   "name": "Park Morr (Forward)",
+   "name_ur": null,
+   "lat": 31.550047,
+   "lon": 74.277755
+  },
+  {
+   "code": "ET5842",
+   "name": "Wasa Disposal Stop (Forward)",
+   "name_ur": null,
+   "lat": 31.550193,
+   "lon": 74.272813
+  },
+  {
+   "code": "ET5844",
+   "name": "Gulshan Ravi Double Sarka",
+   "name_ur": null,
+   "lat": 31.55101,
+   "lon": 74.271143
+  },
+  {
+   "code": "ET59",
+   "name": "17. Naseerabad",
+   "name_ur": null,
+   "lat": 31.48707603,
+   "lon": 74.3387698
+  },
+  {
+   "code": "ET63",
+   "name": "18. Ittefaq Hospital",
+   "name_ur": null,
+   "lat": 31.4792154,
+   "lon": 74.34206847
+  },
+  {
+   "code": "ET66",
+   "name": "19. Qainchi",
+   "name_ur": null,
+   "lat": 31.46441822,
+   "lon": 74.34823703
+  },
+  {
+   "code": "ET69",
+   "name": "20. Ghazi Chowk",
+   "name_ur": null,
+   "lat": 31.45708817,
+   "lon": 74.35125537
+  },
+  {
+   "code": "ET74",
+   "name": "21. Chungi Amar Sidhu",
+   "name_ur": null,
+   "lat": 31.45042606,
+   "lon": 74.35338135
+  },
+  {
+   "code": "ET78",
+   "name": "22. Kamahan",
+   "name_ur": null,
+   "lat": 31.44103415,
+   "lon": 74.35531102
+  },
+  {
+   "code": "ET79",
+   "name": "23. Atari Saroba",
+   "name_ur": null,
+   "lat": 31.43103531,
+   "lon": 74.35677771
+  },
+  {
+   "code": "ET7941",
+   "name": "Al Hafeez Garden Phase 2 (Forward)",
+   "name_ur": null,
+   "lat": 31.585294,
+   "lon": 74.492559
+  },
+  {
+   "code": "ET7942",
+   "name": "Iqbal Garden (Forward)",
+   "name_ur": null,
+   "lat": 31.63662,
+   "lon": 74.20082
+  },
+  {
+   "code": "ET8",
+   "name": "3. Timber Market",
+   "name_ur": null,
+   "lat": 31.59445,
+   "lon": 74.302198
+  },
+  {
+   "code": "ET8289",
+   "name": "Nawabpura Bus Stop",
+   "name_ur": null,
+   "lat": 31.575557,
+   "lon": 74.44497
+  },
+  {
+   "code": "ET84",
+   "name": "24. Nishtar Colony",
+   "name_ur": null,
+   "lat": 31.41972558,
+   "lon": 74.35843922
+  },
+  {
+   "code": "ET855",
+   "name": "Babu sabu",
+   "name_ur": null,
+   "lat": 31.53832,
+   "lon": 74.26664
+  },
+  {
+   "code": "ET867",
+   "name": "Airport",
+   "name_ur": null,
+   "lat": 31.524384,
+   "lon": 74.413719
+  },
+  {
+   "code": "ET87",
+   "name": "25. Youhanabad",
+   "name_ur": null,
+   "lat": 31.41281889,
+   "lon": 74.35946826
+  },
+  {
+   "code": "ET8776",
+   "name": "Govt. College for Girls, Heir (FWD)",
+   "name_ur": null,
+   "lat": 31.41206,
+   "lon": 74.488115
+  },
+  {
+   "code": "ET8778",
+   "name": "Mota Singh Wala 1 (FWD)",
+   "name_ur": null,
+   "lat": 31.448946,
+   "lon": 74.454513
+  },
+  {
+   "code": "ET8779",
+   "name": "Mota Singh Wala 2 (FWD)",
+   "name_ur": null,
+   "lat": 31.448945,
+   "lon": 74.454673
+  },
+  {
+   "code": "ET8788",
+   "name": "Haji Di Khui (Forward)",
+   "name_ur": null,
+   "lat": 31.415792,
+   "lon": 74.358693
+  },
+  {
+   "code": "ET88",
+   "name": "26. Dulu khurd",
+   "name_ur": null,
+   "lat": 31.40542958,
+   "lon": 74.36054209
+  },
+  {
+   "code": "ET92",
+   "name": "27. Gajjumata",
+   "name_ur": null,
+   "lat": 31.39831499,
+   "lon": 74.36160257
+  },
+  {
+   "code": "ET94",
+   "name": "Gajjumata",
+   "name_ur": null,
+   "lat": 31.397068,
+   "lon": 74.361766
+  }
+ ],
+ "routes": [
+  {
+   "code": "Askari X – Airport",
+   "name": "Askari X ↔ Airport",
+   "color": "#D0102B",
+   "avg_speed_kmh": 19.1,
+   "etransit_route_id": 259,
+   "stops": [
+    "ET4093",
+    "ET4846",
+    "ET867"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "07:00",
+    "last_departure": "21:00",
+    "headway_min": 30
+   }
+  },
+  {
+   "code": "Bhatti Chk – Mandiali Toll Plaza",
+   "name": "Bhatti Chowk ↔ Mandiali Toll Plaza",
+   "color": "#1A49BB",
+   "avg_speed_kmh": 13.9,
+   "etransit_route_id": 253,
+   "stops": [
+    "ET4033",
+    "ET4650",
+    "ET4651",
+    "ET4652",
+    "ET4653",
+    "ET4654",
+    "ET4655",
+    "ET4656",
+    "ET4626",
+    "ET4657",
+    "ET4625",
+    "ET4624",
+    "ET4623",
+    "ET4622",
+    "ET4621",
+    "ET7942",
+    "ET4620",
+    "ET4619",
+    "ET430"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "05:25",
+    "last_departure": "21:25",
+    "headway_min": 15
+   }
+  },
+  {
+   "code": "Bhatti Chowk – Shadbagh U/pass",
+   "name": "Bhatti Chowk ↔ Shadbagh Underpass",
+   "color": "#78BB1A",
+   "avg_speed_kmh": 14.1,
+   "etransit_route_id": 241,
+   "stops": [
+    "ET4033",
+    "ET4035",
+    "ET4120",
+    "ET4121",
+    "ET4122",
+    "ET4123",
+    "ET4124",
+    "ET4125",
+    "ET4126",
+    "ET4127",
+    "ET4128",
+    "ET4078"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:00",
+    "last_departure": "21:45",
+    "headway_min": 15
+   }
+  },
+  {
+   "code": "Bhatti – R.A Bazar",
+   "name": "Bhatti ↔ R.A Bazar",
+   "color": "#BB1AA7",
+   "avg_speed_kmh": 15.3,
+   "etransit_route_id": 250,
+   "stops": [
+    "ET4033",
+    "ET4387",
+    "ET269",
+    "ET4388",
+    "ET4389",
+    "ET4390",
+    "ET4391",
+    "ET1383",
+    "ET4392",
+    "ET4393",
+    "ET4394",
+    "ET4395",
+    "ET4396",
+    "ET4397",
+    "ET4398",
+    "ET4264",
+    "ET4851",
+    "ET4400",
+    "ET4267",
+    "ET4268",
+    "ET4269",
+    "ET297",
+    "ET4270",
+    "ET4401",
+    "ET4402",
+    "ET4403",
+    "ET4097",
+    "ET4074"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:00",
+    "last_departure": "22:10",
+    "headway_min": 11
+   }
+  },
+  {
+   "code": "Canal – Chung",
+   "name": "Canal ↔ Chung",
+   "color": "#1ABBA0",
+   "avg_speed_kmh": 12.3,
+   "etransit_route_id": 257,
+   "stops": [
+    "ET4236",
+    "ET4165",
+    "ET297",
+    "ET4166",
+    "ET4167",
+    "ET4168",
+    "ET4169",
+    "ET4170",
+    "ET4171",
+    "ET4172",
+    "ET4173",
+    "ET4174",
+    "ET4175",
+    "ET4176",
+    "ET4177",
+    "ET4178",
+    "ET181",
+    "ET4180",
+    "ET4181",
+    "ET4182",
+    "ET1584",
+    "ET4829",
+    "ET4830",
+    "ET4831",
+    "ET4832",
+    "ET4089"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:15",
+    "last_departure": "22:15",
+    "headway_min": 80
+   }
+  },
+  {
+   "code": "RT 16 Canal – Jinnah Terminal",
+   "name": "RT 16 Canal ↔ Jinnah Terminal",
+   "color": "#BB711A",
+   "avg_speed_kmh": 13.8,
+   "etransit_route_id": 251,
+   "stops": [
+    "ET4236",
+    "ET4165",
+    "ET297",
+    "ET4490",
+    "ET4491",
+    "ET4492",
+    "ET4493",
+    "ET4494",
+    "ET4495",
+    "ET4496",
+    "ET4497",
+    "ET4498",
+    "ET4499",
+    "ET4399",
+    "ET4500",
+    "ET4849",
+    "ET4375",
+    "ET4501",
+    "ET4502",
+    "ET4503",
+    "ET4504",
+    "ET4505",
+    "ET4506",
+    "ET4507",
+    "ET4508",
+    "ET4509",
+    "ET4510",
+    "ET4511",
+    "ET4512",
+    "ET4513",
+    "ET4514",
+    "ET4180",
+    "ET4181",
+    "ET4182",
+    "ET1353"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:47",
+    "last_departure": "22:07",
+    "headway_min": 40
+   }
+  },
+  {
+   "code": "RT-8 Canal – Jinnah Terminal",
+   "name": "RT-8 Canal ↔ Jinnah Terminal",
+   "color": "#421ABB",
+   "avg_speed_kmh": 13.9,
+   "etransit_route_id": 243,
+   "stops": [
+    "ET4236",
+    "ET4165",
+    "ET5524",
+    "ET4166",
+    "ET4167",
+    "ET4168",
+    "ET4169",
+    "ET4170",
+    "ET4171",
+    "ET4172",
+    "ET4173",
+    "ET4174",
+    "ET4175",
+    "ET4176",
+    "ET4177",
+    "ET4178",
+    "ET4179",
+    "ET4180",
+    "ET4181",
+    "ET4182",
+    "ET1353"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:27",
+    "last_departure": "21:57",
+    "headway_min": 30
+   }
+  },
+  {
+   "code": "Depot Chowk – Chungi Amer Sidhu",
+   "name": "Depot Chowk ↔ Chungi Amer Sidhu",
+   "color": "#21BB1A",
+   "avg_speed_kmh": 11.6,
+   "etransit_route_id": 242,
+   "stops": [
+    "ET149",
+    "ET4137",
+    "ET4138",
+    "ET4139",
+    "ET4140",
+    "ET4141",
+    "ET4142",
+    "ET4143",
+    "ET4144",
+    "ET4145",
+    "ET4146",
+    "ET4147",
+    "ET4148",
+    "ET4149",
+    "ET4150",
+    "ET4151",
+    "ET4109",
+    "ET4075"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:10",
+    "last_departure": "21:50",
+    "headway_min": 20
+   }
+  },
+  {
+   "code": "Depot Chowk – Kalma Chowk",
+   "name": "Depot Chowk ↔ Kalma Chowk",
+   "color": "#BB1A50",
+   "avg_speed_kmh": 14.9,
+   "etransit_route_id": 248,
+   "stops": [
+    "ET149",
+    "ET4343",
+    "ET4344",
+    "ET4345",
+    "ET4346",
+    "ET4347",
+    "ET4348",
+    "ET4349",
+    "ET4350",
+    "ET4351",
+    "ET4352",
+    "ET4353",
+    "ET4849",
+    "ET4355",
+    "ET4356",
+    "ET4357",
+    "ET4144",
+    "ET4145",
+    "ET4146",
+    "ET4147",
+    "ET4148",
+    "ET4358",
+    "ET4359",
+    "ET4360",
+    "ET4361",
+    "ET4362",
+    "ET4363",
+    "ET4364",
+    "ET297"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:00",
+    "last_departure": "21:40",
+    "headway_min": 20
+   }
+  },
+  {
+   "code": "Gajjumata – Rangers Wing HQ",
+   "name": "Gajjumata ↔ Rangers Wing Headquarter",
+   "color": "#1A7FBB",
+   "avg_speed_kmh": 10.3,
+   "etransit_route_id": 252,
+   "stops": [
+    "ET94",
+    "ET4539",
+    "ET4540",
+    "ET4541",
+    "ET4542",
+    "ET4543",
+    "ET4544",
+    "ET4545",
+    "ET4546",
+    "ET4547",
+    "ET4548",
+    "ET4549",
+    "ET4550",
+    "ET4551",
+    "ET4552",
+    "ET4553",
+    "ET4554",
+    "ET4555",
+    "ET4556",
+    "ET4557",
+    "ET4558",
+    "ET4559",
+    "ET8778",
+    "ET4560",
+    "ET4561",
+    "ET4562",
+    "ET4563",
+    "ET4564",
+    "ET4565",
+    "ET4566",
+    "ET4567",
+    "ET4568",
+    "ET4569",
+    "ET8779",
+    "ET4570",
+    "ET4571",
+    "ET4572",
+    "ET4573",
+    "ET4574",
+    "ET4575",
+    "ET8776",
+    "ET4576",
+    "ET4577",
+    "ET4082"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "05:30",
+    "last_departure": "19:40",
+    "headway_min": 25
+   }
+  },
+  {
+   "code": "Jinnah Bus Term. – Bahria Town",
+   "name": "Jinnah Bus Terminal ↔ Bahria Town",
+   "color": "#AEBB1A",
+   "avg_speed_kmh": 10.1,
+   "etransit_route_id": 270,
+   "stops": [
+    "ET1353",
+    "ET4181",
+    "ET4182",
+    "ET5647",
+    "ET5648",
+    "ET5649",
+    "ET5650",
+    "ET5651",
+    "ET5652",
+    "ET5653",
+    "ET5654",
+    "ET5655",
+    "ET5656",
+    "ET5657",
+    "ET5658",
+    "ET5659",
+    "ET5660",
+    "ET5661",
+    "ET5662",
+    "ET5663",
+    "ET5664",
+    "ET5665",
+    "ET5666",
+    "ET5667",
+    "ET5668",
+    "ET5669"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "05:50",
+    "last_departure": "20:50",
+    "headway_min": 20
+   }
+  },
+  {
+   "code": "KSK – Railway Station",
+   "name": "KSK ↔ Railway Station",
+   "color": "#991ABB",
+   "avg_speed_kmh": 10.0,
+   "etransit_route_id": 258,
+   "stops": [
+    "ET4091",
+    "ET4837",
+    "ET4838",
+    "ET4839",
+    "ET4840",
+    "ET4011",
+    "ET4096",
+    "ET4013",
+    "ET4014",
+    "ET4015",
+    "ET4016",
+    "ET4017",
+    "ET4018",
+    "ET4019",
+    "ET4020",
+    "ET4021",
+    "ET4022",
+    "ET4023",
+    "ET4025",
+    "ET4026",
+    "ET4027",
+    "ET4028",
+    "ET4029",
+    "ET4030",
+    "ET4031",
+    "ET4032",
+    "ET4033",
+    "ET4034",
+    "ET4035",
+    "ET4036",
+    "ET4037",
+    "ET4038",
+    "ET4039",
+    "ET4040",
+    "ET4041",
+    "ET468"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:30",
+    "last_departure": "23:00",
+    "headway_min": 30
+   }
+  },
+  {
+   "code": "Main Market Gulberg – Babu Sabu",
+   "name": "Main Market Gulberg ↔ Babu Sabu",
+   "color": "#1ABB6A",
+   "avg_speed_kmh": 14.3,
+   "etransit_route_id": 246,
+   "stops": [
+    "ET1361",
+    "ET220",
+    "ET4264",
+    "ET222",
+    "ET4266",
+    "ET4267",
+    "ET4268",
+    "ET4269",
+    "ET4270",
+    "ET4166",
+    "ET4167",
+    "ET4271",
+    "ET4272",
+    "ET4273",
+    "ET4274",
+    "ET4275",
+    "ET4276",
+    "ET4277",
+    "ET4278",
+    "ET4279",
+    "ET4280",
+    "ET4281",
+    "ET4282",
+    "ET4283",
+    "ET4284",
+    "ET4285",
+    "ET4286",
+    "ET855"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:15",
+    "last_departure": "21:55",
+    "headway_min": 20
+   }
+  },
+  {
+   "code": "Mull Adda – Jinnah Bus Terminal",
+   "name": "Mull Adda ↔ Jinnah Bus Terminal",
+   "color": "#BB3B1A",
+   "avg_speed_kmh": 10.7,
+   "etransit_route_id": 260,
+   "stops": [
+    "ET5801",
+    "ET5791",
+    "ET5792",
+    "ET5794",
+    "ET1529",
+    "ET449",
+    "ET5802",
+    "ET5803",
+    "ET5804",
+    "ET5805",
+    "ET5806",
+    "ET5807",
+    "ET5808",
+    "ET5809",
+    "ET4723",
+    "ET4724",
+    "ET4725",
+    "ET4726",
+    "ET4727",
+    "ET4728",
+    "ET4729",
+    "ET4730",
+    "ET4731",
+    "ET4732",
+    "ET4733",
+    "ET4734",
+    "ET4735",
+    "ET498"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "07:45",
+    "last_departure": "22:20",
+    "headway_min": 35
+   }
+  },
+  {
+   "code": "Paragon City – Railway Station",
+   "name": "Paragon City ↔ Railway Station",
+   "color": "#1A28BB",
+   "avg_speed_kmh": 10.0,
+   "etransit_route_id": 254,
+   "stops": [
+    "ET4087",
+    "ET4666",
+    "ET4667",
+    "ET4668",
+    "ET4669",
+    "ET4093",
+    "ET4670",
+    "ET4671",
+    "ET4672",
+    "ET4673",
+    "ET4674",
+    "ET4307",
+    "ET352",
+    "ET4097",
+    "ET4675",
+    "ET4676",
+    "ET4677",
+    "ET4678",
+    "ET4679",
+    "ET4680",
+    "ET4681",
+    "ET4682",
+    "ET4683",
+    "ET4684",
+    "ET4685",
+    "ET4686",
+    "ET4687",
+    "ET4688",
+    "ET4689",
+    "ET4690",
+    "ET4691",
+    "ET571"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "07:00",
+    "last_departure": "22:00",
+    "headway_min": 25
+   }
+  },
+  {
+   "code": "Purana Kahna – R.A Bazar",
+   "name": "Purana Kahna ↔ R.A Bazar",
+   "color": "#57BB1A",
+   "avg_speed_kmh": 15.1,
+   "etransit_route_id": 249,
+   "stops": [
+    "ET298",
+    "ET4420",
+    "ET4421",
+    "ET4422",
+    "ET4423",
+    "ET4424",
+    "ET4425",
+    "ET4426",
+    "ET4427",
+    "ET4428",
+    "ET4429",
+    "ET4430",
+    "ET4431",
+    "ET4432",
+    "ET8788",
+    "ET4433",
+    "ET4434",
+    "ET4435",
+    "ET4436",
+    "ET4437",
+    "ET4438",
+    "ET4109",
+    "ET4439",
+    "ET4440",
+    "ET4441",
+    "ET4442",
+    "ET4443",
+    "ET4444",
+    "ET4445",
+    "ET4446",
+    "ET4447",
+    "ET4448",
+    "ET4449",
+    "ET4450",
+    "ET4451",
+    "ET4452",
+    "ET4453",
+    "ET4074"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:00",
+    "last_departure": "22:04",
+    "headway_min": 8
+   }
+  },
+  {
+   "code": "R.A Bazar – Nasir Bagh",
+   "name": "R.A Bazar ↔ Nasir Bagh",
+   "color": "#BB1A86",
+   "avg_speed_kmh": 14.7,
+   "etransit_route_id": 247,
+   "stops": [
+    "ET4074",
+    "ET4307",
+    "ET4308",
+    "ET4309",
+    "ET4310",
+    "ET4311",
+    "ET4312",
+    "ET4313",
+    "ET4314",
+    "ET4315",
+    "ET4316",
+    "ET4317",
+    "ET4318",
+    "ET4319",
+    "ET4320",
+    "ET4202",
+    "ET4203",
+    "ET4321",
+    "ET4322",
+    "ET4323",
+    "ET4324",
+    "ET4325",
+    "ET269"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:00",
+    "last_departure": "22:30",
+    "headway_min": 11
+   }
+  },
+  {
+   "code": "R.A. Bazar – Chungi Amar Sidhu",
+   "name": "R.A. Bazar ↔ Chungi Amar Sidhu",
+   "color": "#1AB5BB",
+   "avg_speed_kmh": 16.1,
+   "etransit_route_id": 240,
+   "stops": [
+    "ET4074",
+    "ET4097",
+    "ET4098",
+    "ET4099",
+    "ET4100",
+    "ET4101",
+    "ET4102",
+    "ET4103",
+    "ET4104",
+    "ET4105",
+    "ET4106",
+    "ET4107",
+    "ET4108",
+    "ET4109",
+    "ET4075"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:10",
+    "last_departure": "22:10",
+    "headway_min": 20
+   }
+  },
+  {
+   "code": "Railway Stn – Gulshan Ravi OL St",
+   "name": "Railway Station ↔ Gulshan Ravi OL Station",
+   "color": "#BB921A",
+   "avg_speed_kmh": 13.2,
+   "etransit_route_id": 244,
+   "stops": [
+    "ET571",
+    "ET4196",
+    "ET4197",
+    "ET4198",
+    "ET4199",
+    "ET4201",
+    "ET4202",
+    "ET4203",
+    "ET4204",
+    "ET4205",
+    "ET1383",
+    "ET1384",
+    "ET4206",
+    "ET4207",
+    "ET526"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:08",
+    "last_departure": "22:38",
+    "headway_min": 10
+   }
+  },
+  {
+   "code": "Rana Town – Railway Station",
+   "name": "Rana Town ↔ Railway Station",
+   "color": "#641ABB",
+   "avg_speed_kmh": 10.0,
+   "etransit_route_id": 239,
+   "stops": [
+    "ET4011",
+    "ET4096",
+    "ET4013",
+    "ET4014",
+    "ET4015",
+    "ET4016",
+    "ET4017",
+    "ET4018",
+    "ET4019",
+    "ET4020",
+    "ET4021",
+    "ET4022",
+    "ET4023",
+    "ET4024",
+    "ET4025",
+    "ET4026",
+    "ET4027",
+    "ET4028",
+    "ET4029",
+    "ET4030",
+    "ET4031",
+    "ET4032",
+    "ET4034",
+    "ET4035",
+    "ET4036",
+    "ET4037",
+    "ET4038",
+    "ET4039",
+    "ET4040",
+    "ET4041",
+    "ET571"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:20",
+    "last_departure": "22:22",
+    "headway_min": 13
+   }
+  },
+  {
+   "code": "Samanabad – Gulshan Ravi Double",
+   "name": "Samanabad ↔ Gulshan Ravi Double Sarka",
+   "color": "#1ABB35",
+   "avg_speed_kmh": 10.7,
+   "etransit_route_id": 272,
+   "stops": [
+    "ET5827",
+    "ET5829",
+    "ET5831",
+    "ET5833",
+    "ET5836",
+    "ET5838",
+    "ET5840",
+    "ET5842",
+    "ET5844"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:00",
+    "last_departure": "21:25",
+    "headway_min": 25
+   }
+  },
+  {
+   "code": "Shahdara – Gajjumata",
+   "name": "Shahdara ↔ Gajjumata",
+   "color": "#BB1A2F",
+   "avg_speed_kmh": 25.5,
+   "etransit_route_id": 309,
+   "stops": [
+    "ET110",
+    "ET5",
+    "ET8",
+    "ET118",
+    "ET15",
+    "ET19",
+    "ET21",
+    "ET24",
+    "ET29",
+    "ET34",
+    "ET38",
+    "ET43",
+    "ET46",
+    "ET167",
+    "ET54",
+    "ET56",
+    "ET59",
+    "ET63",
+    "ET66",
+    "ET69",
+    "ET74",
+    "ET78",
+    "ET79",
+    "ET84",
+    "ET87",
+    "ET88",
+    "ET92"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "07:00",
+    "last_departure": "21:35",
+    "headway_min": 35
+   }
+  },
+  {
+   "code": "Shalamar OL Stn – Khaira Pull",
+   "name": "Shalamar OL Station ↔ Khaira Pull",
+   "color": "#1A5EBB",
+   "avg_speed_kmh": 10.0,
+   "etransit_route_id": 255,
+   "stops": [
+    "ET542",
+    "ET4754",
+    "ET4755",
+    "ET4756",
+    "ET4757",
+    "ET4758",
+    "ET4759",
+    "ET4760",
+    "ET4761",
+    "ET4762",
+    "ET4763",
+    "ET4764",
+    "ET4765",
+    "ET4766",
+    "ET4767",
+    "ET4768",
+    "ET4769",
+    "ET4770",
+    "ET8289",
+    "ET4771",
+    "ET4772",
+    "ET4773",
+    "ET4774",
+    "ET4775",
+    "ET4776",
+    "ET7941",
+    "ET1459"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "06:00",
+    "last_departure": "21:45",
+    "headway_min": 15
+   }
+  },
+  {
+   "code": "Wahdat Road Stn – Qartaba Chowk",
+   "name": "Wahdat Road Station ↔ Qartaba Chowk",
+   "color": "#8DBB1A",
+   "avg_speed_kmh": 13.7,
+   "etransit_route_id": 245,
+   "stops": [
+    "ET507",
+    "ET4221",
+    "ET4222",
+    "ET4223",
+    "ET4224",
+    "ET4225",
+    "ET4226",
+    "ET4227",
+    "ET4228",
+    "ET4229",
+    "ET4230",
+    "ET4231",
+    "ET4232",
+    "ET4233",
+    "ET4234",
+    "ET4235",
+    "ET4236",
+    "ET4237",
+    "ET4238",
+    "ET4239",
+    "ET4240",
+    "ET4241",
+    "ET1383"
+   ],
+   "schedule": {
+    "days": "MON,TUE,WED,THU,FRI,SAT,SUN",
+    "first_departure": "05:45",
+    "last_departure": "21:55",
+    "headway_min": 10
+   }
+  }
+ ],
+ "buses": [
+  {
+   "bus_number": "SP-101",
+   "route": "Askari X – Airport",
+   "device": "SIM-NORMAL-101"
+  },
+  {
+   "bus_number": "SP-102",
+   "route": "Askari X – Airport",
+   "device": "SIM-SLOW-102"
+  },
+  {
+   "bus_number": "SP-103",
+   "route": "Bhatti Chk – Mandiali Toll Plaza",
+   "device": "SIM-NORMAL-103"
+  },
+  {
+   "bus_number": "SP-104",
+   "route": "Bhatti Chk – Mandiali Toll Plaza",
+   "device": "SIM-DROPOUT-104"
+  },
+  {
+   "bus_number": "SP-105",
+   "route": "Bhatti Chowk – Shadbagh U/pass",
+   "device": "SIM-NORMAL-105"
+  },
+  {
+   "bus_number": "SP-106",
+   "route": "Bhatti Chowk – Shadbagh U/pass",
+   "device": "SIM-NORMAL-106"
+  },
+  {
+   "bus_number": "SP-107",
+   "route": "Bhatti – R.A Bazar",
+   "device": "SIM-NORMAL-107"
+  },
+  {
+   "bus_number": "SP-108",
+   "route": "Bhatti – R.A Bazar",
+   "device": "SIM-NORMAL-108"
+  },
+  {
+   "bus_number": "SP-109",
+   "route": "Canal – Chung",
+   "device": "SIM-NORMAL-109"
+  },
+  {
+   "bus_number": "SP-110",
+   "route": "Canal – Chung",
+   "device": "SIM-NORMAL-110"
+  },
+  {
+   "bus_number": "SP-111",
+   "route": "RT 16 Canal – Jinnah Terminal",
+   "device": "SIM-NORMAL-111"
+  },
+  {
+   "bus_number": "SP-112",
+   "route": "RT 16 Canal – Jinnah Terminal",
+   "device": "SIM-NORMAL-112"
+  },
+  {
+   "bus_number": "SP-113",
+   "route": "RT-8 Canal – Jinnah Terminal",
+   "device": "SIM-NORMAL-113"
+  },
+  {
+   "bus_number": "SP-114",
+   "route": "RT-8 Canal – Jinnah Terminal",
+   "device": "SIM-NORMAL-114"
+  },
+  {
+   "bus_number": "SP-115",
+   "route": "Depot Chowk – Chungi Amer Sidhu",
+   "device": "SIM-NORMAL-115"
+  },
+  {
+   "bus_number": "SP-116",
+   "route": "Depot Chowk – Chungi Amer Sidhu",
+   "device": "SIM-NORMAL-116"
+  },
+  {
+   "bus_number": "SP-117",
+   "route": "Depot Chowk – Kalma Chowk",
+   "device": "SIM-NORMAL-117"
+  },
+  {
+   "bus_number": "SP-118",
+   "route": "Depot Chowk – Kalma Chowk",
+   "device": "SIM-NORMAL-118"
+  },
+  {
+   "bus_number": "SP-119",
+   "route": "Gajjumata – Rangers Wing HQ",
+   "device": "SIM-NORMAL-119"
+  },
+  {
+   "bus_number": "SP-120",
+   "route": "Gajjumata – Rangers Wing HQ",
+   "device": "SIM-NORMAL-120"
+  },
+  {
+   "bus_number": "SP-121",
+   "route": "Jinnah Bus Term. – Bahria Town",
+   "device": "SIM-NORMAL-121"
+  },
+  {
+   "bus_number": "SP-122",
+   "route": "Jinnah Bus Term. – Bahria Town",
+   "device": "SIM-NORMAL-122"
+  },
+  {
+   "bus_number": "SP-123",
+   "route": "KSK – Railway Station",
+   "device": "SIM-NORMAL-123"
+  },
+  {
+   "bus_number": "SP-124",
+   "route": "KSK – Railway Station",
+   "device": "SIM-NORMAL-124"
+  },
+  {
+   "bus_number": "SP-125",
+   "route": "Main Market Gulberg – Babu Sabu",
+   "device": "SIM-NORMAL-125"
+  },
+  {
+   "bus_number": "SP-126",
+   "route": "Main Market Gulberg – Babu Sabu",
+   "device": "SIM-NORMAL-126"
+  },
+  {
+   "bus_number": "SP-127",
+   "route": "Mull Adda – Jinnah Bus Terminal",
+   "device": "SIM-NORMAL-127"
+  },
+  {
+   "bus_number": "SP-128",
+   "route": "Mull Adda – Jinnah Bus Terminal",
+   "device": "SIM-NORMAL-128"
+  },
+  {
+   "bus_number": "SP-129",
+   "route": "Paragon City – Railway Station",
+   "device": "SIM-NORMAL-129"
+  },
+  {
+   "bus_number": "SP-130",
+   "route": "Paragon City – Railway Station",
+   "device": "SIM-NORMAL-130"
+  },
+  {
+   "bus_number": "SP-131",
+   "route": "Purana Kahna – R.A Bazar",
+   "device": "SIM-NORMAL-131"
+  },
+  {
+   "bus_number": "SP-132",
+   "route": "Purana Kahna – R.A Bazar",
+   "device": "SIM-NORMAL-132"
+  },
+  {
+   "bus_number": "SP-133",
+   "route": "R.A Bazar – Nasir Bagh",
+   "device": "SIM-NORMAL-133"
+  },
+  {
+   "bus_number": "SP-134",
+   "route": "R.A Bazar – Nasir Bagh",
+   "device": "SIM-NORMAL-134"
+  },
+  {
+   "bus_number": "SP-135",
+   "route": "R.A. Bazar – Chungi Amar Sidhu",
+   "device": "SIM-NORMAL-135"
+  },
+  {
+   "bus_number": "SP-136",
+   "route": "R.A. Bazar – Chungi Amar Sidhu",
+   "device": "SIM-NORMAL-136"
+  },
+  {
+   "bus_number": "SP-137",
+   "route": "Railway Stn – Gulshan Ravi OL St",
+   "device": "SIM-NORMAL-137"
+  },
+  {
+   "bus_number": "SP-138",
+   "route": "Railway Stn – Gulshan Ravi OL St",
+   "device": "SIM-NORMAL-138"
+  },
+  {
+   "bus_number": "SP-139",
+   "route": "Rana Town – Railway Station",
+   "device": "SIM-NORMAL-139"
+  },
+  {
+   "bus_number": "SP-140",
+   "route": "Rana Town – Railway Station",
+   "device": "SIM-NORMAL-140"
+  },
+  {
+   "bus_number": "SP-141",
+   "route": "Samanabad – Gulshan Ravi Double",
+   "device": "SIM-NORMAL-141"
+  },
+  {
+   "bus_number": "SP-142",
+   "route": "Samanabad – Gulshan Ravi Double",
+   "device": "SIM-NORMAL-142"
+  },
+  {
+   "bus_number": "SP-143",
+   "route": "Shahdara – Gajjumata",
+   "device": "SIM-NORMAL-143"
+  },
+  {
+   "bus_number": "SP-144",
+   "route": "Shahdara – Gajjumata",
+   "device": "SIM-NORMAL-144"
+  },
+  {
+   "bus_number": "SP-145",
+   "route": "Shalamar OL Stn – Khaira Pull",
+   "device": "SIM-NORMAL-145"
+  },
+  {
+   "bus_number": "SP-146",
+   "route": "Shalamar OL Stn – Khaira Pull",
+   "device": "SIM-NORMAL-146"
+  },
+  {
+   "bus_number": "SP-147",
+   "route": "Wahdat Road Stn – Qartaba Chowk",
+   "device": "SIM-NORMAL-147"
+  },
+  {
+   "bus_number": "SP-148",
+   "route": "Wahdat Road Stn – Qartaba Chowk",
+   "device": "SIM-NORMAL-148"
+  },
+  {
+   "bus_number": "SP-149",
+   "route": "Askari X – Airport",
+   "device": null,
+   "driver": "driver1"
+  }
+ ],
+ "drivers": [
+  {
+   "key": "driver1",
+   "name": "Ali Raza",
+   "email": "driver@speedo.demo",
+   "phone": "03000000001",
+   "employee_code": "SP-DRV-01"
+  },
+  {
+   "key": "driver2",
+   "name": "Usman Tariq",
+   "email": "driver2@speedo.demo",
+   "phone": "03000000002",
+   "employee_code": "SP-DRV-02"
+  }
+ ]
+}
