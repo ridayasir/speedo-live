@@ -28,6 +28,9 @@ log = logging.getLogger("speedo")
 
 
 # ------------------------------------------------------------ middleware
+_FRAME_ANCESTORS = " ".join(os.environ.get("FRAME_ANCESTORS", "").split())
+
+
 class SecurityHeaders:
     def __init__(self, app):
         self.app = app
@@ -39,7 +42,10 @@ class SecurityHeaders:
         async def send_wrapper(message):
             if message["type"] == "http.response.start":
                 headers = message.setdefault("headers", [])
-                for k, v in ((b"x-content-type-options", b"nosniff"), (b"x-frame-options", b"DENY"),
+                # FRAME_ANCESTORS lets named sites embed the app (Hugging Face Spaces shows it in an iframe)
+                frame = ((b"content-security-policy", f"frame-ancestors 'self' {_FRAME_ANCESTORS}".encode()) if _FRAME_ANCESTORS
+                         else (b"x-frame-options", b"DENY"))
+                for k, v in ((b"x-content-type-options", b"nosniff"), frame,
                              (b"referrer-policy", b"strict-origin-when-cross-origin"),
                              (b"permissions-policy", b"geolocation=(self), camera=(), microphone=()")):
                     headers.append((k, v))
