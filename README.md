@@ -30,7 +30,7 @@ A passenger opens the app, picks a destination, sees which Speedo route to take 
 | Driver web | `web/src/driver.ts` | Consent, start/end trip, GPS sharing with offline queue, GPS status, route, trip history |
 | Passenger Android | `mobile/passenger` | Expo app: Home, Explore, Live Map, Favorites, Profile, FCM push |
 | Driver Android | `mobile/driver` | Expo app with a background foreground-service location task and offline queue |
-| Deployment | `deploy/` | Dockerfile, docker-compose (PostGIS + Redis), Render blueprint |
+| Deployment | `Dockerfile`, `render.yaml`, `deploy/` | Zero-config Docker image, Render blueprint, docker-compose (PostGIS + Redis) |
 | Docs | `docs/` | [API](docs/API.md), [testing report](docs/TESTING.md), [deployment](docs/DEPLOYMENT.md), [route data](docs/ROUTE_DATA.md), [screenshots](docs/screenshots) |
 
 ## How it works
@@ -83,7 +83,7 @@ backend/   app/ (main, http, config, db, security, cache, realtime, geo, schemas
            migrations/  seed/  tests/
 web/       src/*.ts → public/js   public/{index,admin,driver}.html   tests/ui_flows.py
 mobile/    passenger/  driver/
-deploy/    Dockerfile  docker-compose.yml   (render.yaml is at the repo root)
+deploy/    docker-compose.yml   (Dockerfile and render.yaml are at the repo root)
 docs/      API.md  TESTING.md  DEPLOYMENT.md  ROUTE_DATA.md  openapi.json  screenshots/
 ```
 

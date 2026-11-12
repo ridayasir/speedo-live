@@ -9,7 +9,7 @@ services:
     runtime: docker
     plan: free
     region: singapore          # closest Render region to Pakistan
-    dockerfilePath: ./deploy/Dockerfile
+    dockerfilePath: ./Dockerfile
     dockerContext: .
     healthCheckPath: /health
     autoDeploy: true           # redeploys on every push to main

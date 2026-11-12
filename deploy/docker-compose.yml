@@ -12,7 +12,7 @@ services:
   redis:
     image: redis:7-alpine
   api:
-    build: { context: .., dockerfile: deploy/Dockerfile }
+    build: { context: .., dockerfile: Dockerfile }
     env_file: .env
     environment:
       DATABASE_URL: postgresql://speedo:${POSTGRES_PASSWORD:-change-me}@db:5432/speedo

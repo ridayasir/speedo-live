@@ -31,7 +31,7 @@ Any host that runs a Docker image works. The image serves the API and the web ap
 
 **Render (free)** — `render.yaml` (repo root) is a blueprint for a free web service in Singapore; it asks for `DATABASE_URL`, for which use a free Postgres from neon.tech (free forever, unlike Render’s 30-day free database), `JWT_SECRET` generated, HTTPS automatic, redeploys on every push. In Render: New → Blueprint → select the repo → Apply. Demo accounts (`admin@speedo.demo` / `Demo@12345`) are created automatically; add `BOOTSTRAP_ADMIN_EMAIL` / `BOOTSTRAP_ADMIN_PASSWORD` in the service settings for your own admin.
 
-**Railway / Fly.io / Google Cloud Run / Azure Container Apps** — deploy `deploy/Dockerfile`, attach a managed PostgreSQL (enable the PostGIS extension if offered), and set:
+**Railway / Fly.io / Google Cloud Run / Azure Container Apps** — deploy the root `Dockerfile`, attach a managed PostgreSQL (enable the PostGIS extension if offered), and set:
 
 | Variable | Value |
 |---|---|
