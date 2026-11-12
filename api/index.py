@@ -13,6 +13,7 @@ import secrets
 import sys
 import threading
 import time
+from urllib.parse import parse_qsl, quote, urlencode
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.environ.setdefault("DATABASE_URL", "sqlite:////tmp/speedo.db")
@@ -63,6 +64,16 @@ def _tick() -> None:
         _tick_lock.release()
 
 
+def _original_path(scope):
+    """vercel.json rewrites every URL to /api/index?__p=<original path>; put the original path back."""
+    pairs = parse_qsl(scope.get("query_string", b"").decode("latin-1"), keep_blank_values=True)
+    if not any(k == "__p" for k, _ in pairs):
+        return scope
+    orig = "/" + next(v for k, v in pairs if k == "__p").lstrip("/")
+    rest = urlencode([(k, v) for k, v in pairs if k != "__p"])
+    return {**scope, "path": orig, "raw_path": quote(orig).encode(), "query_string": rest.encode("latin-1")}
+
+
 async def app(scope, receive, send):
     if scope["type"] == "lifespan":  # nothing to start: work happens lazily per request
         while True:
@@ -75,6 +86,7 @@ async def app(scope, receive, send):
     if scope["type"] == "websocket":
         await send({"type": "websocket.close", "code": 1013})
         return
+    scope = _original_path(scope)
     await asyncio.to_thread(_ensure_started)
     path = scope.get("path", "")
     if path == "/api/live/stream":  # long-lived streams don't fit serverless; the client then polls
