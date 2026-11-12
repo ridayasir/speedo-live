@@ -1,0 +1,32 @@
+# Render.com blueprint: free web service (Docker) + free managed Postgres.
+# In Render: New -> Blueprint -> pick this repo -> Apply. Other hosts: see docs/DEPLOYMENT.md.
+# Free plan notes: the web service sleeps after ~15 min idle (first visit then takes ~1 min),
+# and a free Postgres database expires after 30 days unless upgraded.
+databases:
+  - name: speedo-db
+    databaseName: speedo
+    plan: free
+    region: singapore          # closest Render region to Pakistan
+services:
+  - type: web
+    name: speedo-live
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./deploy/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true           # redeploys on every push to main
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: SPEEDO_MODE
+        value: demo            # simulated buses on the real Speedo routes; switch to "live" once drivers report GPS
+      - key: JWT_SECRET
+        generateValue: true
+      - key: TRUST_PROXY
+        value: "true"
+      - key: ENABLE_POSTGIS
+        value: "false"
+      - key: DATABASE_URL
+        fromDatabase: { name: speedo-db, property: connectionString }

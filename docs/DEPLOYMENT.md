@@ -29,7 +29,7 @@ Migrations run automatically on start (`001_schema`, then `002_postgis` because 
 
 Any host that runs a Docker image works. The image serves the API and the web apps on `$PORT`.
 
-**Render** — `deploy/render.yaml` is a blueprint: managed Postgres + the web service, `JWT_SECRET` generated, HTTPS automatic. In Render: New → Blueprint → select the repo. Set `BOOTSTRAP_ADMIN_EMAIL` / `BOOTSTRAP_ADMIN_PASSWORD` when prompted.
+**Render** — `render.yaml` (repo root) is a blueprint on the free plan: managed Postgres + the web service in Singapore, `JWT_SECRET` generated, HTTPS automatic, redeploys on every push. In Render: New → Blueprint → select the repo → Apply. Demo accounts (`admin@speedo.demo` / `Demo@12345`) are created automatically; add `BOOTSTRAP_ADMIN_EMAIL` / `BOOTSTRAP_ADMIN_PASSWORD` in the service settings for your own admin.
 
 **Railway / Fly.io / Google Cloud Run / Azure Container Apps** — deploy `deploy/Dockerfile`, attach a managed PostgreSQL (enable the PostGIS extension if offered), and set:
 

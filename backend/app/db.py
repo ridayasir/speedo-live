@@ -89,7 +89,8 @@ class Database:
                 fh.write(" ".join(sql.split()) + "\n")
 
     def _sql(self, sql: str) -> str:
-        return sql.replace("?", "%s") if self.is_pg else sql
+        # psycopg treats every % as a placeholder, so literal ones (LIKE 'SIM-%') must be doubled
+        return sql.replace("%", "%%").replace("?", "%s") if self.is_pg else sql
 
     @contextmanager
     def transaction(self) -> Iterator["Database"]:

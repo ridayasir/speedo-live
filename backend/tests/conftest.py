@@ -16,7 +16,7 @@ import pytest
 
 TMP = tempfile.mkdtemp(prefix="speedo-test-")
 os.environ.update({
-    "DATABASE_URL": f"sqlite:///{TMP}/test.db",
+    "DATABASE_URL": os.environ.get("TEST_DATABASE_URL") or f"sqlite:///{TMP}/test.db",  # set TEST_DATABASE_URL to run against PostgreSQL
     "SPEEDO_MODE": "demo",
     "SPEEDO_DISABLE_BACKGROUND": "1",
     "JWT_SECRET": "test-secret-test-secret-test-secret-123",

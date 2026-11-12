@@ -83,7 +83,7 @@ backend/   app/ (main, http, config, db, security, cache, realtime, geo, schemas
            migrations/  seed/  tests/
 web/       src/*.ts → public/js   public/{index,admin,driver}.html   tests/ui_flows.py
 mobile/    passenger/  driver/
-deploy/    Dockerfile  docker-compose.yml  render.yaml
+deploy/    Dockerfile  docker-compose.yml   (render.yaml is at the repo root)
 docs/      API.md  TESTING.md  DEPLOYMENT.md  ROUTE_DATA.md  openapi.json  screenshots/
 ```
 
