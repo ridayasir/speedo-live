@@ -16,3 +16,4 @@ web/out/
 .env.local
 linkedin/
 backend/data/
+.vercel

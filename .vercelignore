@@ -1,0 +1,9 @@
+backend/.venv
+backend/data
+backend/tests
+mobile
+docs
+linkedin
+deploy
+**/__pycache__
+**/node_modules
