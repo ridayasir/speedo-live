@@ -125,10 +125,12 @@ export class LiveFeed {
                 return;
             this.failures++;
             this.setState(navigator.onLine === false ? "offline" : "reconnecting");
-            if (this.failures >= 3 || this.params.ticket) { // tickets expire: reopen with a fresh one
+            // CLOSED = the server refused the stream (e.g. 503 on serverless hosts); the browser won't retry by itself
+            const refused = this.es?.readyState === EventSource.CLOSED;
+            if (refused || this.failures >= 3 || this.params.ticket) { // tickets expire: reopen with a fresh one
                 this.es?.close();
                 this.es = null;
-                if (this.failures >= 3)
+                if (refused || this.failures >= 3)
                     this.startPolling();
                 else
                     setTimeout(() => this.start(), 3000);
