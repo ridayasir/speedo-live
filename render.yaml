@@ -1,6 +1,7 @@
-# Render.com blueprint: free web service (Docker). The database is a free PostgreSQL from neon.tech
-# (free forever, no card); Render's own free Postgres expires after 30 days.
-# In Render: New -> Blueprint -> pick this repo -> paste the Neon connection string as DATABASE_URL -> Apply.
+# Render.com blueprint: free web service (Docker), one-click: https://render.com/deploy?repo=https://github.com/ridayasir/speedo-live
+# Uses the built-in SQLite database, which resets when the free service restarts or wakes from sleep
+# (demo routes, buses and accounts are recreated automatically). For data that persists, add a
+# DATABASE_URL env var with a free PostgreSQL from neon.tech.
 # Free plan note: the web service sleeps after ~15 min idle (first visit then takes ~1 min).
 services:
   - type: web
@@ -23,5 +24,3 @@ services:
         value: "true"
       - key: ENABLE_POSTGIS
         value: "false"
-      - key: DATABASE_URL      # Neon connection string: postgresql://user:pass@ep-xxx.neon.tech/neondb?sslmode=require
-        sync: false
