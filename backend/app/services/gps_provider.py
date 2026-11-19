@@ -15,10 +15,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-
 from ..models import Bus, DataSource, Trip, TripStatus
+from ..store import Session
 from .tracking import GpsPoint, ingest_points, utcnow
 
 
@@ -47,10 +45,10 @@ provider = GpsProvider()
 def poll(db: Session) -> int:
     count = 0
     for fix in provider.fetch_positions():
-        bus = db.execute(select(Bus).where(Bus.gps_device_id == fix.device_id)).scalars().first()
+        bus = db.first(Bus, gps_device_id=fix.device_id)
         if not bus or not bus.route_id:
             continue
-        trip = db.execute(select(Trip).where(Trip.bus_id == bus.id, Trip.status == TripStatus.active)).scalars().first()
+        trip = db.first(Trip, bus_id=bus.id, status=TripStatus.active)
         if trip is None:
             trip = Trip(bus_id=bus.id, route_id=bus.route_id, source=DataSource.provider, started_at=utcnow())
             db.add(trip)

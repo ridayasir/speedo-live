@@ -4,53 +4,66 @@
 
 | Part | Folder | Stack |
 |---|---|---|
-| Backend API + real-time feed | `backend/` | Python FastAPI, PostgreSQL + PostGIS, Redis, WebSockets, JWT |
+| Backend API + real-time feed | `backend/` | Python FastAPI, Firebase (Cloud Firestore, Authentication, Storage, Cloud Messaging), WebSockets |
 | Passenger web app + Admin dashboard | `web/` | Next.js 15 (static export), TypeScript, Tailwind, Leaflet + OpenStreetMap |
 | Passenger Android app | `mobile/passenger/` | React Native + Expo SDK 52, Leaflet map in a WebView, FCM push |
 | Driver Android app | `mobile/driver/` | React Native + Expo SDK 52, background GPS (foreground service) |
 
-> **DEMO MODE.** The project ships with *demonstration* data only: 8 sample routes, 20 stops at approximate
-> Lahore landmark positions and 16 simulated buses, all flagged `is_demo` and labeled **DEMO** in every app.
-> These are **not** official Speedo routes, bus numbers or timetables. Load verified PMA/PTC data through
-> **Admin → Routes → Import CSV / Excel** before any public use.
+> All data lives in your **Firebase project**. A new project starts empty: load verified PMA/PTC routes through
+> **Admin → Routes → Import CSV / Excel**, then add buses and drivers in the admin dashboard.
 
 ---
 
-## 1. Quick start (Docker, everything in one command)
+## 1. Firebase setup (once)
+
+The database is **Cloud Firestore** and accounts are **Firebase Authentication** users; **Firebase Storage** keeps a
+copy of every imported route file and **Cloud Messaging** sends push notifications. All of it uses one Firebase project.
+
+1. Create a project at <https://console.firebase.google.com>.
+2. **Build → Firestore Database → Create database** (production mode; pick a region near Pakistan, e.g. `asia-south1`).
+3. **Build → Authentication → Get started → Sign-in method → Email/Password → Enable.**
+4. Optional: **Build → Storage → Get started** (keeps imported route files). Note the bucket name, e.g. `your-project.firebasestorage.app`.
+5. **Project settings → General**: copy the *Project ID* and the *Web API key*.
+6. **Project settings → Service accounts → Generate new private key**. Save the file as
+   `backend/firebase-service-account.json` (git-ignored; never commit it).
+7. Fill in `backend/.env` (copy `backend/.env.example`):
+
+   ```
+   FIREBASE_PROJECT_ID=your-project-id
+   FIREBASE_WEB_API_KEY=AIza...
+   FIREBASE_CREDENTIALS_FILE=firebase-service-account.json
+   FIREBASE_STORAGE_BUCKET=your-project.firebasestorage.app
+   ```
+
+8. Check the connection and create the first administrator:
+
+   ```bash
+   cd backend
+   python -m app.firebase_check          # Firestore, Auth, Storage and FCM, each PASS or FAIL
+   python -m app.seed --admin-email you@example.com --admin-password "a-long-password" --admin-name "Your Name"
+   ```
+
+9. Optional, with the [Firebase CLI](https://firebase.google.com/docs/cli): `firebase use --add` then
+   `firebase deploy --only firestore:rules,storage` to deploy the deny-all rules in `firestore.rules` / `storage.rules`.
+   Apps never talk to Firestore or Storage directly; only the API does, through the Admin SDK.
+
+No composite indexes are needed: the API only sends single-field queries to Firestore.
+
+> **No demo data.** A new project starts empty. Load the verified PMA/PTC routes, stops and timetables through
+> **Admin → Routes → Import CSV / Excel**, then add buses and drivers in the admin dashboard.
+> (`python -m app.seed --demo` loads clearly labelled sample data; it exists for the automated tests only.)
+
+## 2. Running locally
+
+**Requirements:** Python 3.12+, Node 20+, and the Firebase project from section 1. Redis is optional (only for
+running more than one API process).
 
 ```bash
-docker compose up --build
-# open http://localhost:8000          passenger web app
-#      http://localhost:8000/admin/   admin dashboard
-#      http://localhost:8000/docs     API documentation (Swagger)
-```
-
-Demo accounts (created by the seed; change the passwords with `SEED_*_PASSWORD` env vars):
-
-| Role | Login | Password |
-|---|---|---|
-| Admin | `admin@speedolive.demo` | `Admin@12345` |
-| Driver | `driver@speedolive.demo` or `+923000000001` | `Driver@12345` |
-| Passenger | `passenger@speedolive.demo` | `Passenger@123` |
-
-The demo driver is assigned bus **DRV-001** (not simulated), so you can drive it with the driver app.
-
-## 2. Running the parts separately (development)
-
-**Requirements:** Python 3.12+, Node 20+, PostgreSQL 16 with PostGIS 3, Redis 7 (optional; without it, live updates work within one API process).
-
-```bash
-# database
-createuser -s speedo; createdb -O speedo speedo
-psql speedo -c "ALTER USER speedo PASSWORD 'speedo'"
-
 # backend
 cd backend
-cp .env.example .env            # set JWT_SECRET etc.
+python -m venv .venv && .venv\Scripts\activate     # macOS/Linux: source .venv/bin/activate
 pip install -r requirements-dev.txt
-alembic upgrade head            # schema + PostGIS extension
-python -m app.seed              # DEMO data and demo accounts
-uvicorn app.main:app --reload   # http://localhost:8000/docs
+uvicorn app.main:app --reload                       # http://localhost:8000/docs
 
 # web
 cd web
@@ -64,16 +77,20 @@ npm install
 EXPO_PUBLIC_API_URL=http://<your-computer-LAN-IP>:8000 npx expo start
 ```
 
-Open the app on a phone with a **development build** (`npx expo run:android`) or on an emulator. The default API
+On Windows, after the first-time setup, `start.bat` starts the API and the website and opens the browser.
+
+Or in a container: `docker compose up --build` (reads `backend/.env` and mounts
+`backend/firebase-service-account.json`), then open <http://localhost:8000>.
+
+Open the Android apps on a phone with a **development build** (`npx expo run:android`) or on an emulator. The default API
 URL `http://10.0.2.2:8000` reaches the host machine from the Android emulator. The driver app's background
 location needs a development or production build; Expo Go does not support it.
 
-### Local mode without Postgres or Docker (Windows)
-
-For trying the app on one machine, the backend can run on SQLite. Set `DATABASE_URL=sqlite:///./speedo_local.db`
-and `REDIS_URL=` in `backend/.env`, create `backend/.venv` and install `requirements-dev.txt`, run `npm install` in
-`web/`, then double-click `start.bat`. Tables are created by `python -m app.seed` (Alembic is not used here).
-Nearby-stop search uses plain lat/lng instead of PostGIS. This mode is for local development only; production uses PostGIS.
+**Sign-in.** The API signs users in with Firebase Authentication and returns a Firebase **ID token** (valid 1 hour)
+plus a **refresh token**; the web and Android apps renew the ID token automatically. Users can sign in with their email
+or their phone number. Accounts registered with a phone number only get an internal sign-in address
+`<number>@phone.speedolive.invalid` in Firebase, because Firebase passwords need an email. Users created by hand in the
+Firebase console can sign in too and get a passenger profile on first login.
 
 ## 3. Building the Android apps
 
@@ -91,35 +108,38 @@ eas build -p android --profile production   # .aab for Google Play
 Repeat in `mobile/driver`. To build locally instead: `npx expo prebuild -p android && cd android && ./gradlew assembleRelease`
 (needs Android Studio / SDK 34).
 
-**Push notifications (Firebase Cloud Messaging):**
-1. Create a Firebase project, add an Android app with package `pk.speedolive.passenger`, download `google-services.json` into `mobile/passenger/`.
-2. Create a service-account key (Project settings → Service accounts) and give the API `FCM_PROJECT_ID` and `FCM_CREDENTIALS_FILE`.
-Without these, notifications are still created and appear in the in-app inbox; they are just not pushed to the phone.
+**Push notifications (Firebase Cloud Messaging):** in the same Firebase project, add an Android app with package
+`pk.speedolive.passenger` and download `google-services.json` into `mobile/passenger/` before building. The API sends
+pushes with the service account it already uses for Firestore; nothing else to configure. Without
+`google-services.json`, notifications still appear in the in-app inbox; they are just not pushed to the phone.
 
 ## 4. Deploying to the cloud
 
 The root `Dockerfile` builds one container that serves the API, WebSocket feed and website on a single port.
 
 **Render (blueprint included):** push this repo to GitHub, then in Render choose *New → Blueprint* and pick the repo.
-`render.yaml` creates the web service, a PostgreSQL database and Redis. Set `SEED_ADMIN_PASSWORD` when prompted.
-Render's Postgres supports PostGIS; the first migration runs `CREATE EXTENSION postgis`.
+`render.yaml` creates the web service; enter the `FIREBASE_*` values when asked (paste the service-account file's
+JSON into `FIREBASE_CREDENTIALS_JSON`). Then create the first admin from the service's Shell with `python -m app.seed --admin-email ...`.
 
 **Any other container host** (Railway, Fly.io, Google Cloud Run, a VPS): run the image with these environment variables:
 
 | Variable | Required | Notes |
 |---|---|---|
-| `DATABASE_URL` | yes | PostgreSQL with PostGIS. `postgres://` URLs are accepted. |
-| `JWT_SECRET` | yes | long random string; the app refuses to start in production with the default |
+| `FIREBASE_PROJECT_ID` | yes | the Firebase project id |
+| `FIREBASE_WEB_API_KEY` | yes | Project settings → General → Web API key (used to sign users in) |
+| `FIREBASE_CREDENTIALS_JSON` or `FIREBASE_CREDENTIALS_FILE` | yes* | service-account key (content or path). *Not needed on Google Cloud, which uses the runtime's service account |
+| `FIREBASE_STORAGE_BUCKET` | | keeps a copy of imported route files |
 | `ENVIRONMENT` | yes | `production` |
-| `REDIS_URL` | recommended | needed when running more than one instance |
-| `DATA_SOURCE` | | `demo` (default), `driver` or `provider` |
+| `DATA_SOURCE` | | `driver` (default), `provider` or `demo` |
 | `CORS_ORIGINS` | | comma-separated origins if the website is hosted elsewhere |
-| `FCM_PROJECT_ID`, `FCM_CREDENTIALS_FILE` | | push notifications |
-| `SEED_ADMIN_PASSWORD` etc. | | passwords for seeded accounts |
+| `REDIS_URL` | | shares live WebSocket events between API processes |
 
-HTTPS: every host above terminates HTTPS for you. **Backups:** enable your database provider's automated daily
-backups (Render, Railway, Cloud SQL and Neon all offer them); for a self-hosted database run
-`pg_dump -Fc "$DATABASE_URL" > speedo-$(date +%F).dump` daily from cron.
+Run **one API instance**: the API keeps an in-memory mirror of the Firestore reference data (routes, stops, buses,
+users, active trips) for fast ETA and planning, and that mirror is not shared between instances.
+
+HTTPS: every host above terminates HTTPS for you. **Backups:** enable Firestore's scheduled backups or
+point-in-time recovery (Firestore → Disaster recovery), or export with
+`gcloud firestore export gs://<bucket>/backups/$(date +%F)` from a daily job.
 
 To host the website separately (Vercel, Netlify, Cloudflare Pages): build `web/` with
 `NEXT_PUBLIC_API_URL=https://your-api-host` and upload `web/out/`.
@@ -128,22 +148,21 @@ To host the website separately (Vercel, Netlify, Cloudflare Pages): build `web/`
 
 | `DATA_SOURCE` | Where bus positions come from |
 |---|---|
-| `demo` | The built-in simulator moves buses flagged `is_demo` along DEMO routes. Driver apps work too. |
-| `driver` | Only authorised driver apps. The simulator is off. |
+| `driver` (default) | Only authorised driver apps. |
+| `demo` | The built-in simulator also moves buses flagged `is_demo` along DEMO routes (tests and demonstrations only). |
 | `provider` | An approved external GPS feed, via `backend/app/services/gps_provider.py` (match buses by *GPS device ID*). |
 
-Going live: import verified routes, add real buses and drivers in the admin dashboard, delete the demo
-data (`python -m app.seed --reset` removes demo routes, stops and buses), then set `DATA_SOURCE=driver` or `provider`.
+Going live: import verified routes and add real buses and drivers in the admin dashboard.
 No government system is accessed without authorisation; the provider adapter is an empty interface until one is approved.
 
 ## 6. How live tracking works
 
 ```
 Driver app (GPS every 5 s, foreground service, offline queue)
-   → POST /api/driver/trips/{id}/locations        (JWT, driver must own the bus and the active trip)
+   → POST /api/driver/trips/{id}/locations        (Firebase ID token, driver must own the bus and the active trip)
    → validate: coordinates, Lahore service area, timestamp, accuracy ≤ 100 m, speed and jump plausibility, duplicates
-   → PostgreSQL/PostGIS (thinned history: a point every 15 m or 30 s) + latest position on the bus
-   → Redis pub/sub → WebSocket /ws/live → passenger web and Android apps
+   → Firestore (thinned history in gps_locations: a point every 15 m or 30 s) + latest position on the bus
+   → WebSocket /ws/live (Redis pub/sub when several processes) → passenger web and Android apps
 ```
 
 * **Stale vs stopped:** a bus with no update for 60 s is *GPS signal lost* (stale) and after 5 min *offline*. A bus
@@ -168,17 +187,21 @@ Every import must state its source, which is stored on each route and stop.
 
 ## 8. Security and privacy
 
-* bcrypt password hashing, JWT bearer tokens, role-based access (passenger / driver / admin) on every endpoint.
+* Passwords are held only by Firebase Authentication; the API verifies Firebase ID tokens with the Admin SDK and
+  applies role-based access (passenger / driver / admin, stored on the Firestore profile) on every endpoint.
+  Deactivating a driver also disables their Firebase account.
+* Firestore and Storage security rules deny all direct client access; only the API (Admin SDK) reads and writes.
 * Drivers can only post GPS for the bus assigned to them and only during a trip they started with explicit consent.
 * Public endpoints never return driver names, phone numbers or licence numbers (covered by a test).
 * Input validation with Pydantic; rate limiting (120 req/min per IP, 10/min on login and registration).
 * GPS history is deleted after `GPS_RETENTION_DAYS` (30 by default). Admin actions are recorded in an audit log.
-* Secrets only come from environment variables; `.env` files are git-ignored.
+* Secrets only come from environment variables; `.env` files and service-account keys are git-ignored.
 
 ## 9. Tests
 
 ```bash
-cd backend && createdb -O speedo speedo_test && pytest -q
+cd backend && pytest -q                   # in-memory Firestore/Auth fakes; no Firebase project needed
+python -m app.firebase_check              # live check against the Firebase project in backend/.env
 ```
 
 See [TESTING.md](TESTING.md) for what is covered and what has not been tested yet.
@@ -188,11 +211,14 @@ See [TESTING.md](TESTING.md) for what is covered and what has not been tested ye
 ```
 backend/app/
   main.py               app, background loops (simulator, stale detection, alerts, retention)
-  models.py             SQLAlchemy models (18 tables)        migrations/  Alembic
+  firebase.py           Firebase Admin SDK: Firestore, Auth, Storage, FCM   firebase_check.py  live connection check
+  store.py              Firestore persistence (unit of work, in-memory mirror)  models.py  Firestore documents
   routers/              auth, public (passenger), me, driver, admin, ws
   services/tracking.py  GPS ingestion, status, ETA          services/planner.py  journey planning
   services/simulator.py DEMO buses                          services/gps_provider.py  real GPS adapter
   services/importer.py  CSV/XLSX import                     services/notifications.py FCM
+  services/accounts.py  Firebase Authentication accounts
+firebase.json, firestore.rules, storage.rules   Firebase CLI config and security rules
 web/src/app/            pages: / live routes route stop timetable favorites profile admin
 mobile/passenger/       Expo passenger app                  mobile/driver/  Expo driver app
 docs/openapi.json       API specification

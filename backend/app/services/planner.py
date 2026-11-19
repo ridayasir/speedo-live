@@ -3,13 +3,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from sqlalchemy import func, select
-from sqlalchemy.orm import Session
-
 from ..config import get_settings
-from ..db import is_sqlite
 from ..models import BusStop, Route, RouteStatus, RouteStop
-from .geo import haversine_m, point_wkt
+from ..store import Session
+from .geo import haversine_m
 
 TRANSFER_PENALTY_MIN = 5.0
 
@@ -23,15 +20,9 @@ class Place:
 
 
 def nearby_stops(db: Session, lat: float, lng: float, radius_m: float, limit: int = 8) -> list[tuple[BusStop, float]]:
-    if is_sqlite:
-        all_stops = [(s, haversine_m(lat, lng, s.lat, s.lng)) for s in db.execute(select(BusStop)).scalars()]
-        return sorted((x for x in all_stops if x[1] <= radius_m), key=lambda x: x[1])[:limit]
-    geog = func.ST_GeogFromText(point_wkt(lat, lng))
-    dist = func.ST_Distance(BusStop.geog, geog).label("d")
-    rows = db.execute(
-        select(BusStop, dist).where(func.ST_DWithin(BusStop.geog, geog, radius_m)).order_by(dist).limit(limit)
-    ).all()
-    return [(r[0], float(r[1])) for r in rows]
+    """Stops within radius_m (great-circle distance), nearest first. Stops are held in memory."""
+    found = [(s, haversine_m(lat, lng, s.lat, s.lng)) for s in db.all(BusStop)]
+    return sorted((x for x in found if x[1] <= radius_m), key=lambda x: x[1])[:limit]
 
 
 def _walk_min(m: float) -> float:
@@ -64,7 +55,7 @@ class RouteIndex:
 
 
 def _index(db: Session) -> list[RouteIndex]:
-    routes = db.execute(select(Route).where(Route.status == RouteStatus.active)).scalars().all()
+    routes = [r for r in db.all(Route) if r.status == RouteStatus.active]
     out = []
     for r in routes:
         ordered = sorted(r.stops, key=lambda x: x.sequence)

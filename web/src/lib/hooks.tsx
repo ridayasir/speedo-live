@@ -63,14 +63,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [refresh]);
 
   const login = async (identifier: string, password: string) => {
-    const r = await api<{ access_token: string; user: User }>("/api/auth/login", { method: "POST", json: { identifier, password } });
-    setToken(r.access_token);
+    const r = await api<{ access_token: string; refresh_token: string; user: User }>("/api/auth/login", { method: "POST", json: { identifier, password } });
+    setToken(r.access_token, r.refresh_token);
     setUser(r.user);
     return r.user;
   };
   const register = async (body: { full_name: string; email?: string; phone?: string; password: string }) => {
-    const r = await api<{ access_token: string; user: User }>("/api/auth/register", { method: "POST", json: body });
-    setToken(r.access_token);
+    const r = await api<{ access_token: string; refresh_token: string; user: User }>("/api/auth/register", { method: "POST", json: body });
+    setToken(r.access_token, r.refresh_token);
     setUser(r.user);
     return r.user;
   };

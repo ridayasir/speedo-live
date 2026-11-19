@@ -10,6 +10,7 @@ export const API_URL = (
 export const WS_URL = API_URL.replace(/^http/, "ws");
 
 const TOKEN_KEY = "speedo.token";
+const REFRESH_KEY = "speedo.refresh";
 
 export function getToken(): string | null {
   try {
@@ -19,13 +20,45 @@ export function getToken(): string | null {
   }
 }
 
-export function setToken(token: string | null) {
+/** Store the Firebase ID token (and its refresh token). Passing null signs out. */
+export function setToken(token: string | null, refreshToken?: string | null) {
   try {
     if (token) window.localStorage.setItem(TOKEN_KEY, token);
     else window.localStorage.removeItem(TOKEN_KEY);
+    if (refreshToken) window.localStorage.setItem(REFRESH_KEY, refreshToken);
+    else if (!token || refreshToken === null) window.localStorage.removeItem(REFRESH_KEY);
   } catch {
     /* storage unavailable */
   }
+}
+
+function getRefreshToken(): string | null {
+  try {
+    return typeof window === "undefined" ? null : window.localStorage.getItem(REFRESH_KEY);
+  } catch {
+    return null;
+  }
+}
+
+// Firebase ID tokens last one hour; swap the refresh token for a new one (once, shared by parallel calls).
+let refreshing: Promise<boolean> | null = null;
+function refreshSession(): Promise<boolean> {
+  const rt = getRefreshToken();
+  if (!rt) return Promise.resolve(false);
+  refreshing ??= fetch(`${API_URL}/api/auth/refresh`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ refresh_token: rt }),
+  })
+    .then(async (r) => {
+      if (!r.ok) return false;
+      const d = await r.json();
+      setToken(d.access_token, d.refresh_token);
+      return true;
+    })
+    .catch(() => false)
+    .finally(() => (refreshing = null));
+  return refreshing;
 }
 
 export class ApiError extends Error {
@@ -54,7 +87,7 @@ function errorMessage(body: unknown, fallback: string): string {
   return fallback;
 }
 
-export async function api<T = unknown>(path: string, opts: RequestInit & { json?: unknown } = {}): Promise<T> {
+export async function api<T = unknown>(path: string, opts: RequestInit & { json?: unknown } = {}, retried = false): Promise<T> {
   const headers = new Headers(opts.headers);
   const token = getToken();
   if (token) headers.set("Authorization", `Bearer ${token}`);
@@ -73,6 +106,9 @@ export async function api<T = unknown>(path: string, opts: RequestInit & { json?
   const text = await res.text();
   const data = text ? (() => { try { return JSON.parse(text); } catch { return text; } })() : undefined;
   if (!res.ok) {
+    if (res.status === 401 && token && !retried && !path.startsWith("/api/auth/refresh") && (await refreshSession())) {
+      return api<T>(path, opts, true);
+    }
     if (res.status === 401 && token) setToken(null);
     throw new ApiError(res.status, errorMessage(data, `Request failed (${res.status})`));
   }
@@ -80,8 +116,12 @@ export async function api<T = unknown>(path: string, opts: RequestInit & { json?
 }
 
 export async function download(path: string, filename: string) {
-  const token = getToken();
-  const res = await fetch(`${API_URL}${path}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+  const get = () => {
+    const token = getToken();
+    return fetch(`${API_URL}${path}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+  };
+  let res = await get();
+  if (res.status === 401 && (await refreshSession())) res = await get();
   if (!res.ok) throw new ApiError(res.status, "Download failed");
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);

@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import LiveMap from "./src/components/LiveMap";
-import { Btn, Card, Demo, DemoBanner, ErrorText, Field, Loading, Muted, RouteChip, Section, StatusPill, Title, s } from "./src/components/ui";
+import { Btn, Card, Demo, ErrorText, Field, Loading, Muted, RouteChip, Section, StatusPill, Title, s } from "./src/components/ui";
 import { api, loadToken, setToken } from "./src/lib/api";
 import { ago, effectiveStatus, km } from "./src/lib/format";
 import { C } from "./src/lib/theme";
@@ -38,9 +38,9 @@ function Login({ onIn }: { onIn: () => void }) {
     setBusy(true);
     setErr(null);
     try {
-      const r = await api<{ access_token: string; user: User }>("/api/auth/login", { method: "POST", json: { identifier: id.trim(), password: pw } });
+      const r = await api<{ access_token: string; refresh_token: string; user: User }>("/api/auth/login", { method: "POST", json: { identifier: id.trim(), password: pw } });
       if (r.user.role !== "driver") throw new Error("This app is for Speedo drivers. Passengers should use the Speedo Live app.");
-      await setToken(r.access_token);
+      await setToken(r.access_token, r.refresh_token);
       onIn();
     } catch (e) {
       setErr((e as Error).message);
@@ -343,7 +343,6 @@ export default function App() {
         <Login onIn={() => setSignedIn(true)} />
       ) : (
         <DriverCtx.Provider value={{ me, reload, tracking, setTracking, signOut }}>
-          <DemoBanner show={!!me?.demo_mode} />
           <SafeAreaProvider style={{ flex: 1 }}>
             <NavigationContainer>
               <Tab.Navigator screenOptions={({ route }) => ({

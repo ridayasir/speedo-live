@@ -4,11 +4,9 @@ from __future__ import annotations
 import logging
 from datetime import timedelta
 
-from sqlalchemy import delete, select
-from sqlalchemy.orm import Session
-
 from ..config import get_settings
 from ..models import ArrivalWatch, Bus, GpsLocation, Trip, TripStatus, User
+from ..store import Session
 from .notifications import notify, notify_route_followers
 from .realtime import hub
 from .tracking import aware, arrivals_for_stop, bus_state, gps_freshness, utcnow
@@ -21,7 +19,7 @@ def check_buses(db: Session) -> dict:
     s = get_settings()
     now = utcnow()
     changed = interrupted = 0
-    for trip in db.execute(select(Trip).where(Trip.status == TripStatus.active)).scalars().all():
+    for trip in db.where(Trip, status=TripStatus.active):
         last = aware(trip.last_update_at) or aware(trip.started_at)
         if (now - last).total_seconds() > s.interrupt_trip_after_seconds:
             trip.status = TripStatus.interrupted
@@ -29,7 +27,7 @@ def check_buses(db: Session) -> dict:
             trip.end_reason = "gps_timeout"
             interrupted += 1
     db.commit()
-    for bus in db.execute(select(Bus)).scalars().all():
+    for bus in db.all(Bus):
         fresh = gps_freshness(bus, now)
         if _last_gps_state.get(bus.id) != fresh:
             prev = _last_gps_state.get(bus.id)
@@ -43,9 +41,7 @@ def check_buses(db: Session) -> dict:
 def check_delays(db: Session) -> int:
     s = get_settings()
     sent = 0
-    for trip in db.execute(
-        select(Trip).where(Trip.status == TripStatus.active, Trip.delay_notified.is_(False))
-    ).scalars().all():
+    for trip in db.where(Trip, status=TripStatus.active, delay_notified=False):
         state = bus_state(db, trip.bus, trip)
         if state["status"] == "delayed" and (state["delay_minutes"] or 0) >= s.delay_threshold_minutes:
             label = " (DEMO)" if trip.bus.is_demo else ""
@@ -62,7 +58,7 @@ def check_delays(db: Session) -> int:
 def check_watches(db: Session) -> int:
     now = utcnow()
     sent = 0
-    for w in db.execute(select(ArrivalWatch).where(ArrivalWatch.is_active.is_(True))).scalars().all():
+    for w in db.where(ArrivalWatch, is_active=True):
         if w.expires_at and aware(w.expires_at) < now:
             w.is_active = False
             continue
@@ -90,6 +86,8 @@ def check_watches(db: Session) -> int:
 
 def purge_old_locations(db: Session) -> int:
     cutoff = utcnow() - timedelta(days=get_settings().gps_retention_days)
-    res = db.execute(delete(GpsLocation).where(GpsLocation.recorded_at < cutoff))
+    old = db.where(GpsLocation, ("recorded_at", "<", cutoff), limit=2000)
+    for g in old:
+        db.delete(g)
     db.commit()
-    return res.rowcount or 0
+    return len(old)

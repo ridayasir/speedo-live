@@ -42,8 +42,10 @@ class LoginIn(BaseModel):
 
 
 class TokenOut(BaseModel):
-    access_token: str
+    access_token: str = Field(description="Firebase ID token; send as Authorization: Bearer <token>")
     token_type: str = "bearer"
+    refresh_token: str | None = Field(default=None, description="Exchange at POST /api/auth/refresh")
+    expires_in: int | None = Field(default=None, description="Seconds until access_token expires")
     user: dict
 
 

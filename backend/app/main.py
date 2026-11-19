@@ -8,14 +8,15 @@ from fastapi.responses import JSONResponse
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
-from sqlalchemy import text
 
+from . import firebase
 from .config import get_settings
-from .db import SessionLocal, engine
+from .db import SessionLocal
 from .limits import limiter
 from .routers import admin, auth, driver, me, public, ws
 from .services import gps_provider, monitor, simulator
 from .services.realtime import hub
+from .store import store
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 log = logging.getLogger("speedo")
@@ -38,8 +39,7 @@ async def _loop(name: str, fn, every: float):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     s = get_settings()
-    if s.environment == "production" and s.jwt_secret.startswith("dev-only"):
-        raise RuntimeError("Set JWT_SECRET to a long random value before running in production")
+    await asyncio.to_thread(firebase.init)  # connects Firestore/Auth/Storage/FCM and loads the data mirror
     await hub.start()
     tasks = []
     if s.run_background_tasks:
@@ -55,6 +55,10 @@ async def lifespan(app: FastAPI):
     yield
     for t in tasks:
         t.cancel()
+    try:
+        await asyncio.to_thread(store.commit, True)  # save the latest live positions before exiting
+    except Exception:
+        log.exception("final Firestore write failed")
     await hub.stop()
 
 
@@ -64,9 +68,11 @@ app = FastAPI(
     version="1.0.0",
     description=(
         "Speedo Live: bus tracking and route navigation for Lahore.\n\n"
-        "Authenticate with `POST /api/auth/login` and send `Authorization: Bearer <token>`.\n"
+        "Data is stored in Cloud Firestore; accounts are Firebase Authentication users.\n\n"
+        "Authenticate with `POST /api/auth/login` and send the returned Firebase ID token as "
+        "`Authorization: Bearer <token>`; renew it with `POST /api/auth/refresh`.\n"
         "Live positions stream over the `/ws/live` WebSocket.\n\n"
-        "In DEMO mode all buses, routes and schedules are simulated sample data."
+        "In DEMO mode, buses flagged is_demo are moved by a simulator."
     ),
     lifespan=lifespan,
 )
@@ -87,17 +93,16 @@ async def value_error(_: Request, exc: ValueError):
 def health():
     db_ok = redis_ok = False
     try:
-        with engine.connect() as c:
-            c.execute(text("SELECT 1"))
-        db_ok = True
+        db_ok = bool(store.backend and store.backend.ping())
     except Exception:
-        pass
+        log.exception("Firestore health check failed")
     try:
         redis_ok = bool(hub.redis_sync and hub.redis_sync.ping())
     except Exception:
         pass
-    return {"status": "ok" if db_ok else "degraded", "database": db_ok, "redis": redis_ok,
-            "data_source": settings.data_source}
+    return {"status": "ok" if db_ok else "degraded", "database": "firestore", "firestore": db_ok,
+            "firebase_project": settings.firebase_project_id, "auth": firebase.auth_provider is not None,
+            "storage": firebase.files.enabled, "redis": redis_ok, "data_source": settings.data_source}
 
 
 for r in (auth.router, public.router, me.router, driver.router, admin.router, ws.router):

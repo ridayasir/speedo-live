@@ -17,11 +17,8 @@ import io
 from dataclasses import dataclass, field
 from datetime import time
 
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-
 from ..models import BusStop, Route, RouteStatus, RouteStop, Schedule
-from .geo import point_wkt
+from ..store import Session
 from .tracking import recompute_route_metrics
 
 
@@ -91,7 +88,7 @@ def import_routes(db: Session, rows: list[dict], source: str, shapes: list[dict]
 
     for code, stops in by_route.items():
         stops.sort(key=lambda x: x["_seq"])
-        route = db.execute(select(Route).where(Route.code == code)).scalars().first()
+        route = db.first(Route, code=code)
         if route is None:
             route = Route(code=code, name=stops[0]["route_name"], status=RouteStatus.active, is_demo=is_demo)
             db.add(route)
@@ -107,7 +104,7 @@ def import_routes(db: Session, rows: list[dict], source: str, shapes: list[dict]
             route.color = stops[0]["color"]
         route.path = shape_paths.get(code) or []
         for n, r in enumerate(stops):
-            stop = db.execute(select(BusStop).where(BusStop.code == r["stop_code"])).scalars().first()
+            stop = db.first(BusStop, code=r["stop_code"])
             if stop is None:
                 stop = BusStop(code=r["stop_code"], name=r["stop_name"], lat=r["_lat"], lng=r["_lng"], is_demo=is_demo)
                 db.add(stop)
@@ -115,7 +112,6 @@ def import_routes(db: Session, rows: list[dict], source: str, shapes: list[dict]
             else:
                 rep.stops_updated += 1
             stop.name, stop.lat, stop.lng = r["stop_name"], r["_lat"], r["_lng"]
-            stop.geog = point_wkt(r["_lat"], r["_lng"])
             stop.source_reference = source
             stop.is_demo = is_demo
             if r.get("stop_name_ur"):
@@ -134,7 +130,7 @@ def import_schedules(db: Session, rows: list[dict], is_demo: bool = False) -> Im
     rep = ImportReport()
     touched: set[int] = set()
     for i, r in enumerate(rows, start=2):
-        route = db.execute(select(Route).where(Route.code == r.get("route_code", ""))).scalars().first()
+        route = db.first(Route, code=r.get("route_code", ""))
         if not route:
             rep.errors.append(f"Row {i}: unknown route_code {r.get('route_code')!r}")
             continue

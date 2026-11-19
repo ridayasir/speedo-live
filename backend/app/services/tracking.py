@@ -8,12 +8,10 @@ from dataclasses import dataclass, field
 from datetime import datetime, time, timedelta, timezone
 from zoneinfo import ZoneInfo
 
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-
 from ..config import get_settings
-from ..models import Bus, BusStatus, GpsLocation, Route, RouteStop, Schedule, Trip, TripStatus
-from .geo import cumulative_lengths, haversine_m, point_wkt, project_onto_path
+from ..models import Bus, BusStatus, DataSource, GpsLocation, Route, Schedule, Trip, TripStatus, route_stops
+from ..store import Session
+from .geo import cumulative_lengths, haversine_m, project_onto_path
 from .realtime import hub
 
 log = logging.getLogger("speedo.tracking")
@@ -88,9 +86,7 @@ def route_geom(db: Session, route: Route | int) -> RouteGeom:
     cached = _route_cache.get(route.id)
     if cached and cached.version == version:
         return cached
-    rows = db.execute(
-        select(RouteStop).where(RouteStop.route_id == route.id).order_by(RouteStop.sequence)
-    ).scalars().all()
+    rows = sorted(route.stops, key=lambda r: r.sequence)
     path = route.path or [[r.stop.lat, r.stop.lng] for r in rows]
     geom = RouteGeom(
         route_id=route.id,
@@ -131,14 +127,12 @@ def recompute_route_metrics(db: Session, route: Route) -> None:
     if rows:
         route.start_stop_id = rows[0].stop_id
         route.end_stop_id = rows[-1].stop_id
-    from .geo import line_wkt
-
-    route.geog = line_wkt(route.path)
     invalidate_route(route.id)
 
 
 # --------------------------------------------------------------------------- speed memory
 _recent: dict[int, deque] = {}
+_last_stored: dict[int, GpsLocation] = {}  # last GPS fix written per bus (thinning)
 
 
 def _remember_progress(bus_id: int, t: datetime, d: float) -> None:
@@ -183,9 +177,8 @@ def gps_freshness(bus: Bus, now: datetime | None = None) -> str:
 
 
 def active_trip(db: Session, bus_id: int) -> Trip | None:
-    return db.execute(
-        select(Trip).where(Trip.bus_id == bus_id, Trip.status == TripStatus.active).order_by(Trip.started_at.desc())
-    ).scalars().first()
+    rows = db.where(Trip, bus_id=bus_id, status=TripStatus.active, order_by="started_at", desc=True)
+    return rows[0] if rows else None
 
 
 def bus_state(db: Session, bus: Bus, trip: Trip | None = None, now: datetime | None = None,
@@ -301,9 +294,7 @@ def ingest_points(db: Session, trip: Trip, points: list[GpsPoint], now: datetime
     bus = trip.bus
     geom = route_geom(db, trip.route_id)
     last_ts = aware(bus.last_gps_at)
-    last_stored = db.execute(
-        select(GpsLocation).where(GpsLocation.bus_id == bus.id).order_by(GpsLocation.recorded_at.desc()).limit(1)
-    ).scalars().first()
+    last_stored = _last_stored.get(bus.id)
 
     seen: set[datetime] = set()
     for p in sorted(points, key=lambda x: aware(x.recorded_at)):
@@ -338,18 +329,18 @@ def ingest_points(db: Session, trip: Trip, points: list[GpsPoint], now: datetime
         _remember_progress(bus.id, ts, trip.progress_m)
 
         # thinning: keep a point if it moved enough or enough time passed
-        keep = (
+        keep = trip.source != DataSource.demo and (  # simulated buses keep no GPS history
             last_stored is None
             or haversine_m(last_stored.lat, last_stored.lng, p.lat, p.lng) >= s.gps_store_min_distance_m
             or (ts - aware(last_stored.recorded_at)).total_seconds() >= s.gps_store_min_seconds
         )
         if keep:
             row = GpsLocation(
-                trip_id=trip.id, bus_id=bus.id, lat=p.lat, lng=p.lng, geog=point_wkt(p.lat, p.lng),
-                accuracy_m=p.accuracy_m, speed_mps=p.speed_mps, heading=p.heading, recorded_at=ts,
+                trip_id=trip.id, bus_id=bus.id, lat=p.lat, lng=p.lng,
+                accuracy_m=p.accuracy_m, speed_mps=p.speed_mps, heading=p.heading, recorded_at=ts, received_at=now,
             )
             db.add(row)
-            last_stored = row
+            last_stored = _last_stored[bus.id] = row
             res.stored += 1
 
         bus.last_lat, bus.last_lng = p.lat, p.lng
@@ -423,17 +414,12 @@ def arrivals_for_stop(db: Session, stop_id: int, route_id: int | None = None, no
     """Upcoming arrivals at a stop. Live estimates only come from fresh GPS; otherwise scheduled times."""
     s = get_settings()
     now = now or utcnow()
-    q = select(RouteStop).where(RouteStop.stop_id == stop_id)
-    if route_id:
-        q = q.where(RouteStop.route_id == route_id)
-    rs_rows = db.execute(q).scalars().all()
+    rs_rows = route_stops(stop_id=stop_id, route_id=route_id or None)
     live: list[dict] = []
     scheduled: list[dict] = []
     for rs in rs_rows:
         route = rs.route
-        trips = db.execute(
-            select(Trip).where(Trip.route_id == route.id, Trip.status == TripStatus.active)
-        ).scalars().all()
+        trips = db.where(Trip, route_id=route.id, status=TripStatus.active)
         for trip in trips:
             bus = trip.bus
             fresh = gps_freshness(bus, now)

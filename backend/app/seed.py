@@ -1,23 +1,24 @@
-"""Seed DEMONSTRATION data.
+"""Set up a Speedo Live Firebase project.
 
-Everything created here is flagged is_demo=True and named with a DEMO prefix. These are NOT official
-Speedo routes, stops, bus numbers or timetables. Stop names refer to well-known Lahore landmarks with
-approximate coordinates so the map looks familiar; route lines are straight segments between stops.
-Replace with verified PMA/PTC data through Admin > Import.
+Create (or promote) the first administrator. The account is a Firebase Authentication user with an
+admin profile in Firestore:
 
-Usage:  python -m app.seed            (adds demo data if missing, plus demo accounts)
-        python -m app.seed --reset    (drops demo records first)
+    python -m app.seed --admin-email you@example.com --admin-password "a-long-password" --admin-name "Your Name"
+
+Routes, stops, buses and timetables are NOT created here: load the verified PMA/PTC data through
+Admin > Routes > Import CSV / Excel.
+
+`--demo` loads clearly labelled DEMONSTRATION data (sample routes, simulated buses, demo accounts). It is
+used by the automated tests; never load it into a project that real passengers use.
 """
 import argparse
 import os
 from datetime import time
 
-from sqlalchemy import delete, select
-
-from .db import Base, SessionLocal, engine, is_sqlite
-from .models import Administrator, Bus, BusStop, Driver, Role, Route, RouteStop, Schedule, ServiceAlert, User
-from .security import hash_password
-from .services.geo import haversine_m, point_wkt
+from .db import SessionLocal
+from .models import Bus, BusStop, Driver, Role, Route, RouteStop, Schedule, ServiceAlert, User
+from .services import accounts
+from .services.geo import haversine_m
 from .services.tracking import recompute_route_metrics
 
 SOURCE = "DEMO DATA - not official Speedo information"
@@ -69,39 +70,44 @@ def _offsets(codes: list[str]) -> list[float]:
     return out
 
 
-def reset(db):
-    db.execute(delete(Bus).where(Bus.is_demo.is_(True)))
-    db.execute(delete(Route).where(Route.is_demo.is_(True)))
-    db.execute(delete(BusStop).where(BusStop.is_demo.is_(True)))
-    db.commit()
+def create_admin(db, email: str, password: str | None, name: str) -> User:
+    """Create the admin account, or promote an existing account with this email to admin."""
+    email = email.strip().lower()
+    user = accounts.find_user(email=email)
+    if user:
+        user.role = Role.admin
+        user.is_active = True
+        db.commit()
+        if password:
+            accounts.set_password(user, password)
+        return user
+    if not password or len(password) < 8:
+        raise SystemExit("--admin-password (8+ characters) is required to create a new admin")
+    return accounts.create_account(db, name, password, Role.admin, email=email)
 
 
 def _user(db, email, name, role, password, phone=None):
-    u = db.execute(select(User).where(User.email == email)).scalars().first()
+    u = accounts.find_user(email=email)
     if u:
         return u, False
-    u = User(email=email, full_name=name, role=role, password_hash=hash_password(password), phone=phone)
-    db.add(u)
-    db.flush()
-    return u, True
+    return accounts.create_account(db, name, password, role, email=email, phone=phone), True
 
 
-def seed(db) -> dict:
+def seed_demo(db) -> dict:
+    """DEMONSTRATION data only (tests). Everything is flagged is_demo and named DEMO."""
     stops = {}
     for code, (name, lat, lng) in STOPS.items():
-        s = db.execute(select(BusStop).where(BusStop.code == code)).scalars().first()
+        s = db.first(BusStop, code=code)
         if not s:
-            s = BusStop(code=code, name=name, lat=lat, lng=lng, geog=point_wkt(lat, lng), is_demo=True,
-                        source_reference=SOURCE)
+            s = BusStop(code=code, name=name, lat=lat, lng=lng, is_demo=True, source_reference=SOURCE)
             db.add(s)
         stops[code] = s
-    db.flush()
 
     routes = {}
     for code, name, color, seq in ROUTES:
         for direction, codes in (("", seq), ("R", list(reversed(seq)))):
             rcode = code + direction
-            r = db.execute(select(Route).where(Route.code == rcode)).scalars().first()
+            r = db.first(Route, code=rcode)
             if r:
                 routes[rcode] = r
                 continue
@@ -110,11 +116,9 @@ def seed(db) -> dict:
             r = Route(code=rcode, name=rname, color=color, is_demo=True, source_reference=SOURCE, fare_pkr=None,
                       path=[[STOPS[c][1], STOPS[c][2]] for c in codes])
             db.add(r)
-            db.flush()
             for n, (c, off) in enumerate(zip(codes, _offsets(codes))):
-                r.stops.append(RouteStop(stop_id=stops[c].id, stop=stops[c], sequence=n + 1, offset_minutes=off,
+                r.stops.append(RouteStop(stop_id=stops[c].id, sequence=n + 1, offset_minutes=off,
                                          is_major=c in MAJOR))
-            db.flush()
             recompute_route_metrics(db, r)
             db.add(Schedule(route_id=r.id, days="mon,tue,wed,thu,fri,sat", first_departure=time(6, 0),
                             last_departure=time(22, 0), frequency_minutes=12, is_demo=True,
@@ -122,53 +126,76 @@ def seed(db) -> dict:
             db.add(Schedule(route_id=r.id, days="sun", first_departure=time(8, 0), last_departure=time(21, 0),
                             frequency_minutes=20, is_demo=True, notes="Demo timetable, not an official schedule"))
             routes[rcode] = r
-    db.flush()
 
     n = 101
     buses = []
     for rcode, r in routes.items():
         for _ in range(2):
             num = f"DEMO-{n}"
-            b = db.execute(select(Bus).where(Bus.bus_number == num)).scalars().first()
+            b = db.first(Bus, bus_number=num)
             if not b:
                 b = Bus(bus_number=num, registration_number=f"DEMO-REG-{n}", capacity=60, route_id=r.id, is_demo=True)
                 db.add(b)
             buses.append(b)
             n += 1
-    db.flush()
 
-    if not db.execute(select(ServiceAlert)).first():
+    if not db.all(ServiceAlert):
         db.add(ServiceAlert(severity="info", title="Demo mode",
                             message="Speedo Live is running with simulated buses and sample routes. "
                                     "Times and positions are not real."))
+    db.commit()
 
-    # demo accounts (passwords can be overridden by env vars)
     admin_pw = os.environ.get("SEED_ADMIN_PASSWORD", "Admin@12345")
     driver_pw = os.environ.get("SEED_DRIVER_PASSWORD", "Driver@12345")
     pass_pw = os.environ.get("SEED_PASSENGER_PASSWORD", "Passenger@123")
-    admin, created = _user(db, "admin@speedolive.demo", "Demo Administrator", Role.admin, admin_pw)
-    if created:
-        db.add(Administrator(user_id=admin.id))
+    _user(db, "admin@speedolive.demo", "Demo Administrator", Role.admin, admin_pw)
     du, created = _user(db, "driver@speedolive.demo", "Demo Driver", Role.driver, driver_pw, phone="+923000000001")
     if created:
         # the demo driver gets a separate, non-simulated bus so their own GPS drives it
         bus = Bus(bus_number="DRV-001", registration_number="DEMO-DRV-001", capacity=60, route_id=routes["DEMO-1"].id,
                   is_demo=False)
         db.add(bus)
-        db.flush()
         db.add(Driver(user_id=du.id, license_number="DEMO-LIC-0001", employee_code="DEMO-EMP-1", assigned_bus_id=bus.id))
     _user(db, "passenger@speedolive.demo", "Demo Passenger", Role.passenger, pass_pw)
     db.commit()
     return {"stops": len(stops), "routes": len(routes), "buses": len(buses)}
 
 
+seed = seed_demo  # name used by the test suite
+
+
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--reset", action="store_true")
+    from . import firebase
+
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--admin-email", default=os.environ.get("SEED_ADMIN_EMAIL"))
+    ap.add_argument("--admin-password", default=os.environ.get("SEED_ADMIN_PASSWORD"))
+    ap.add_argument("--admin-name", default=os.environ.get("SEED_ADMIN_NAME", "Administrator"))
+    ap.add_argument("--demo", action="store_true", help="load DEMONSTRATION data (tests only)")
+    ap.add_argument("--ask", action="store_true", help="ask for the admin's email, name and password")
     args = ap.parse_args()
-    if is_sqlite:  # the Alembic migration needs PostGIS
-        Base.metadata.create_all(engine)
+    if args.ask:
+        import getpass
+
+        print("Create the Speedo Live administrator account\n")
+        args.admin_email = input("Admin email: ").strip()
+        args.admin_name = input("Full name: ").strip() or "Administrator"
+        while True:
+            pw = getpass.getpass("Password (8+ characters, hidden while typing): ")
+            if len(pw) < 8:
+                print("  Too short, use at least 8 characters.")
+            elif pw != getpass.getpass("Type the password again: "):
+                print("  The two passwords do not match, try again.")
+            else:
+                break
+        args.admin_password = pw
+    if not args.admin_email and not args.demo:
+        ap.print_help()
+        raise SystemExit(1)
+    firebase.init()
     with SessionLocal() as db:
-        if args.reset:
-            reset(db)
-        print(seed(db))
+        if args.admin_email:
+            u = create_admin(db, args.admin_email, args.admin_password, args.admin_name)
+            print(f"Admin ready: {u.email} (user id {u.id}, Firebase uid {u.firebase_uid})")
+        if args.demo:
+            print(seed_demo(db))

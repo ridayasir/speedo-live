@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bus, Clock, Heart, Home, Map, Route as RouteIcon, User } from "lucide-react";
-import { DemoBanner } from "./ui";
+
 import clsx from "./clsx";
 import { useAuth } from "@/lib/hooks";
 
@@ -43,7 +43,6 @@ export default function Shell({ children }: { children: React.ReactNode }) {
   if (path.startsWith("/admin")) return <>{children}</>;
   return (
     <div className="min-h-screen flex flex-col">
-      <DemoBanner />
       <header className="sticky top-0 z-[1100] border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
           <Logo />

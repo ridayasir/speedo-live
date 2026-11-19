@@ -3,13 +3,11 @@ import io
 import json
 from datetime import timedelta
 
-from sqlalchemy import select
-
-from app.models import Bus, Notification, Trip, TripStatus, User
+from app.models import Bus, Route, Trip, TripStatus, User
 from app.services import geo, monitor, simulator
 from app.services.tracking import route_geom, utcnow
 
-from .conftest import login
+from .conftest import AUTH, FILES, FIRESTORE, login
 
 
 # ----------------------------------------------------------------- accounts
@@ -36,9 +34,69 @@ def test_wrong_password(client):
     assert r.status_code == 401
 
 
-def test_password_is_hashed(db):
-    u = db.execute(select(User).where(User.email == "admin@speedolive.demo")).scalars().one()
-    assert u.password_hash.startswith("$2") and "Admin" not in u.password_hash
+def test_passwords_live_only_in_firebase_auth(db):
+    u = db.first(User, email="admin@speedolive.demo")
+    assert u.firebase_uid and AUTH.users[u.firebase_uid]["email"] == "admin@speedolive.demo"
+    stored = FIRESTORE.data["users"][str(u.id)]
+    assert "password" not in str(stored).lower() and "Admin@12345" not in str(stored)
+
+
+def test_phone_only_account_and_token_refresh(client):
+    r = client.post("/api/auth/register", json={"full_name": "Bilal", "phone": "03007654321", "password": "secret123"})
+    assert r.status_code == 201, r.text
+    body = r.json()
+    assert body["refresh_token"] and body["expires_in"] == 3600
+    uid = next(k for k, v in AUTH.users.items() if v["email"] == "923007654321@phone.speedolive.invalid")
+    # the ID token works, a refreshed one works too, and the old refresh token rotation is accepted
+    new = client.post("/api/auth/refresh", json={"refresh_token": body["refresh_token"]})
+    assert new.status_code == 200 and new.json()["user"]["phone"] == "+923007654321"
+    h = {"Authorization": f"Bearer {new.json()['access_token']}"}
+    assert client.get("/api/auth/me", headers=h).json()["full_name"] == "Bilal"
+    assert client.post("/api/auth/refresh", json={"refresh_token": "rt.not-a-real-token"}).status_code == 401
+    assert client.get("/api/auth/me", headers={"Authorization": "Bearer forged"}).status_code == 401
+    # password change goes to Firebase
+    assert client.post("/api/auth/me/password", headers=h,
+                       json={"current_password": "wrong-one", "new_password": "newsecret1"}).status_code == 400
+    assert client.post("/api/auth/me/password", headers=h,
+                       json={"current_password": "secret123", "new_password": "newsecret1"}).status_code == 204
+    assert AUTH.users[uid]["password"] == "newsecret1"
+    login(client, "03007654321", "newsecret1")
+
+
+def test_firebase_console_account_gets_profile(client, db):
+    AUTH.create_user("console.user@example.pk", "console123")
+    h = login(client, "console.user@example.pk", "console123")
+    me = client.get("/api/auth/me", headers=h).json()
+    assert me["role"] == "passenger" and me["email"] == "console.user@example.pk"
+
+
+def test_data_survives_restart_from_firestore(db):
+    """Everything the API knows is in Firestore: rebuilding the in-memory mirror loses nothing."""
+    from app.store import store
+
+    before = {m.__collection__: sorted(o.id for o in store.cached(m)) for m in store.cache}
+    route = db.first(Route, code="DEMO-1")
+    stops_before = [(rs.stop_id, rs.sequence, round(rs.distance_from_start_m)) for rs in route.stops]
+    doc = FIRESTORE.data["routes"][str(route.id)]
+    assert isinstance(doc["path"][0], dict) and "lat" in doc["path"][0]  # no nested arrays
+    store.reload()
+    after = {m.__collection__: sorted(o.id for o in store.cached(m)) for m in store.cache}
+    assert before == after
+    route = db.first(Route, code="DEMO-1")
+    assert [(rs.stop_id, rs.sequence, round(rs.distance_from_start_m)) for rs in route.stops] == stops_before
+    assert route.path and isinstance(route.path[0], list)
+
+
+def test_unique_fields_and_rollback(db):
+    from app.store import IntegrityError
+
+    db.add(Bus(bus_number="DEMO-101"))
+    try:
+        db.commit()
+        raise AssertionError("duplicate bus number accepted")
+    except IntegrityError:
+        db.rollback()
+    assert len(db.where(Bus, bus_number="DEMO-101")) == 1
 
 
 # ----------------------------------------------------------------- discovery
@@ -151,7 +209,7 @@ def test_trip_gps_flow_and_live_sync(client, driver_h, db):
 
 
 def test_driver_cannot_report_other_bus(client, driver_h, db):
-    other = db.execute(select(Bus).where(Bus.bus_number == "DEMO-110")).scalars().one()
+    other = db.first(Bus, bus_number="DEMO-110")
     t = Trip(bus_id=other.id, route_id=other.route_id, status=TripStatus.active, started_at=utcnow())
     db.add(t)
     db.commit()
@@ -174,18 +232,18 @@ def test_offline_trip_gets_interrupted(client, driver_h, db):
 
 # ----------------------------------------------------------------- simulator & notifications
 def test_simulator_moves_demo_buses_only(db):
-    before = {b.bus_number: b.last_gps_at for b in db.execute(select(Bus)).scalars()}
+    before = {b.bus_number: b.last_gps_at for b in db.all(Bus)}
     assert simulator.tick(db) > 0
     db.expire_all()
-    after = {b.bus_number: b.last_gps_at for b in db.execute(select(Bus)).scalars()}
+    after = {b.bus_number: b.last_gps_at for b in db.all(Bus)}
     assert after["DEMO-101"] is not None and after["DEMO-101"] != before["DEMO-101"]
     assert after["DRV-001"] == before["DRV-001"]  # never simulated
 
 
 def test_arrival_watch_notifies(client, passenger_h, db):
     simulator.tick(db)
-    bus = db.execute(select(Bus).where(Bus.bus_number == "DEMO-101")).scalars().one()
-    trip = db.execute(select(Trip).where(Trip.bus_id == bus.id, Trip.status == TripStatus.active)).scalars().one()
+    bus = db.first(Bus, bus_number="DEMO-101")
+    trip = db.first(Trip, bus_id=bus.id, status=TripStatus.active)
     geom = route_geom(db, trip.route_id)
     nxt = geom.next_stop(trip.progress_m)
     r = client.post("/api/me/watches", headers=passenger_h,
@@ -219,7 +277,7 @@ def test_favorites_prefs_and_disruption_notification(client, passenger_h, admin_
 def test_notification_prefs_block_kind(db):
     from app.services.notifications import notify
 
-    u = db.execute(select(User).where(User.email == "passenger@speedolive.demo")).scalars().one()
+    u = db.first(User, email="passenger@speedolive.demo")
     u.notification_prefs = dict(u.notification_prefs, delays=False)
     assert notify(db, u, "delay", "t", "b") is None
     assert notify(db, u, "disruption", "t", "b", dedupe_key="x1") is not None
@@ -274,6 +332,14 @@ def test_admin_overview_and_crud(client, admin_h):
     assert client.get("/api/driver/me", headers=d_h).json()["route"]["code"] == "T-R1"
     client.patch(f"/api/admin/drivers/{drv.json()['id']}", headers=admin_h, json={"is_active": False})
     assert client.post("/api/auth/login", json={"identifier": "03111111111", "password": "drive1234"}).status_code == 403
+    assert AUTH.users[next(u for u, v in AUTH.users.items() if v["email"] == "923111111111@phone.speedolive.invalid")]["disabled"]
+    # existing tokens of a deactivated driver stop working
+    assert client.get("/api/driver/me", headers=d_h).status_code == 401
+    # duplicate licence is refused without leaving a half-created Firebase account behind
+    n_users = len(AUTH.users)
+    dup = client.post("/api/admin/drivers", headers=admin_h, json={
+        "full_name": "Dup Driver", "phone": "03122222222", "password": "drive1234", "license_number": "LIC-T1"})
+    assert dup.status_code == 409 and len(AUTH.users) == n_users
     # deactivate bus
     assert client.delete(f"/api/admin/buses/{bus['id']}", headers=admin_h).status_code == 204
     fleet = client.get("/api/admin/fleet", headers=admin_h).json()["buses"]
@@ -302,6 +368,9 @@ def test_csv_import(client, admin_h):
     assert r.json()["routes_created"] == 1 and r.json()["stops_created"] == 3 and r.json()["schedules"] == 1
     rt = client.get("/api/routes", params={"q": "IMP-1"}).json()[0]
     assert rt["is_demo"] is False and rt["source_reference"] == "Test fixture"
+    # a copy of each uploaded file is kept in Firebase Storage
+    assert set(r.json()["stored_files"]) == {"routes", "schedules"}
+    assert any(k.startswith("imports/") and v == routes_csv.encode() for k, v in FILES.blobs.items())
     bad = client.post("/api/admin/import/routes", headers=admin_h, data={"source_reference": "Test fixture"},
                       files={"routes_file": ("r.csv", io.BytesIO(b"route_code,lat\nX,1\n"), "text/csv")})
     assert bad.status_code == 422
@@ -318,3 +387,78 @@ def test_reports(client, admin_h):
 def test_openapi_docs(client):
     spec = client.get("/openapi.json").json()
     assert "/api/plan" in spec["paths"] and "/api/driver/trips/{trip_id}/locations" in spec["paths"]
+
+
+def test_route_delete_cascades(client, admin_h, db):
+    s1 = client.post("/api/admin/stops", headers=admin_h, json={"code": "DEL-1", "name": "Del A", "lat": 31.50, "lng": 74.30}).json()
+    s2 = client.post("/api/admin/stops", headers=admin_h, json={"code": "DEL-2", "name": "Del B", "lat": 31.51, "lng": 74.31}).json()
+    r = client.post("/api/admin/routes", headers=admin_h, json={"code": "DEL-R", "name": "Delete me", "stops": [
+        {"stop_id": s1["id"], "offset_minutes": 0}, {"stop_id": s2["id"], "offset_minutes": 4}]}).json()
+    sc = client.post("/api/admin/schedules", headers=admin_h, json={
+        "route_id": r["id"], "first_departure": "07:00", "last_departure": "08:00"}).json()
+    assert client.delete(f"/api/admin/routes/{r['id']}", headers=admin_h).status_code == 204
+    assert str(r["id"]) not in FIRESTORE.data["routes"] and str(sc["id"]) not in FIRESTORE.data["schedules"]
+    assert client.get(f"/api/routes/{r['id']}").status_code == 404
+    assert client.delete(f"/api/admin/stops/{s1['id']}", headers=admin_h).status_code == 204
+
+
+def test_health_reports_firestore(client):
+    h = client.get("/health").json()
+    assert h["status"] == "ok" and h["database"] == "firestore" and h["firestore"] is True and h["auth"] is True
+
+
+def test_enum_fields_accept_plain_values(db):
+    from app.models import AlertSeverity, ServiceAlert
+
+    a = ServiceAlert(severity="warning", title="t", message="m")
+    assert a.severity is AlertSeverity.warning
+    a.severity = "info"
+    assert a.severity is AlertSeverity.info
+
+
+def test_profile_created_by_another_process_is_adopted_on_login(client, db):
+    """An admin made with `python -m app.seed` while the API runs must log in as admin, not as a new passenger."""
+    from app.models import Role, User
+    from app.store import store
+
+    uid = AUTH.create_user("late.admin@example.pk", "lateadmin1")
+    u = User(firebase_uid=uid, auth_email="late.admin@example.pk", email="late.admin@example.pk",
+             full_name="Late Admin", role=Role.admin)
+    db.add(u)
+    db.commit()
+    store.cache[User].pop(u.id)  # this process never saw it
+    r = client.post("/api/auth/login", json={"identifier": "late.admin@example.pk", "password": "lateadmin1"})
+    assert r.status_code == 200 and r.json()["user"]["role"] == "admin" and r.json()["user"]["id"] == u.id
+    assert sum(1 for x in store.cached(User) if x.email == "late.admin@example.pk") == 1
+
+
+def test_live_gps_writes_are_throttled(db):
+    """Moving a bus updates memory at once but Firestore at most every WRITE_EVERY seconds."""
+    from app.store import store
+
+    bus = db.first(Bus, bus_number="DEMO-105")
+    bus.last_lat = 31.501
+    db.commit()  # first live write goes through
+    writes = FIRESTORE.writes
+    for i in range(5):
+        bus.last_lat = 31.502 + i / 1000
+        db.commit()
+    assert FIRESTORE.writes == writes  # held back
+    assert db.get(Bus, bus.id).last_lat == 31.506  # API still serves the newest position
+    bus.status = "maintenance"  # a real change is written immediately, with the newest position
+    db.commit()
+    assert FIRESTORE.data["buses"][str(bus.id)]["status"] == "maintenance"
+    assert FIRESTORE.data["buses"][str(bus.id)]["last_lat"] == 31.506
+    bus.status = "active"
+    bus.last_lat = 31.6
+    store.commit(force=True)  # shutdown flush
+    assert FIRESTORE.data["buses"][str(bus.id)]["last_lat"] == 31.6
+
+
+def test_simulated_buses_store_no_gps_history(db):
+    from app.services import simulator
+
+    before = len(FIRESTORE.data.get("gps_locations", {}))
+    simulator.tick(db)
+    simulator.tick(db, dt=40)
+    assert len(FIRESTORE.data.get("gps_locations", {})) == before

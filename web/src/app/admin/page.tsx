@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { AlertTriangle, BarChart3, Bus, CalendarClock, LayoutDashboard, LogOut, MapPin, Radar, Route, Settings, Users } from "lucide-react";
 import AuthForm from "@/components/AuthForm";
 import { Logo } from "@/components/Shell";
-import { Card, DemoBanner, Spinner } from "@/components/ui";
+import { Card, Spinner } from "@/components/ui";
 import clsx from "@/components/clsx";
 import { useAuth, useMeta } from "@/lib/hooks";
 import { Overview } from "@/components/admin/Overview";
@@ -44,7 +44,6 @@ function AdminInner() {
   if (!user || user.role !== "admin")
     return (
       <div className="min-h-screen bg-surface">
-        <DemoBanner />
         <div className="mx-auto max-w-md px-4 py-16">
           <Logo className="mb-6 justify-center" />
           <Card className="p-6">
@@ -63,7 +62,6 @@ function AdminInner() {
   const C = tab.C;
   return (
     <div className="min-h-screen bg-surface">
-      <DemoBanner />
       <div className="flex">
         <aside className="hidden lg:flex w-60 shrink-0 flex-col border-r border-slate-200 bg-white min-h-screen sticky top-0">
           <div className="p-4 border-b border-slate-100"><Logo /><div className="mt-1 text-xs font-semibold text-accent-600 ml-11">Admin</div></div>

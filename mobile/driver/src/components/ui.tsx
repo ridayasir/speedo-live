@@ -51,7 +51,7 @@ export function DemoBanner({ show }: { show: boolean }) {
   if (!show) return null;
   return (
     <View style={s.banner}>
-      <Text style={s.bannerText}>DEMO MODE: buses, routes and times are simulated sample data, not real Speedo services.</Text>
+      <Text style={s.bannerText}>DEMO MODE: buses marked DEMO are simulated; their positions and arrival times are not real.</Text>
     </View>
   );
 }

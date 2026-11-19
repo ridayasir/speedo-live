@@ -1,13 +1,12 @@
 """Admin dashboard API. Every endpoint requires an admin token."""
 import csv
 import io
+import logging
+from collections import Counter
 from datetime import datetime, timedelta
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
 from fastapi.responses import StreamingResponse
-from sqlalchemy import func, or_, select
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
 
 from ..config import get_settings
 from ..db import get_db
@@ -28,6 +27,7 @@ from ..models import (
     Trip,
     TripStatus,
     User,
+    route_stops,
 )
 from ..schemas import (
     AlertIn,
@@ -49,13 +49,16 @@ from ..schemas import (
     stop_out,
     trip_out,
 )
-from ..security import hash_password, require_admin
-from ..services import importer
-from ..services.geo import point_wkt
+from .. import firebase
+from ..security import require_admin
+from ..services import accounts, importer
 from ..services.notifications import notify_route_followers
 from ..services.realtime import hub
 from ..services.tracking import PKT, aware, bus_state, invalidate_route, recompute_route_metrics, utcnow
+from ..store import IntegrityError, Session
+from .public import ilike
 
+log = logging.getLogger("speedo.admin")
 router = APIRouter(prefix="/api/admin", tags=["admin"], dependencies=[Depends(require_admin)])
 
 
@@ -74,10 +77,11 @@ def _commit(db: Session, what: str = "record"):
 # ----------------------------------------------------------------------------- overview
 @router.get("/overview")
 def overview(db: Session = Depends(get_db)):
-    buses = db.execute(select(Bus)).scalars().all()
+    buses = db.all(Bus)
     states = [bus_state(db, b) for b in buses]
-    count = lambda m: db.execute(select(func.count()).select_from(m)).scalar_one()  # noqa: E731
-    active_alerts = db.execute(select(ServiceAlert).where(ServiceAlert.is_active.is_(True))).scalars().all()
+    count = lambda m: len(db.all(m))  # noqa: E731
+    active_alerts = [a for a in db.all(ServiceAlert) if a.is_active]
+    active_trips = db.where(Trip, status=TripStatus.active)
     return {
         "demo_mode": get_settings().is_demo,
         "total_buses": len(buses),
@@ -88,10 +92,9 @@ def overview(db: Session = Depends(get_db)):
         "total_routes": count(Route),
         "total_stops": count(BusStop),
         "total_drivers": count(Driver),
-        "active_drivers": db.execute(select(func.count(func.distinct(Trip.driver_id))).where(
-            Trip.status == TripStatus.active, Trip.driver_id.is_not(None))).scalar_one(),
-        "ongoing_trips": db.execute(select(func.count()).select_from(Trip).where(Trip.status == TripStatus.active)).scalar_one(),
-        "passengers": db.execute(select(func.count()).select_from(User).where(User.role == Role.passenger)).scalar_one(),
+        "active_drivers": len({t.driver_id for t in active_trips if t.driver_id is not None}),
+        "ongoing_trips": len(active_trips),
+        "passengers": sum(1 for u in db.all(User) if u.role == Role.passenger),
         "alerts": [alert_out(a) for a in active_alerts],
     }
 
@@ -99,10 +102,10 @@ def overview(db: Session = Depends(get_db)):
 # ----------------------------------------------------------------------------- buses
 @router.get("/buses")
 def list_buses(q: str | None = None, db: Session = Depends(get_db)):
-    stmt = select(Bus).order_by(Bus.bus_number)
+    buses = sorted(db.all(Bus), key=lambda b: b.bus_number)
     if q:
-        stmt = stmt.where(or_(Bus.bus_number.ilike(f"%{q}%"), Bus.registration_number.ilike(f"%{q}%")))
-    return [bus_admin_out(b) | {"live": bus_state(db, b)} for b in db.execute(stmt).scalars().all()]
+        buses = [b for b in buses if ilike(q, b.bus_number, b.registration_number)]
+    return [bus_admin_out(b) | {"live": bus_state(db, b)} for b in buses]
 
 
 @router.post("/buses", status_code=201)
@@ -156,7 +159,7 @@ def delete_bus(bus_id: int, hard: bool = False, admin: User = Depends(require_ad
         db.delete(b)
     else:
         b.status = BusStatus.inactive
-        for t in db.execute(select(Trip).where(Trip.bus_id == b.id, Trip.status == TripStatus.active)).scalars():
+        for t in db.where(Trip, bus_id=b.id, status=TripStatus.active):
             t.status, t.ended_at, t.end_reason = TripStatus.interrupted, utcnow(), "bus_deactivated"
     audit(db, admin, "delete" if hard else "deactivate", "bus", bus_id)
     db.commit()
@@ -165,17 +168,16 @@ def delete_bus(bus_id: int, hard: bool = False, admin: User = Depends(require_ad
 # ----------------------------------------------------------------------------- stops
 @router.get("/stops")
 def list_stops(q: str | None = None, db: Session = Depends(get_db)):
-    stmt = select(BusStop).order_by(BusStop.name)
+    stops = sorted(db.all(BusStop), key=lambda s: s.name)
     if q:
-        stmt = stmt.where(or_(BusStop.name.ilike(f"%{q}%"), BusStop.code.ilike(f"%{q}%")))
-    stops = db.execute(stmt).scalars().all()
-    counts = dict(db.execute(select(RouteStop.stop_id, func.count()).group_by(RouteStop.stop_id)).all())
+        stops = [s for s in stops if ilike(q, s.name, s.code)]
+    counts = Counter(rs.stop_id for rs in route_stops())
     return [stop_out(s) | {"route_count": counts.get(s.id, 0)} for s in stops]
 
 
 @router.post("/stops", status_code=201)
 def create_stop(body: StopIn, admin: User = Depends(require_admin), db: Session = Depends(get_db)):
-    s = BusStop(**body.model_dump(), geog=point_wkt(body.lat, body.lng))
+    s = BusStop(**body.model_dump())
     db.add(s)
     _commit(db, "stop")
     audit(db, admin, "create", "stop", s.id)
@@ -190,10 +192,9 @@ def update_stop(stop_id: int, body: StopPatch, admin: User = Depends(require_adm
         raise HTTPException(404, "Stop not found")
     for k, v in body.model_dump(exclude_unset=True).items():
         setattr(s, k, v)
-    s.geog = point_wkt(s.lat, s.lng)
     _commit(db, "stop")
     if body.lat is not None or body.lng is not None:
-        for rs in db.execute(select(RouteStop).where(RouteStop.stop_id == s.id)).scalars():
+        for rs in route_stops(stop_id=s.id):
             recompute_route_metrics(db, rs.route)
         db.commit()
     audit(db, admin, "update", "stop", s.id)
@@ -206,7 +207,7 @@ def delete_stop(stop_id: int, admin: User = Depends(require_admin), db: Session 
     s = db.get(BusStop, stop_id)
     if not s:
         raise HTTPException(404, "Stop not found")
-    used = db.execute(select(func.count()).select_from(RouteStop).where(RouteStop.stop_id == stop_id)).scalar_one()
+    used = len(route_stops(stop_id=stop_id))
     if used:
         raise HTTPException(409, f"Stop is used by {used} route(s); remove it from those routes first")
     db.delete(s)
@@ -219,7 +220,7 @@ def _apply_stops(db: Session, route: Route, stops) -> None:
     ids = [s.stop_id for s in stops]
     if len(set(ids)) != len(ids):
         raise HTTPException(400, "A stop can appear only once on a route")
-    found = {s.id: s for s in db.execute(select(BusStop).where(BusStop.id.in_(ids))).scalars()}
+    found = {i: s for i in ids if (s := db.get(BusStop, i))}
     missing = [i for i in ids if i not in found]
     if missing:
         raise HTTPException(400, f"Unknown stop ids: {missing}")
@@ -236,8 +237,8 @@ def _apply_stops(db: Session, route: Route, stops) -> None:
 
 @router.get("/routes")
 def list_routes(db: Session = Depends(get_db)):
-    routes = db.execute(select(Route).order_by(Route.code)).scalars().all()
-    bus_counts = dict(db.execute(select(Bus.route_id, func.count()).group_by(Bus.route_id)).all())
+    routes = sorted(db.all(Route), key=lambda r: r.code)
+    bus_counts = Counter(b.route_id for b in db.all(Bus))
     return [route_out(r) | {"bus_count": bus_counts.get(r.id, 0), "schedule_count": len(r.schedules)} for r in routes]
 
 
@@ -291,7 +292,7 @@ def delete_route(route_id: int, admin: User = Depends(require_admin), db: Sessio
     r = db.get(Route, route_id)
     if not r:
         raise HTTPException(404, "Route not found")
-    if db.execute(select(Trip).where(Trip.route_id == route_id, Trip.status == TripStatus.active)).first():
+    if db.where(Trip, route_id=route_id, status=TripStatus.active):
         raise HTTPException(409, "Route has active trips; end them or suspend the route instead")
     db.delete(r)
     invalidate_route(route_id)
@@ -302,10 +303,10 @@ def delete_route(route_id: int, admin: User = Depends(require_admin), db: Sessio
 # ----------------------------------------------------------------------------- schedules
 @router.get("/schedules")
 def list_schedules(route_id: int | None = None, db: Session = Depends(get_db)):
-    stmt = select(Schedule).order_by(Schedule.route_id, Schedule.first_departure)
+    rows = sorted(db.all(Schedule), key=lambda s: (s.route_id, s.first_departure))
     if route_id:
-        stmt = stmt.where(Schedule.route_id == route_id)
-    return [schedule_out(s) | {"route_code": s.route.code} for s in db.execute(stmt).scalars().all()]
+        rows = [s for s in rows if s.route_id == route_id]
+    return [schedule_out(s) | {"route_code": s.route.code if s.route else None} for s in rows]
 
 
 @router.post("/schedules", status_code=201)
@@ -350,26 +351,31 @@ def delete_schedule(schedule_id: int, admin: User = Depends(require_admin), db: 
 # ----------------------------------------------------------------------------- drivers
 @router.get("/drivers")
 def list_drivers(db: Session = Depends(get_db)):
-    rows = db.execute(select(Driver).join(User).order_by(User.full_name)).scalars().all()
-    active = {t.driver_id: t for t in db.execute(select(Trip).where(Trip.status == TripStatus.active)).scalars()}
+    rows = sorted((d for d in db.all(Driver) if d.user), key=lambda d: d.user.full_name)
+    active = {t.driver_id: t for t in db.where(Trip, status=TripStatus.active)}
     return [driver_out(d) | {"active_trip_id": active[d.id].id if d.id in active else None} for d in rows]
 
 
 @router.post("/drivers", status_code=201)
 def create_driver(body: DriverIn, admin: User = Depends(require_admin), db: Session = Depends(get_db)):
-    from .auth import _normalize_phone
-
-    user = User(full_name=body.full_name, email=body.email.lower() if body.email else None,
-                phone=_normalize_phone(body.phone), password_hash=hash_password(body.password), role=Role.driver)
-    db.add(user)
-    _commit(db, "driver account")
-    d = Driver(user_id=user.id, license_number=body.license_number, employee_code=body.employee_code)
-    if body.bus_id:
-        if not db.get(Bus, body.bus_id):
-            raise HTTPException(400, "Bus not found")
-        d.assigned_bus_id = body.bus_id
+    if body.bus_id and not db.get(Bus, body.bus_id):
+        raise HTTPException(400, "Bus not found")
+    taken = [x for x in db.all(Driver) if x.license_number == body.license_number
+             or (body.employee_code and x.employee_code == body.employee_code)
+             or (body.bus_id and x.assigned_bus_id == body.bus_id)]
+    if taken:
+        raise HTTPException(409, "That driver conflicts with an existing one (duplicate code, number or assignment)")
+    user = accounts.create_account(db, body.full_name, body.password, Role.driver, email=body.email, phone=body.phone)
+    d = Driver(user_id=user.id, license_number=body.license_number, employee_code=body.employee_code,
+               assigned_bus_id=body.bus_id or None)
     db.add(d)
-    _commit(db, "driver")
+    try:
+        _commit(db, "driver")
+    except HTTPException:
+        firebase.auth_provider.delete_user(user.firebase_uid)
+        db.delete(user)
+        db.commit()
+        raise
     audit(db, admin, "create", "driver", d.id)
     db.commit()
     db.refresh(d)
@@ -385,19 +391,18 @@ def update_driver(driver_id: int, body: DriverPatch, admin: User = Depends(requi
     if "full_name" in data:
         d.user.full_name = data["full_name"]
     if "phone" in data:
-        from .auth import _normalize_phone
-
-        d.user.phone = _normalize_phone(data["phone"])
+        d.user.phone = accounts.normalize_phone(data["phone"])
     if "password" in data and data["password"]:
-        d.user.password_hash = hash_password(data["password"])
+        accounts.set_password(d.user, data["password"])
     for k in ("license_number", "employee_code"):
         if k in data:
             setattr(d, k, data[k])
     if "is_active" in data:
         d.is_active = data["is_active"]
         d.user.is_active = data["is_active"]
+        accounts.set_active(d.user, data["is_active"])
         if not data["is_active"]:
-            for t in db.execute(select(Trip).where(Trip.driver_id == d.id, Trip.status == TripStatus.active)).scalars():
+            for t in db.where(Trip, driver_id=d.id, status=TripStatus.active):
                 t.status, t.ended_at, t.end_reason = TripStatus.interrupted, utcnow(), "driver_deactivated"
     if "bus_id" in data:
         if data["bus_id"]:
@@ -429,7 +434,7 @@ def update_driver(driver_id: int, body: DriverPatch, admin: User = Depends(requi
 def fleet(db: Session = Depends(get_db)):
     """Live fleet with assigned driver names (admin only)."""
     out = []
-    for b in db.execute(select(Bus).order_by(Bus.bus_number)).scalars().all():
+    for b in sorted(db.all(Bus), key=lambda b: b.bus_number):
         st = bus_state(db, b)
         trip = db.get(Trip, st["trip_id"]) if st["trip_id"] else None
         out.append(st | {
@@ -444,12 +449,8 @@ def fleet(db: Session = Depends(get_db)):
 @router.get("/trips")
 def list_trips(status: TripStatus | None = None, bus_id: int | None = None, limit: int = Query(100, le=500),
                db: Session = Depends(get_db)):
-    stmt = select(Trip).order_by(Trip.started_at.desc()).limit(limit)
-    if status:
-        stmt = stmt.where(Trip.status == status)
-    if bus_id:
-        stmt = stmt.where(Trip.bus_id == bus_id)
-    return [trip_out(t) for t in db.execute(stmt).scalars().all()]
+    filters = ([("status", "==", status)] if status else []) + ([("bus_id", "==", bus_id)] if bus_id else [])
+    return [trip_out(t) for t in db.where(Trip, *filters, order_by="started_at", desc=True, limit=limit)]
 
 
 @router.get("/trips/{trip_id}/track")
@@ -457,7 +458,7 @@ def trip_track(trip_id: int, db: Session = Depends(get_db)):
     t = db.get(Trip, trip_id)
     if not t:
         raise HTTPException(404, "Trip not found")
-    pts = db.execute(select(GpsLocation).where(GpsLocation.trip_id == trip_id).order_by(GpsLocation.recorded_at)).scalars().all()
+    pts = db.where(GpsLocation, trip_id=trip_id, order_by="recorded_at")
     return trip_out(t) | {"points": [{"lat": p.lat, "lng": p.lng, "at": iso(p.recorded_at), "speed_mps": p.speed_mps} for p in pts]}
 
 
@@ -477,7 +478,7 @@ def force_end_trip(trip_id: int, admin: User = Depends(require_admin), db: Sessi
 # ----------------------------------------------------------------------------- alerts
 @router.get("/alerts")
 def list_alerts(db: Session = Depends(get_db)):
-    return [alert_out(a) for a in db.execute(select(ServiceAlert).order_by(ServiceAlert.created_at.desc())).scalars()]
+    return [alert_out(a) for a in sorted(db.all(ServiceAlert), key=lambda a: a.created_at, reverse=True)]
 
 
 @router.post("/alerts", status_code=201)
@@ -525,20 +526,39 @@ async def import_routes(
     admin: User = Depends(require_admin),
     db: Session = Depends(get_db),
 ):
-    """Import verified route data. Replaces the stop list (and schedules, if given) of each route in the file."""
-    rows = importer.read_table(routes_file.filename or "routes.csv", await routes_file.read())
-    shapes = importer.read_table(shapes_file.filename or "shapes.csv", await shapes_file.read()) if shapes_file else None
+    """Import verified route data. Replaces the stop list (and schedules, if given) of each route in the file.
+
+    With Firebase Storage configured, a copy of every uploaded file is kept under imports/ for traceability."""
+    uploads = {"routes": (routes_file, await routes_file.read())}
+    if schedules_file:
+        uploads["schedules"] = (schedules_file, await schedules_file.read())
+    if shapes_file:
+        uploads["shapes"] = (shapes_file, await shapes_file.read())
+    name = lambda k: uploads[k][0].filename or f"{k}.csv"  # noqa: E731
+    rows = importer.read_table(name("routes"), uploads["routes"][1])
+    shapes = importer.read_table(name("shapes"), uploads["shapes"][1]) if shapes_file else None
     rep = importer.import_routes(db, rows, source_reference, shapes)
     if rep.errors:
         raise HTTPException(422, {"errors": rep.errors[:50]})
     if schedules_file:
-        srep = importer.import_schedules(db, importer.read_table(schedules_file.filename or "s.csv", await schedules_file.read()))
+        srep = importer.import_schedules(db, importer.read_table(name("schedules"), uploads["schedules"][1]))
         if srep.errors:
             raise HTTPException(422, {"errors": srep.errors[:50], "routes_imported": rep.__dict__})
         rep.schedules = srep.schedules
-    audit(db, admin, "import", "routes", None, {"source": source_reference, **{k: v for k, v in rep.__dict__.items() if k != "errors"}})
+    stored = {}
+    stamp = utcnow().strftime("%Y%m%dT%H%M%SZ")
+    for kind, (f, data) in uploads.items():
+        try:
+            path = firebase.files.upload(f"imports/{stamp}_{kind}_{name(kind)}", data, f.content_type)
+        except Exception as exc:  # the import itself already succeeded; a missing copy is not fatal
+            log.warning("could not store %s in Firebase Storage: %s", kind, exc)
+            path = None
+        if path:
+            stored[kind] = path
+    result = {k: v for k, v in rep.__dict__.items() if k != "errors"}
+    audit(db, admin, "import", "routes", None, {"source": source_reference, **result, "files": stored})
     db.commit()
-    return rep.__dict__
+    return rep.__dict__ | {"stored_files": stored}
 
 
 @router.get("/import/templates/{kind}")
@@ -556,7 +576,7 @@ def import_template(kind: str):
 
 # ----------------------------------------------------------------------------- reports
 def _report(db: Session, start: datetime, end: datetime) -> dict:
-    trips = db.execute(select(Trip).where(Trip.started_at >= start, Trip.started_at < end)).scalars().all()
+    trips = db.where(Trip, ("started_at", ">=", start), ("started_at", "<", end))
     thr = get_settings().delay_threshold_minutes
     by_day: dict[str, dict] = {}
     by_bus: dict[str, dict] = {}
@@ -581,8 +601,8 @@ def _report(db: Session, start: datetime, end: datetime) -> dict:
                                                 "journeys": 0, "delayed_trips": 0})
         rr["trips"] += 1
         rr["delayed_trips"] += t.max_delay_minutes >= thr
-    for code, n in db.execute(select(Route.code, func.count()).join(Journey, Journey.route_id == Route.id)
-                              .where(Journey.created_at >= start, Journey.created_at < end).group_by(Route.code)).all():
+    journeys = Counter(j.route_id for j in db.where(Journey, ("created_at", ">=", start), ("created_at", "<", end)))
+    for code, n in [(r.code, journeys[r.id]) for r in db.all(Route) if journeys.get(r.id)]:
         by_route.setdefault(code, {"route_code": code, "route_name": code, "trips": 0, "journeys": 0, "delayed_trips": 0})["journeys"] = n
     for b in by_bus.values():
         b["km"] = round(b["km"], 1)
@@ -590,7 +610,7 @@ def _report(db: Session, start: datetime, end: datetime) -> dict:
         b["gps_availability_pct"] = round(min(100.0, 100 * b["gps_points"] / b["expected_points"]), 1) if b["expected_points"] else None
     delayed = [trip_out(t) for t in trips if t.max_delay_minutes >= thr]
     interrupted = [trip_out(t) for t in trips if t.status == TripStatus.interrupted]
-    alerts = db.execute(select(ServiceAlert).where(ServiceAlert.created_at >= start, ServiceAlert.created_at < end)).scalars().all()
+    alerts = [a for a in db.all(ServiceAlert) if a.created_at and start <= a.created_at < end]
     return {
         "from": start.isoformat(), "to": end.isoformat(),
         "daily_trips": sorted(by_day.values(), key=lambda x: x["date"]),
@@ -633,13 +653,15 @@ def settings_view():
     s = get_settings()
     keys = ["data_source", "simulator_tick_seconds", "gps_min_interval_seconds", "gps_max_accuracy_m",
             "stale_after_seconds", "offline_after_seconds", "interrupt_trip_after_seconds", "delay_threshold_minutes",
-            "default_bus_speed_kmh", "gps_retention_days", "max_walk_m"]
-    return {k: getattr(s, k) for k in keys} | {"fcm_configured": bool(s.fcm_project_id and s.fcm_credentials_file),
+            "default_bus_speed_kmh", "gps_retention_days", "max_walk_m", "firebase_project_id",
+            "firebase_storage_bucket"]
+    return {k: getattr(s, k) for k in keys} | {"fcm_configured": firebase.push is not None,
+                                              "storage_configured": firebase.files.enabled,
                                               "redis_configured": bool(s.redis_url)}
 
 
 @router.get("/audit")
 def audit_log(limit: int = Query(100, le=500), db: Session = Depends(get_db)):
-    rows = db.execute(select(AuditLog).order_by(AuditLog.created_at.desc()).limit(limit)).scalars().all()
+    rows = db.where(AuditLog, order_by="created_at", desc=True, limit=limit)
     return [{"id": a.id, "user_id": a.user_id, "action": a.action, "entity": a.entity, "entity_id": a.entity_id,
              "details": a.details, "created_at": iso(a.created_at)} for a in rows]

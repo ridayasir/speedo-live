@@ -16,4 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ ./
 COPY --from=web /web/out /app/web
 EXPOSE 8000
-CMD ["sh", "-c", "alembic upgrade head && python -m app.seed && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips='*'"]
+# Firebase settings come from the environment (FIREBASE_PROJECT_ID, FIREBASE_WEB_API_KEY,
+# FIREBASE_CREDENTIALS_JSON, FIREBASE_STORAGE_BUCKET). Create the first admin once with:
+#   python -m app.seed --admin-email ... --admin-password ...
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips='*'"]

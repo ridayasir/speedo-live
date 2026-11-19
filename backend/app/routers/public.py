@@ -1,9 +1,8 @@
 """Public passenger endpoints. No login needed for discovery, tracking or timetables."""
+from collections import Counter
 from datetime import datetime, timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import func, or_, select
-from sqlalchemy.orm import Session
 
 from ..config import get_settings
 from ..db import get_db
@@ -14,21 +13,28 @@ from ..models import (
     Journey,
     Route,
     RouteStatus,
-    RouteStop,
     ServiceAlert,
     Trip,
     TripStatus,
+    route_stops,
 )
 from ..schemas import PlanIn, alert_out, route_out, schedule_out, stop_out
 from ..services.planner import Place, nearby_stops, plan
 from ..services.tracking import PKT, arrivals_for_stop, bus_state, schedule_departures, utcnow
+from ..store import Session
 
 router = APIRouter(prefix="/api", tags=["passenger"])
 
 
+def ilike(q: str, *values: str | None) -> bool:
+    """Case-insensitive substring match (the old SQL ILIKE '%q%')."""
+    q = q.strip().lower()
+    return any(v and q in v.lower() for v in values)
+
+
 @router.get("/meta")
 def meta():
-    """Operating mode. In demo mode every bus and route shown is simulated sample data."""
+    """Operating mode. In demo mode, buses flagged is_demo are simulated."""
     s = get_settings()
     return {
         "app": "Speedo Live",
@@ -36,7 +42,7 @@ def meta():
         "data_source": s.data_source,
         "demo_mode": s.is_demo,
         "notice": (
-            "DEMO MODE: buses, routes and timings are simulated sample data, not real Speedo services."
+            "DEMO MODE: buses marked DEMO are simulated; their positions and times are not real."
             if s.is_demo else "Live data from authorised GPS sources."
         ),
         "stale_after_seconds": s.stale_after_seconds,
@@ -52,24 +58,21 @@ def meta():
 def list_routes(q: str | None = None, include_inactive: bool = False, with_path: bool = False,
                 db: Session = Depends(get_db)):
     """List routes. with_path=true adds the line geometry and ordered stops for drawing on a map."""
-    stmt = select(Route).order_by(Route.code)
+    routes = sorted(db.all(Route), key=lambda r: r.code)
     if not include_inactive:
-        stmt = stmt.where(Route.status == RouteStatus.active)
+        routes = [r for r in routes if r.status == RouteStatus.active]
     if q:
-        like = f"%{q.strip()}%"
-        stmt = stmt.where(or_(Route.name.ilike(like), Route.code.ilike(like)))
-    return [route_out(r, detail=with_path) for r in db.execute(stmt).scalars().all()]
+        routes = [r for r in routes if ilike(q, r.name, r.code)]
+    return [route_out(r, detail=with_path) for r in routes]
 
 
 @router.get("/routes/popular")
 def popular_routes(limit: int = Query(6, ge=1, le=20), db: Session = Depends(get_db)):
     """Ranked by passenger journeys and favourites in the last 30 days."""
     since = utcnow() - timedelta(days=30)
-    j = dict(db.execute(
-        select(Journey.route_id, func.count()).where(Journey.created_at >= since).group_by(Journey.route_id)
-    ).all())
-    f = dict(db.execute(select(FavoriteRoute.route_id, func.count()).group_by(FavoriteRoute.route_id)).all())
-    routes = db.execute(select(Route).where(Route.status == RouteStatus.active)).scalars().all()
+    j = Counter(x.route_id for x in db.where(Journey, ("created_at", ">=", since)))
+    f = Counter(x.route_id for x in db.all(FavoriteRoute))
+    routes = [r for r in db.all(Route) if r.status == RouteStatus.active]
     routes.sort(key=lambda r: (-(j.get(r.id, 0) + 2 * f.get(r.id, 0)), r.code))
     return [route_out(r) | {"journeys_30d": j.get(r.id, 0), "favorites": f.get(r.id, 0)} for r in routes[:limit]]
 
@@ -94,11 +97,10 @@ def route_buses(route_id: int, db: Session = Depends(get_db)):
 # ----------------------------------------------------------------------------- stops
 @router.get("/stops")
 def list_stops(q: str | None = None, limit: int = Query(50, ge=1, le=500), db: Session = Depends(get_db)):
-    stmt = select(BusStop).order_by(BusStop.name).limit(limit)
+    stops = sorted(db.all(BusStop), key=lambda s: s.name)
     if q:
-        like = f"%{q.strip()}%"
-        stmt = stmt.where(or_(BusStop.name.ilike(like), BusStop.code.ilike(like), BusStop.name_ur.ilike(like)))
-    return [stop_out(s) for s in db.execute(stmt).scalars().all()]
+        stops = [s for s in stops if ilike(q, s.name, s.code, s.name_ur)]
+    return [stop_out(s) for s in stops[:limit]]
 
 
 @router.get("/stops/nearby")
@@ -113,7 +115,7 @@ def get_stop(stop_id: int, db: Session = Depends(get_db)):
     s = db.get(BusStop, stop_id)
     if not s:
         raise HTTPException(404, "Stop not found")
-    rows = db.execute(select(RouteStop).where(RouteStop.stop_id == stop_id)).scalars().all()
+    rows = route_stops(stop_id=stop_id)
     return stop_out(s) | {
         "routes": [route_out(rs.route) | {"sequence": rs.sequence} for rs in rows],
         "alerts": [alert_out(a) for a in _active_alerts(db, stop_id=stop_id)],
@@ -131,9 +133,8 @@ def stop_arrivals(stop_id: int, route_id: int | None = None, db: Session = Depen
 # ----------------------------------------------------------------------------- buses
 def _live_buses(db: Session, route_id: int | None = None) -> list[dict]:
     now = utcnow()
-    trips = {t.bus_id: t for t in db.execute(select(Trip).where(Trip.status == TripStatus.active)).scalars().all()}
-    stmt = select(Bus).order_by(Bus.bus_number)
-    buses = db.execute(stmt).scalars().all()
+    trips = {t.bus_id: t for t in db.where(Trip, status=TripStatus.active)}
+    buses = sorted(db.all(Bus), key=lambda b: b.bus_number)
     out = []
     for b in buses:
         t = trips.get(b.id)
@@ -194,10 +195,9 @@ def plan_journey(body: PlanIn, db: Session = Depends(get_db)):
 @router.get("/timetable")
 def timetable(route_id: int | None = None, stop_id: int | None = None, db: Session = Depends(get_db)):
     """Route operating hours and scheduled times at major stops (today, Pakistan time)."""
-    stmt = select(Route).where(Route.status != RouteStatus.inactive).order_by(Route.code)
+    routes = sorted((r for r in db.all(Route) if r.status != RouteStatus.inactive), key=lambda r: r.code)
     if route_id:
-        stmt = stmt.where(Route.id == route_id)
-    routes = db.execute(stmt).scalars().all()
+        routes = [r for r in routes if r.id == route_id]
     now = utcnow()
     today = now.astimezone(PKT)
     out = []
@@ -230,16 +230,14 @@ def timetable(route_id: int | None = None, stop_id: int | None = None, db: Sessi
 # ----------------------------------------------------------------------------- alerts & search
 def _active_alerts(db: Session, route_id: int | None = None, stop_id: int | None = None):
     now = utcnow()
-    stmt = select(ServiceAlert).where(
-        ServiceAlert.is_active.is_(True),
-        or_(ServiceAlert.starts_at.is_(None), ServiceAlert.starts_at <= now),
-        or_(ServiceAlert.ends_at.is_(None), ServiceAlert.ends_at >= now),
-    ).order_by(ServiceAlert.created_at.desc())
+    rows = [a for a in db.all(ServiceAlert) if a.is_active and (a.starts_at is None or a.starts_at <= now)
+            and (a.ends_at is None or a.ends_at >= now)]
+    general = lambda a: a.route_id is None and a.stop_id is None  # noqa: E731
     if route_id:
-        stmt = stmt.where(or_(ServiceAlert.route_id == route_id, ServiceAlert.route_id.is_(None) & ServiceAlert.stop_id.is_(None)))
+        rows = [a for a in rows if a.route_id == route_id or general(a)]
     if stop_id:
-        stmt = stmt.where(or_(ServiceAlert.stop_id == stop_id, ServiceAlert.route_id.is_(None) & ServiceAlert.stop_id.is_(None)))
-    return db.execute(stmt).scalars().all()
+        rows = [a for a in rows if a.stop_id == stop_id or general(a)]
+    return sorted(rows, key=lambda a: a.created_at, reverse=True)
 
 
 @router.get("/alerts")
@@ -249,10 +247,9 @@ def alerts(route_id: int | None = None, stop_id: int | None = None, db: Session 
 
 @router.get("/search")
 def search(q: str = Query(min_length=1, max_length=100), db: Session = Depends(get_db)):
-    like = f"%{q.strip()}%"
-    stops = db.execute(select(BusStop).where(or_(BusStop.name.ilike(like), BusStop.code.ilike(like))).limit(10)).scalars().all()
-    routes = db.execute(select(Route).where(or_(Route.name.ilike(like), Route.code.ilike(like))).limit(10)).scalars().all()
-    buses = db.execute(select(Bus).where(Bus.bus_number.ilike(like)).limit(10)).scalars().all()
+    stops = [s for s in db.all(BusStop) if ilike(q, s.name, s.code)][:10]
+    routes = [r for r in db.all(Route) if ilike(q, r.name, r.code)][:10]
+    buses = [b for b in db.all(Bus) if ilike(q, b.bus_number)][:10]
     return {
         "stops": [stop_out(s) for s in stops],
         "routes": [route_out(r) for r in routes],

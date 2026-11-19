@@ -1,29 +1,30 @@
 import os
 
-os.environ.setdefault("DATABASE_URL", "postgresql+psycopg://speedo:speedo@localhost:5432/speedo_test")
 os.environ["RUN_BACKGROUND_TASKS"] = "false"
 os.environ["REDIS_URL"] = ""
 os.environ["RATE_LIMIT_AUTH"] = "1000/minute"
 os.environ["RATE_LIMIT_DEFAULT"] = "10000/minute"
 os.environ["DATA_SOURCE"] = "demo"
+os.environ["FIREBASE_PROJECT_ID"] = "speedo-test"
 
 import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
-from sqlalchemy import text  # noqa: E402
 
-from app.db import Base, SessionLocal, engine, is_sqlite  # noqa: E402
+from app import firebase  # noqa: E402
+from app.db import SessionLocal  # noqa: E402
+from app.services import tracking  # noqa: E402
+
+from .fakes import FakeAuth, FakeFiles, FakeFirestore, FakePush  # noqa: E402
+
+FIRESTORE, AUTH, FILES, PUSH = FakeFirestore(), FakeAuth(), FakeFiles(), FakePush()
+firebase.use(FIRESTORE, AUTH, FILES, PUSH)
+
 from app.main import app  # noqa: E402
 from app.seed import seed  # noqa: E402
-from app.services import tracking  # noqa: E402
 
 
 @pytest.fixture(scope="session", autouse=True)
 def database():
-    if not is_sqlite:
-        with engine.begin() as c:
-            c.execute(text("CREATE EXTENSION IF NOT EXISTS postgis"))
-    Base.metadata.drop_all(engine)
-    Base.metadata.create_all(engine)
     with SessionLocal() as db:
         seed(db)
     yield

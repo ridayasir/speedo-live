@@ -1,0 +1,10 @@
+rules_version = '2';
+// Imported route files are written by the API server (Admin SDK) only. No direct client access.
+// Deploy with: firebase deploy --only storage
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

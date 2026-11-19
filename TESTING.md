@@ -1,5 +1,28 @@
 # Speedo Live testing report
 
+## Firebase migration (19 November 2026)
+
+The backend now stores everything in Cloud Firestore and uses Firebase Authentication for accounts,
+Firebase Storage for imported files and Cloud Messaging for push. Environment: Windows 10, Python 3.12,
+firebase-admin 7.8.0, Node 24.
+
+| Check | How | Result |
+|---|---|---|
+| All original API behaviour (accounts, discovery, planner, timetable, driver GPS, WebSocket, ETAs, simulator, notifications, admin CRUD, CSV import, reports, privacy) | The existing pytest suite, unchanged in intent, run against in-memory Firestore/Auth fakes that enforce Firestore's data rules | **Pass** |
+| Firebase-specific behaviour | New tests: passwords only in Firebase Auth, phone-only accounts, token refresh, password change, console-created users, deactivated driver disabled in Firebase, data reloads intact from Firestore, unique fields + rollback, cascading deletes, Storage copy of imports, health check, enum values | **Pass** |
+| Firestore compatibility of stored data | Every document written during the test run encoded with the real `google-cloud-firestore` encoder | **Pass** |
+| Firestore queries need no composite index | Queries built by the real client library inspected offline: equality-only or single-field range | **Pass** |
+| Running server | Real API process (background simulator and monitors on) with the fakes: health, login, refresh, admin overview, planner, registration, favourites, live WebSocket | **Pass**, no errors in the log |
+| Web app | `tsc --noEmit` after adding automatic token refresh | **Pass** |
+| Android apps | Same token-refresh change; not type-checked here (no `node_modules`) | **Not checked** |
+| **Live connection to a real Firebase project** | `python -m app.firebase_check` (Firestore, Auth, Storage, FCM) | **Not run: no Firebase project credentials on this machine yet** |
+
+Total: 42 automated tests passed (`cd backend && pytest -q`).
+
+---
+
+## Earlier report (PostgreSQL version)
+
 Date: 5 November 2026. Environment: Linux cloud workspace, Python 3.13, PostgreSQL 16 + PostGIS 3.4, Redis 7, Node 22, Chromium (Playwright).
 
 ## Summary

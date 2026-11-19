@@ -10,11 +10,9 @@ import logging
 import random
 from dataclasses import dataclass
 
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-
 from ..config import get_settings
 from ..models import Bus, BusStatus, DataSource, Trip, TripStatus
+from ..store import Session
 from .geo import point_at_distance
 from .tracking import GpsPoint, clear_progress, ingest_points, route_geom, update_route_history, utcnow
 
@@ -46,14 +44,10 @@ def tick(db: Session, dt: float | None = None) -> int:
     if not s.is_demo:
         return 0
     dt = dt or s.simulator_tick_seconds
-    buses = db.execute(
-        select(Bus).where(Bus.is_demo.is_(True), Bus.status == BusStatus.active, Bus.route_id.is_not(None))
-    ).scalars().all()
+    buses = [b for b in db.all(Bus) if b.is_demo and b.status == BusStatus.active and b.route_id is not None]
     moved = 0
     for bus in buses:
-        trip = db.execute(
-            select(Trip).where(Trip.bus_id == bus.id, Trip.status == TripStatus.active)
-        ).scalars().first()
+        trip = db.first(Trip, bus_id=bus.id, status=TripStatus.active)
         geom = route_geom(db, bus.route_id)
         if geom.length_m <= 0:
             continue

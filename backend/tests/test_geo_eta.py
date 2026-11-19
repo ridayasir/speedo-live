@@ -2,7 +2,6 @@
 from datetime import timedelta
 
 import pytest
-from sqlalchemy import select
 
 from app.models import Bus, Route, Trip, TripStatus
 from app.services import geo
@@ -56,7 +55,7 @@ def test_low_accuracy_and_future_timestamps_rejected():
 
 
 def test_stale_and_offline_detection(db):
-    bus = db.execute(select(Bus).where(Bus.bus_number == "DEMO-101")).scalars().one()
+    bus = db.first(Bus, bus_number="DEMO-101")
     now = utcnow()
     bus.last_gps_at = now - timedelta(seconds=10)
     assert gps_freshness(bus, now) == "fresh"
@@ -70,7 +69,7 @@ def test_stale_and_offline_detection(db):
 
 
 def test_stale_is_not_reported_as_stopped(db):
-    bus = db.execute(select(Bus).where(Bus.bus_number == "DEMO-102")).scalars().one()
+    bus = db.first(Bus, bus_number="DEMO-102")
     trip = Trip(bus_id=bus.id, route_id=bus.route_id, status=TripStatus.active, started_at=utcnow())
     db.add(trip)
     db.flush()
@@ -85,8 +84,8 @@ def test_stale_is_not_reported_as_stopped(db):
 
 
 def test_eta_uses_distance_and_speed(db):
-    route = db.execute(select(Route).where(Route.code == "DEMO-1")).scalars().one()
-    bus = db.execute(select(Bus).where(Bus.bus_number == "DEMO-103")).scalars().one()
+    route = db.first(Route, code="DEMO-1")
+    bus = db.first(Bus, bus_number="DEMO-103")
     geom = route_geom(db, route)
     trip = Trip(bus_id=bus.id, route_id=route.id, status=TripStatus.active, started_at=utcnow(), progress_m=0)
     db.add(trip)

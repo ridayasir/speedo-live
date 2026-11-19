@@ -1,63 +1,67 @@
+"""Accounts through Firebase Authentication.
+
+`access_token` is a Firebase ID token (valid 1 hour); send it as `Authorization: Bearer <token>`.
+Exchange `refresh_token` for a new one at POST /api/auth/refresh.
+"""
 from fastapi import APIRouter, Depends, HTTPException, Request, status
-from sqlalchemy import or_, select
-from sqlalchemy.orm import Session
+from pydantic import BaseModel, Field
 
 from ..config import get_settings
 from ..db import get_db
 from ..limits import limiter
-from ..models import DEFAULT_PREFS, Role, User
+from ..models import Role, User
 from ..schemas import LoginIn, PasswordIn, ProfileIn, RegisterIn, TokenOut, user_out
-from ..security import create_token, get_current_user, hash_password, verify_password
+from ..security import get_current_user
+from ..services import accounts
+from ..services.accounts import normalize_phone as _normalize_phone  # noqa: F401  (used by admin)
 from ..services.tracking import utcnow
+from ..store import Session
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 
-def _normalize_phone(p: str | None) -> str | None:
-    if not p:
-        return None
-    p = p.replace(" ", "").replace("-", "")
-    if p.startswith("03") and len(p) == 11:  # local Pakistani mobile format
-        p = "+92" + p[1:]
-    return p
+class RefreshIn(BaseModel):
+    refresh_token: str = Field(min_length=10, max_length=4096)
 
 
 @router.post("/register", response_model=TokenOut, status_code=201)
 @limiter.limit(get_settings().rate_limit_auth)
 def register(request: Request, body: RegisterIn, db: Session = Depends(get_db)):
-    """Create a passenger account with email or phone and a password."""
-    email = body.email.lower() if body.email else None
-    phone = _normalize_phone(body.phone)
-    conds = ([User.email == email] if email else []) + ([User.phone == phone] if phone else [])
-    clash = db.execute(select(User).where(or_(*conds))).scalars().first()
-    if clash:
-        raise HTTPException(status.HTTP_409_CONFLICT, "An account with this email or phone already exists")
-    user = User(full_name=body.full_name.strip(), email=email, phone=phone, password_hash=hash_password(body.password),
-                role=Role.passenger, notification_prefs=dict(DEFAULT_PREFS))
-    db.add(user)
-    db.commit()
-    return TokenOut(access_token=create_token(user), user=user_out(user))
+    """Create a passenger account with email or phone and a password (stored in Firebase Authentication)."""
+    user = accounts.create_account(db, body.full_name, body.password, Role.passenger, email=body.email,
+                                   phone=body.phone)
+    _, tokens = accounts.sign_in(db, user.auth_email, body.password)
+    return accounts.token_out(user, tokens)
 
 
 @router.post("/login", response_model=TokenOut)
 @limiter.limit(get_settings().rate_limit_auth)
 def login(request: Request, body: LoginIn, db: Session = Depends(get_db)):
     """Log in with email or phone. Works for passengers, drivers and admins."""
-    ident = body.identifier.strip().lower()
-    phone = _normalize_phone(ident)
-    user = db.execute(select(User).where(or_(User.email == ident, User.phone == phone))).scalars().first()
-    if not user or not verify_password(body.password, user.password_hash):
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Incorrect email/phone or password")
+    user, tokens = accounts.sign_in(db, body.identifier, body.password)
     if not user.is_active or (user.driver and not user.driver.is_active):
         raise HTTPException(status.HTTP_403_FORBIDDEN, "This account is deactivated")
     user.last_login_at = utcnow()
     db.commit()
-    return TokenOut(access_token=create_token(user), user=user_out(user))
+    return accounts.token_out(user, tokens)
+
+
+@router.post("/refresh", response_model=TokenOut)
+@limiter.limit(get_settings().rate_limit_auth)
+def refresh(request: Request, body: RefreshIn, db: Session = Depends(get_db)):
+    """Exchange a refresh token for a new ID token."""
+    tokens = accounts.refresh(body.refresh_token)
+    from ..security import user_by_uid
+
+    user = user_by_uid(tokens.uid)
+    if not user or not user.is_active:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Session expired. Please log in again.")
+    return accounts.token_out(user, tokens)
 
 
 @router.post("/logout", status_code=204)
 def logout(user: User = Depends(get_current_user)):
-    """Tokens are stateless; the client discards its token. Kept so apps have a single logout call."""
+    """The client discards its tokens. Kept so apps have a single logout call."""
     return None
 
 
@@ -71,9 +75,9 @@ def update_me(body: ProfileIn, user: User = Depends(get_current_user), db: Sessi
     if body.full_name:
         user.full_name = body.full_name.strip()
     if body.phone:
-        phone = _normalize_phone(body.phone)
-        other = db.execute(select(User).where(User.phone == phone, User.id != user.id)).scalars().first()
-        if other:
+        phone = accounts.normalize_phone(body.phone)
+        other = accounts.find_user(phone=phone)
+        if other and other.id != user.id:
             raise HTTPException(409, "Phone number already in use")
         user.phone = phone
     db.commit()
@@ -82,7 +86,10 @@ def update_me(body: ProfileIn, user: User = Depends(get_current_user), db: Sessi
 
 @router.post("/me/password", status_code=204)
 def change_password(body: PasswordIn, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    if not verify_password(body.current_password, user.password_hash):
-        raise HTTPException(400, "Current password is incorrect")
-    user.password_hash = hash_password(body.new_password)
-    db.commit()
+    try:
+        accounts.sign_in(db, user.auth_email, body.current_password)
+    except HTTPException as exc:
+        if exc.status_code == 401:
+            raise HTTPException(400, "Current password is incorrect") from exc
+        raise
+    accounts.set_password(user, body.new_password)

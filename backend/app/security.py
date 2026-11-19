@@ -1,52 +1,33 @@
-from datetime import datetime, timedelta, timezone
+"""Authentication: callers send a Firebase ID token as `Authorization: Bearer <token>`.
 
-import bcrypt
-import jwt
+The token is verified with the Firebase Admin SDK and mapped to the user's profile in Firestore
+(users.firebase_uid). Roles (passenger, driver, admin) live on that profile.
+"""
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from sqlalchemy.orm import Session
 
-from .config import get_settings
+from . import firebase
 from .db import get_db
 from .models import Role, User
+from .store import Session, store
 
 bearer = HTTPBearer(auto_error=False)
 
 
-def hash_password(raw: str) -> str:
-    return bcrypt.hashpw(raw.encode()[:72], bcrypt.gensalt(rounds=12)).decode()
-
-
-def verify_password(raw: str, hashed: str) -> bool:
-    try:
-        return bcrypt.checkpw(raw.encode()[:72], hashed.encode())
-    except ValueError:
-        return False
-
-
-def create_token(user: User) -> str:
-    s = get_settings()
-    now = datetime.now(timezone.utc)
-    payload = {
-        "sub": str(user.id),
-        "role": user.role.value,
-        "iat": now,
-        "exp": now + timedelta(minutes=s.access_token_minutes),
-    }
-    return jwt.encode(payload, s.jwt_secret, algorithm=s.jwt_algorithm)
-
-
-def decode_token(token: str) -> dict:
-    s = get_settings()
-    return jwt.decode(token, s.jwt_secret, algorithms=[s.jwt_algorithm])
+def user_by_uid(uid: str) -> User | None:
+    for u in store.cached(User):
+        if u.firebase_uid == uid:
+            return u
+    return None
 
 
 def user_from_token(db: Session, token: str) -> User | None:
-    try:
-        payload = decode_token(token)
-    except jwt.PyJWTError:
+    if firebase.auth_provider is None:
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, "Firebase Authentication is not configured")
+    uid = firebase.auth_provider.verify(token)
+    if not uid:
         return None
-    user = db.get(User, int(payload.get("sub", 0)))
+    user = user_by_uid(uid)
     if not user or not user.is_active:
         return None
     return user

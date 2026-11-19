@@ -1,6 +1,7 @@
 "use client";
 
-import { AlertTriangle, Loader2, Info, WifiOff } from "lucide-react";
+import { useState } from "react";
+import { AlertTriangle, Eye, EyeOff, Loader2, Info, WifiOff } from "lucide-react";
 import type { BusState } from "@/lib/types";
 import { useMeta } from "@/lib/hooks";
 import clsx from "./clsx";
@@ -50,15 +51,41 @@ export function Button({ variant = "primary", size = "md", loading, className, c
   );
 }
 
-export function Input({ label, className, ...rest }: React.InputHTMLAttributes<HTMLInputElement> & { label?: string }) {
-  const input = (
+export function Input({ label, className, type, ...rest }: React.InputHTMLAttributes<HTMLInputElement> & { label?: string }) {
+  // password fields get a show/hide toggle so people can check what they typed
+  const [shown, setShown] = useState(false);
+  const isPassword = type === "password";
+  const field = (
     <input
       className={clsx(
         "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100",
+        isPassword && "pr-11",
         className,
       )}
+      type={isPassword && shown ? "text" : type}
       {...rest}
     />
+  );
+  const input = isPassword ? (
+    <span className="relative block">
+      {field}
+      <button
+        type="button"
+        onMouseDown={(e) => e.preventDefault() /* keep the cursor in the password field */}
+        onClick={(e) => {
+          e.preventDefault();
+          setShown((s) => !s);
+        }}
+        aria-label={shown ? "Hide password" : "Show password"}
+        aria-pressed={shown}
+        title={shown ? "Hide password" : "Show password"}
+        className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-xl text-slate-500 hover:text-brand-700 focus:outline-none focus-visible:text-brand-700"
+      >
+        {shown ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+      </button>
+    </span>
+  ) : (
+    field
   );
   if (!label) return input;
   return (
@@ -129,7 +156,7 @@ export function DemoBanner() {
       <div className="mx-auto max-w-7xl px-4 py-1.5 flex items-center gap-2">
         <Info className="h-4 w-4 shrink-0" />
         <span>
-          <b>DEMO MODE.</b> Buses, routes and times are simulated sample data, not real Speedo services.
+          <b>DEMO MODE.</b> Buses marked DEMO are simulated; their positions and arrival times are not real.
         </span>
       </div>
     </div>

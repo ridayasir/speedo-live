@@ -1,39 +1,16 @@
-"""Database models.
+"""Data models, stored as Cloud Firestore documents (one collection per model).
 
-Points keep plain lat/lng columns for easy reading plus a PostGIS geography column
-(`geog`) used for spatial queries and indexes. `geo.point_wkt` keeps them in sync.
+Field names and relationships match the previous SQL schema, so services and routers use them unchanged.
+Route stops are embedded in their route document; route paths are stored as [{lat, lng}, ...]
+because Firestore does not allow nested arrays. Unique fields and cascades that the SQL database used
+to enforce are enforced by app.store (UNIQUE) and the on_delete hooks below.
 """
+from __future__ import annotations
+
 import enum
-from datetime import datetime, time
+from datetime import datetime, timezone
 
-from geoalchemy2 import Geography
-from sqlalchemy import (
-    JSON,
-    BigInteger,
-    Boolean,
-    Enum,
-    Float,
-    ForeignKey,
-    Index,
-    Integer,
-    String,
-    Text,
-    Time,
-    UniqueConstraint,
-    func,
-)
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from .db import Base, UtcDateTime, is_sqlite
-
-
-def _geo(kind: str):
-    # SQLite has no spatial types; planner.nearby_stops uses lat/lng there instead
-    return Text() if is_sqlite else Geography(kind, srid=4326, spatial_index=True)
-
-
-def _enum(e):
-    return Enum(e, values_callable=lambda x: [m.value for m in x], native_enum=False, length=32)
+from .store import Doc, Session, TrackedList, store
 
 
 class Role(str, enum.Enum):
@@ -73,13 +50,6 @@ class AlertSeverity(str, enum.Enum):
     disruption = "disruption"
 
 
-class TimestampMixin:
-    created_at: Mapped[datetime] = mapped_column(UtcDateTime(), server_default=func.now())
-    updated_at: Mapped[datetime] = mapped_column(
-        UtcDateTime(), server_default=func.now(), onupdate=func.now()
-    )
-
-
 DEFAULT_PREFS = {
     "bus_approaching": True,
     "arrival_minutes_before": 5,
@@ -88,282 +58,350 @@ DEFAULT_PREFS = {
     "schedule_changes": True,
 }
 
-
-class User(TimestampMixin, Base):
-    __tablename__ = "users"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str | None] = mapped_column(String(255), unique=True, index=True)
-    phone: Mapped[str | None] = mapped_column(String(32), unique=True, index=True)
-    full_name: Mapped[str] = mapped_column(String(120))
-    password_hash: Mapped[str] = mapped_column(String(255))
-    role: Mapped[Role] = mapped_column(_enum(Role), default=Role.passenger, index=True)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    notification_prefs: Mapped[dict] = mapped_column(JSON, default=lambda: dict(DEFAULT_PREFS))
-    last_login_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
-
-    admin: Mapped["Administrator | None"] = relationship(back_populates="user", uselist=False)
-    driver: Mapped["Driver | None"] = relationship(back_populates="user", uselist=False)
+TS = {"created_at": None, "updated_at": None}
 
 
-class Administrator(TimestampMixin, Base):
-    __tablename__ = "administrators"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), unique=True)
-    access_level: Mapped[str] = mapped_column(String(32), default="full")
-    user: Mapped[User] = relationship(back_populates="admin")
+def _find(model, **eq):
+    for o in store.cached(model):
+        if all(getattr(o, k) == v for k, v in eq.items()):
+            return o
+    return None
 
 
-class Driver(TimestampMixin, Base):
-    __tablename__ = "drivers"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), unique=True)
-    license_number: Mapped[str] = mapped_column(String(64), unique=True)
-    employee_code: Mapped[str | None] = mapped_column(String(64), unique=True)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    location_consent_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
-    assigned_bus_id: Mapped[int | None] = mapped_column(
-        ForeignKey("buses.id", ondelete="SET NULL"), unique=True
-    )
-    user: Mapped[User] = relationship(back_populates="driver")
-    assigned_bus: Mapped["Bus | None"] = relationship(back_populates="driver", foreign_keys=[assigned_bus_id])
+def _delete_all(db: Session, rows) -> None:
+    for r in rows:
+        db.delete(r)
 
 
-class BusStop(TimestampMixin, Base):
-    __tablename__ = "bus_stops"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    code: Mapped[str] = mapped_column(String(32), unique=True)
-    name: Mapped[str] = mapped_column(String(160), index=True)
-    name_ur: Mapped[str | None] = mapped_column(String(160))
-    lat: Mapped[float] = mapped_column(Float)
-    lng: Mapped[float] = mapped_column(Float)
-    geog = mapped_column(_geo("POINT"))
-    is_demo: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
-    source_reference: Mapped[str | None] = mapped_column(String(255))
+# ----------------------------------------------------------------------------- people
+class User(Doc):
+    """App profile of a Firebase Authentication account (firebase_uid). Passwords live only in Firebase.
+
+    auth_email is the account's Firebase sign-in email. Accounts registered with only a phone number get
+    an internal address (<digits>@phone.speedolive.invalid) because Firebase passwords need an email.
+    """
+
+    __collection__ = "users"
+    FIELDS = {"firebase_uid": None, "auth_email": None, "email": None, "phone": None, "full_name": "", "role": Role.passenger,
+              "is_active": True, "notification_prefs": lambda: dict(DEFAULT_PREFS), "last_login_at": None, **TS}
+    ENUMS = {"role": Role}
+    UNIQUE = (("firebase_uid",), ("auth_email",), ("email",), ("phone",))
+
+    @property
+    def driver(self) -> Driver | None:
+        return _find(Driver, user_id=self.id)
 
 
-class Route(TimestampMixin, Base):
-    __tablename__ = "routes"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    code: Mapped[str] = mapped_column(String(32), unique=True)
-    name: Mapped[str] = mapped_column(String(200))
-    color: Mapped[str] = mapped_column(String(9), default="#1d4ed8")
-    status: Mapped[RouteStatus] = mapped_column(_enum(RouteStatus), default=RouteStatus.active)
-    start_stop_id: Mapped[int | None] = mapped_column(ForeignKey("bus_stops.id", ondelete="SET NULL"))
-    end_stop_id: Mapped[int | None] = mapped_column(ForeignKey("bus_stops.id", ondelete="SET NULL"))
-    # [[lat, lng], ...] along the road; geog mirrors it for spatial queries
-    path: Mapped[list] = mapped_column(JSON, default=list)
-    geog = mapped_column(_geo("LINESTRING"), nullable=True)
-    length_m: Mapped[float] = mapped_column(Float, default=0)
-    avg_speed_kmh: Mapped[float | None] = mapped_column(Float)
-    fare_pkr: Mapped[float | None] = mapped_column(Float)
-    is_demo: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
-    source_reference: Mapped[str | None] = mapped_column(String(255))
+class Driver(Doc):
+    __collection__ = "drivers"
+    FIELDS = {"user_id": None, "license_number": "", "employee_code": None, "is_active": True,
+              "location_consent_at": None, "assigned_bus_id": None, **TS}
+    UNIQUE = (("user_id",), ("license_number",), ("employee_code",), ("assigned_bus_id",))
 
-    stops: Mapped[list["RouteStop"]] = relationship(
-        back_populates="route", order_by="RouteStop.sequence", cascade="all, delete-orphan"
-    )
-    schedules: Mapped[list["Schedule"]] = relationship(back_populates="route", cascade="all, delete-orphan")
-    start_stop: Mapped[BusStop | None] = relationship(foreign_keys=[start_stop_id])
-    end_stop: Mapped[BusStop | None] = relationship(foreign_keys=[end_stop_id])
+    @property
+    def user(self) -> User | None:
+        return store.get(User, self.user_id)
+
+    @property
+    def assigned_bus(self) -> Bus | None:
+        return store.get(Bus, self.assigned_bus_id)
 
 
-class RouteStop(Base):
-    __tablename__ = "route_stops"
-    __table_args__ = (
-        UniqueConstraint("route_id", "sequence", name="uq_route_stop_seq"),
-        UniqueConstraint("route_id", "stop_id", name="uq_route_stop_stop"),
-    )
-    id: Mapped[int] = mapped_column(primary_key=True)
-    route_id: Mapped[int] = mapped_column(ForeignKey("routes.id", ondelete="CASCADE"), index=True)
-    stop_id: Mapped[int] = mapped_column(ForeignKey("bus_stops.id", ondelete="CASCADE"), index=True)
-    sequence: Mapped[int] = mapped_column(Integer)
-    distance_from_start_m: Mapped[float] = mapped_column(Float, default=0)
-    # scheduled minutes from the first stop
-    offset_minutes: Mapped[float] = mapped_column(Float, default=0)
-    is_major: Mapped[bool] = mapped_column(Boolean, default=False)
+# ----------------------------------------------------------------------------- network
+class BusStop(Doc):
+    __collection__ = "bus_stops"
+    FIELDS = {"code": "", "name": "", "name_ur": None, "lat": 0.0, "lng": 0.0, "is_demo": False,
+              "source_reference": None, **TS}
+    UNIQUE = (("code",),)
 
-    route: Mapped[Route] = relationship(back_populates="stops")
-    stop: Mapped[BusStop] = relationship()
-
-
-class Bus(TimestampMixin, Base):
-    __tablename__ = "buses"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    bus_number: Mapped[str] = mapped_column(String(32), unique=True)
-    registration_number: Mapped[str | None] = mapped_column(String(32), unique=True)
-    capacity: Mapped[int | None] = mapped_column(Integer)
-    status: Mapped[BusStatus] = mapped_column(_enum(BusStatus), default=BusStatus.active)
-    route_id: Mapped[int | None] = mapped_column(ForeignKey("routes.id", ondelete="SET NULL"), index=True)
-    gps_device_id: Mapped[str | None] = mapped_column(String(64), unique=True)
-    is_demo: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
-    # latest known position (history lives in gps_locations)
-    last_lat: Mapped[float | None] = mapped_column(Float)
-    last_lng: Mapped[float | None] = mapped_column(Float)
-    last_speed_mps: Mapped[float | None] = mapped_column(Float)
-    last_heading: Mapped[float | None] = mapped_column(Float)
-    last_accuracy_m: Mapped[float | None] = mapped_column(Float)
-    last_gps_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
-
-    route: Mapped[Route | None] = relationship()
-    driver: Mapped[Driver | None] = relationship(
-        back_populates="assigned_bus", foreign_keys="Driver.assigned_bus_id", uselist=False
-    )
+    def on_delete(self, db: Session) -> None:
+        _delete_all(db, db.where(FavoriteStop, stop_id=self.id))
+        _delete_all(db, db.where(ServiceAlert, stop_id=self.id))
+        _delete_all(db, db.where(ArrivalWatch, stop_id=self.id))
+        for r in db.all(Route):
+            if r.start_stop_id == self.id:
+                r.start_stop_id = None
+            if r.end_stop_id == self.id:
+                r.end_stop_id = None
+        for field in ("from_stop_id", "to_stop_id"):
+            for j in db.where(Journey, **{field: self.id}):
+                setattr(j, field, None)
 
 
-class Trip(TimestampMixin, Base):
-    __tablename__ = "trips"
-    __table_args__ = (Index("ix_trips_bus_status", "bus_id", "status"),)
-    id: Mapped[int] = mapped_column(primary_key=True)
-    bus_id: Mapped[int] = mapped_column(ForeignKey("buses.id", ondelete="CASCADE"))
-    route_id: Mapped[int] = mapped_column(ForeignKey("routes.id", ondelete="CASCADE"), index=True)
-    driver_id: Mapped[int | None] = mapped_column(ForeignKey("drivers.id", ondelete="SET NULL"), index=True)
-    status: Mapped[TripStatus] = mapped_column(_enum(TripStatus), default=TripStatus.active, index=True)
-    source: Mapped[DataSource] = mapped_column(_enum(DataSource), default=DataSource.driver)
-    direction: Mapped[str] = mapped_column(String(16), default="forward")
-    started_at: Mapped[datetime] = mapped_column(UtcDateTime(), server_default=func.now(), index=True)
-    ended_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
-    last_update_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
-    progress_m: Mapped[float] = mapped_column(Float, default=0)
-    max_delay_minutes: Mapped[float] = mapped_column(Float, default=0)
-    delay_notified: Mapped[bool] = mapped_column(Boolean, default=False)
-    gps_points: Mapped[int] = mapped_column(Integer, default=0)
-    end_reason: Mapped[str | None] = mapped_column(String(64))
+class RouteStop:
+    """A stop on a route (embedded in the route document)."""
 
-    bus: Mapped[Bus] = relationship()
-    route: Mapped[Route] = relationship()
-    driver: Mapped[Driver | None] = relationship()
+    FIELDS = ("stop_id", "sequence", "distance_from_start_m", "offset_minutes", "is_major")
 
+    def __init__(self, stop_id=None, sequence=0, distance_from_start_m=0.0, offset_minutes=0.0, is_major=False,
+                 stop: BusStop | None = None, route: Route | None = None):
+        object.__setattr__(self, "route", route)
+        object.__setattr__(self, "stop_id", stop_id if stop_id is not None else (stop.id if stop else None))
+        object.__setattr__(self, "sequence", sequence)
+        object.__setattr__(self, "distance_from_start_m", float(distance_from_start_m or 0))
+        object.__setattr__(self, "offset_minutes", float(offset_minutes or 0))
+        object.__setattr__(self, "is_major", bool(is_major))
 
-class GpsLocation(Base):
-    __tablename__ = "gps_locations"
-    __table_args__ = (
-        UniqueConstraint("bus_id", "recorded_at", name="uq_gps_bus_time"),
-        Index("ix_gps_bus_time", "bus_id", "recorded_at"),
-    )
-    id: Mapped[int] = mapped_column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
-    trip_id: Mapped[int] = mapped_column(ForeignKey("trips.id", ondelete="CASCADE"), index=True)
-    bus_id: Mapped[int] = mapped_column(ForeignKey("buses.id", ondelete="CASCADE"))
-    lat: Mapped[float] = mapped_column(Float)
-    lng: Mapped[float] = mapped_column(Float)
-    geog = mapped_column(_geo("POINT"))
-    accuracy_m: Mapped[float | None] = mapped_column(Float)
-    speed_mps: Mapped[float | None] = mapped_column(Float)
-    heading: Mapped[float | None] = mapped_column(Float)
-    recorded_at: Mapped[datetime] = mapped_column(UtcDateTime())
-    received_at: Mapped[datetime] = mapped_column(UtcDateTime(), server_default=func.now())
+    def __setattr__(self, k, v):
+        object.__setattr__(self, k, v)
+        if k in self.FIELDS and self.route is not None and self.route._persisted is not None:
+            store.mark(self.route)
+
+    @property
+    def route_id(self) -> int | None:
+        return self.route.id if self.route else None
+
+    @property
+    def stop(self) -> BusStop | None:
+        return store.get(BusStop, self.stop_id)
+
+    def to_dict(self) -> dict:
+        return {k: getattr(self, k) for k in self.FIELDS}
 
 
-class Schedule(TimestampMixin, Base):
-    __tablename__ = "schedules"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    route_id: Mapped[int] = mapped_column(ForeignKey("routes.id", ondelete="CASCADE"), index=True)
-    # comma separated: mon,tue,wed,thu,fri,sat,sun
-    days: Mapped[str] = mapped_column(String(64), default="mon,tue,wed,thu,fri,sat,sun")
-    first_departure: Mapped[time] = mapped_column(Time)
-    last_departure: Mapped[time] = mapped_column(Time)
-    frequency_minutes: Mapped[int] = mapped_column(Integer, default=15)
-    valid_from: Mapped[datetime | None] = mapped_column(UtcDateTime())
-    valid_to: Mapped[datetime | None] = mapped_column(UtcDateTime())
-    notes: Mapped[str | None] = mapped_column(Text)
-    is_demo: Mapped[bool] = mapped_column(Boolean, default=False)
-
-    route: Mapped[Route] = relationship(back_populates="schedules")
+class RouteStopList(TrackedList):
+    def append(self, x: RouteStop):
+        object.__setattr__(x, "route", self._owner)
+        super().append(x)
 
 
-class Notification(Base):
-    __tablename__ = "notifications"
-    __table_args__ = (Index("ix_notifications_user_created", "user_id", "created_at"),)
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
-    kind: Mapped[str] = mapped_column(String(32))
-    title: Mapped[str] = mapped_column(String(200))
-    body: Mapped[str] = mapped_column(Text)
-    data: Mapped[dict] = mapped_column(JSON, default=dict)
-    dedupe_key: Mapped[str | None] = mapped_column(String(120), index=True)
-    delivery_status: Mapped[str] = mapped_column(String(32), default="stored")
-    created_at: Mapped[datetime] = mapped_column(UtcDateTime(), server_default=func.now())
-    read_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
+class Route(Doc):
+    __collection__ = "routes"
+    FIELDS = {"code": "", "name": "", "color": "#1d4ed8", "status": RouteStatus.active, "start_stop_id": None,
+              "end_stop_id": None, "path": list, "length_m": 0.0, "avg_speed_kmh": None, "fare_pkr": None,
+              "is_demo": False, "source_reference": None, **TS}
+    ENUMS = {"status": RouteStatus}
+    UNIQUE = (("code",),)
+
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        object.__setattr__(self, "stops", RouteStopList(self))
+
+    def to_dict(self) -> dict:
+        d = super().to_dict()
+        d["path"] = [{"lat": p[0], "lng": p[1]} for p in (self.path or [])]
+        d["stops"] = [rs.to_dict() for rs in sorted(self.stops, key=lambda x: x.sequence)]
+        return d
+
+    def _load_extra(self, data: dict) -> None:
+        object.__setattr__(self, "path", [[p["lat"], p["lng"]] if isinstance(p, dict) else list(p)
+                                          for p in (data.get("path") or [])])
+        lst = RouteStopList(self)
+        for d in data.get("stops") or []:
+            list.append(lst, RouteStop(route=self, **{k: d.get(k) for k in RouteStop.FIELDS}))
+        object.__setattr__(self, "stops", lst)
+
+    def _restore_extra(self, fresh: Route) -> None:
+        lst = RouteStopList(self)
+        for rs in fresh.stops:
+            object.__setattr__(rs, "route", self)
+            list.append(lst, rs)
+        object.__setattr__(self, "stops", lst)
+
+    @property
+    def schedules(self) -> list[Schedule]:
+        return [s for s in store.cached(Schedule) if s.route_id == self.id]
+
+    @property
+    def start_stop(self) -> BusStop | None:
+        return store.get(BusStop, self.start_stop_id)
+
+    @property
+    def end_stop(self) -> BusStop | None:
+        return store.get(BusStop, self.end_stop_id)
+
+    def on_delete(self, db: Session) -> None:
+        _delete_all(db, self.schedules)
+        _delete_all(db, db.where(ServiceAlert, route_id=self.id))
+        _delete_all(db, db.where(FavoriteRoute, route_id=self.id))
+        _delete_all(db, db.where(ArrivalWatch, route_id=self.id))
+        _delete_all(db, db.where(Trip, route_id=self.id))
+        for b in db.where(Bus, route_id=self.id):
+            b.route_id = None
+        for j in db.where(Journey, route_id=self.id):
+            j.route_id = None
 
 
-class DeviceToken(TimestampMixin, Base):
-    __tablename__ = "device_tokens"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
-    token: Mapped[str] = mapped_column(String(512), unique=True)
-    platform: Mapped[str] = mapped_column(String(16), default="android")
+def route_stops(stop_id: int | None = None, route_id: int | None = None) -> list[RouteStop]:
+    """All route-stop links, optionally for one stop and/or one route."""
+    out = []
+    for r in store.cached(Route):
+        if route_id is not None and r.id != route_id:
+            continue
+        out += [rs for rs in r.stops if stop_id is None or rs.stop_id == stop_id]
+    return out
 
 
-class FavoriteRoute(Base):
-    __tablename__ = "favorite_routes"
-    __table_args__ = (UniqueConstraint("user_id", "route_id", name="uq_fav_route"),)
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
-    route_id: Mapped[int] = mapped_column(ForeignKey("routes.id", ondelete="CASCADE"), index=True)
-    created_at: Mapped[datetime] = mapped_column(UtcDateTime(), server_default=func.now())
-    route: Mapped[Route] = relationship()
+class Bus(Doc):
+    __collection__ = "buses"
+    FIELDS = {"bus_number": "", "registration_number": None, "capacity": None, "status": BusStatus.active,
+              "route_id": None, "gps_device_id": None, "is_demo": False, "last_lat": None, "last_lng": None,
+              "last_speed_mps": None, "last_heading": None, "last_accuracy_m": None, "last_gps_at": None, **TS}
+    ENUMS = {"status": BusStatus}
+    UNIQUE = (("bus_number",), ("registration_number",), ("gps_device_id",))
+    VOLATILE = frozenset({"last_lat", "last_lng", "last_speed_mps", "last_heading", "last_accuracy_m", "last_gps_at"})
+    WRITE_EVERY = 300
+
+    @property
+    def route(self) -> Route | None:
+        return store.get(Route, self.route_id)
+
+    @property
+    def driver(self) -> Driver | None:
+        return _find(Driver, assigned_bus_id=self.id)
+
+    def on_delete(self, db: Session) -> None:
+        _delete_all(db, db.where(Trip, bus_id=self.id))
+        _delete_all(db, db.where(ArrivalWatch, bus_id=self.id))
+        for d in db.where(Driver, assigned_bus_id=self.id):
+            d.assigned_bus_id = None
 
 
-class FavoriteStop(Base):
-    __tablename__ = "favorite_stops"
-    __table_args__ = (UniqueConstraint("user_id", "stop_id", name="uq_fav_stop"),)
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
-    stop_id: Mapped[int] = mapped_column(ForeignKey("bus_stops.id", ondelete="CASCADE"), index=True)
-    created_at: Mapped[datetime] = mapped_column(UtcDateTime(), server_default=func.now())
-    stop: Mapped[BusStop] = relationship()
+# ----------------------------------------------------------------------------- operations
+class Trip(Doc):
+    """Active trips are mirrored in memory; finished trips are read from Firestore on demand."""
+
+    __collection__ = "trips"
+    FIELDS = {"bus_id": None, "route_id": None, "driver_id": None, "status": TripStatus.active,
+              "source": DataSource.driver, "direction": "forward", "started_at": None, "ended_at": None,
+              "last_update_at": None, "progress_m": 0.0, "max_delay_minutes": 0.0, "delay_notified": False,
+              "gps_points": 0, "end_reason": None, **TS}
+    ENUMS = {"status": TripStatus, "source": DataSource}
+    CACHE_FILTERS = (("status", "==", "active"),)
+    VOLATILE = frozenset({"progress_m", "last_update_at", "gps_points", "max_delay_minutes"})
+    WRITE_EVERY = 300
+
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        if self.started_at is None:
+            object.__setattr__(self, "started_at", datetime.now(timezone.utc))
+
+    @classmethod
+    def keep_cached(cls, obj) -> bool:
+        return obj.status == TripStatus.active
+
+    @property
+    def bus(self) -> Bus | None:
+        return store.get(Bus, self.bus_id)
+
+    @property
+    def route(self) -> Route | None:
+        return store.get(Route, self.route_id)
+
+    @property
+    def driver(self) -> Driver | None:
+        return store.get(Driver, self.driver_id)
+
+    def on_delete(self, db: Session) -> None:
+        _delete_all(db, db.where(GpsLocation, trip_id=self.id))
 
 
-class ServiceAlert(TimestampMixin, Base):
-    __tablename__ = "service_alerts"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    route_id: Mapped[int | None] = mapped_column(ForeignKey("routes.id", ondelete="CASCADE"), index=True)
-    stop_id: Mapped[int | None] = mapped_column(ForeignKey("bus_stops.id", ondelete="CASCADE"))
-    severity: Mapped[AlertSeverity] = mapped_column(_enum(AlertSeverity), default=AlertSeverity.info)
-    title: Mapped[str] = mapped_column(String(200))
-    message: Mapped[str] = mapped_column(Text)
-    starts_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
-    ends_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
-    created_by: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"))
+class GpsLocation(Doc):
+    """GPS history. The document id is <bus_id>-<epoch ms>, so a bus cannot store two fixes for one instant."""
+
+    __collection__ = "gps_locations"
+    FIELDS = {"trip_id": None, "bus_id": None, "lat": 0.0, "lng": 0.0, "accuracy_m": None, "speed_mps": None,
+              "heading": None, "recorded_at": None, "received_at": None}
+    CACHED = False
+    TIMESTAMPS = False
+    STR_ID = True
+
+    def new_id(self) -> str:
+        return f"{self.bus_id}-{int(self.recorded_at.timestamp() * 1000)}"
 
 
-class Journey(Base):
+class Schedule(Doc):
+    __collection__ = "schedules"
+    FIELDS = {"route_id": None, "days": "mon,tue,wed,thu,fri,sat,sun", "first_departure": None,
+              "last_departure": None, "frequency_minutes": 15, "valid_from": None, "valid_to": None, "notes": None,
+              "is_demo": False, **TS}
+    TIMES = ("first_departure", "last_departure")
+
+    @property
+    def route(self) -> Route | None:
+        return store.get(Route, self.route_id)
+
+
+class Notification(Doc):
+    __collection__ = "notifications"
+    FIELDS = {"user_id": None, "kind": "", "title": "", "body": "", "data": dict, "dedupe_key": None,
+              "delivery_status": "stored", "created_at": None, "read_at": None}
+    CACHED = False
+    TIMESTAMPS = False
+
+
+class DeviceToken(Doc):
+    __collection__ = "device_tokens"
+    FIELDS = {"user_id": None, "token": "", "platform": "android", **TS}
+    UNIQUE = (("token",),)
+
+
+class FavoriteRoute(Doc):
+    __collection__ = "favorite_routes"
+    FIELDS = {"user_id": None, "route_id": None, "created_at": None}
+    UNIQUE = (("user_id", "route_id"),)
+    TIMESTAMPS = False
+
+    @property
+    def route(self) -> Route | None:
+        return store.get(Route, self.route_id)
+
+
+class FavoriteStop(Doc):
+    __collection__ = "favorite_stops"
+    FIELDS = {"user_id": None, "stop_id": None, "created_at": None}
+    UNIQUE = (("user_id", "stop_id"),)
+    TIMESTAMPS = False
+
+    @property
+    def stop(self) -> BusStop | None:
+        return store.get(BusStop, self.stop_id)
+
+
+class ServiceAlert(Doc):
+    __collection__ = "service_alerts"
+    FIELDS = {"route_id": None, "stop_id": None, "severity": AlertSeverity.info, "title": "", "message": "",
+              "starts_at": None, "ends_at": None, "is_active": True, "created_by": None, **TS}
+    ENUMS = {"severity": AlertSeverity}
+
+
+class Journey(Doc):
     """Passenger journey history (searches the user chose to track)."""
 
-    __tablename__ = "journeys"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
-    route_id: Mapped[int | None] = mapped_column(ForeignKey("routes.id", ondelete="SET NULL"), index=True)
-    from_stop_id: Mapped[int | None] = mapped_column(ForeignKey("bus_stops.id", ondelete="SET NULL"))
-    to_stop_id: Mapped[int | None] = mapped_column(ForeignKey("bus_stops.id", ondelete="SET NULL"))
-    created_at: Mapped[datetime] = mapped_column(UtcDateTime(), server_default=func.now())
-    route: Mapped[Route | None] = relationship()
-    from_stop: Mapped[BusStop | None] = relationship(foreign_keys=[from_stop_id])
-    to_stop: Mapped[BusStop | None] = relationship(foreign_keys=[to_stop_id])
+    __collection__ = "journeys"
+    FIELDS = {"user_id": None, "route_id": None, "from_stop_id": None, "to_stop_id": None, "created_at": None}
+    CACHED = False
+    TIMESTAMPS = False
+
+    @property
+    def route(self) -> Route | None:
+        return store.get(Route, self.route_id)
+
+    @property
+    def from_stop(self) -> BusStop | None:
+        return store.get(BusStop, self.from_stop_id)
+
+    @property
+    def to_stop(self) -> BusStop | None:
+        return store.get(BusStop, self.to_stop_id)
 
 
-class ArrivalWatch(Base):
+class ArrivalWatch(Doc):
     """A passenger asked to be told when a bus approaches a stop."""
 
-    __tablename__ = "arrival_watches"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
-    stop_id: Mapped[int] = mapped_column(ForeignKey("bus_stops.id", ondelete="CASCADE"))
-    route_id: Mapped[int] = mapped_column(ForeignKey("routes.id", ondelete="CASCADE"))
-    bus_id: Mapped[int | None] = mapped_column(ForeignKey("buses.id", ondelete="CASCADE"))
-    minutes_before: Mapped[int] = mapped_column(Integer, default=5)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
-    notified_approaching: Mapped[bool] = mapped_column(Boolean, default=False)
-    created_at: Mapped[datetime] = mapped_column(UtcDateTime(), server_default=func.now())
-    expires_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
+    __collection__ = "arrival_watches"
+    FIELDS = {"user_id": None, "stop_id": None, "route_id": None, "bus_id": None, "minutes_before": 5,
+              "is_active": True, "notified_approaching": False, "created_at": None, "expires_at": None}
+    TIMESTAMPS = False
+    CACHE_FILTERS = (("is_active", "==", True),)
+
+    @classmethod
+    def keep_cached(cls, obj) -> bool:
+        return obj.is_active
 
 
-class AuditLog(Base):
-    __tablename__ = "audit_logs"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"))
-    action: Mapped[str] = mapped_column(String(64))
-    entity: Mapped[str] = mapped_column(String(64))
-    entity_id: Mapped[str | None] = mapped_column(String(64))
-    details: Mapped[dict] = mapped_column(JSON, default=dict)
-    created_at: Mapped[datetime] = mapped_column(UtcDateTime(), server_default=func.now(), index=True)
+class AuditLog(Doc):
+    __collection__ = "audit_logs"
+    FIELDS = {"user_id": None, "action": "", "entity": "", "entity_id": None, "details": dict, "created_at": None}
+    CACHED = False
+    TIMESTAMPS = False

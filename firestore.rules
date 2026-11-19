@@ -1,0 +1,11 @@
+rules_version = '2';
+// Speedo Live reads and writes Firestore only through its API server (Firebase Admin SDK, which
+// bypasses these rules). Apps and browsers never talk to Firestore directly, so all direct access
+// is denied. Deploy with: firebase deploy --only firestore:rules
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

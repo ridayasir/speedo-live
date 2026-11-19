@@ -1,7 +1,5 @@
 """Driver app endpoints. A driver can only report the position of the bus assigned to them."""
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
-from sqlalchemy.orm import Session
 
 from ..config import get_settings
 from ..db import get_db
@@ -10,12 +8,13 @@ from ..schemas import GpsBatchIn, TripEndIn, TripStartIn, driver_out, route_out,
 from ..security import require_driver
 from ..services.realtime import hub
 from ..services.tracking import GpsPoint, active_trip, bus_state, clear_progress, ingest_points, update_route_history, utcnow
+from ..store import Session
 
 router = APIRouter(prefix="/api/driver", tags=["driver"])
 
 
 def _driver(user: User, db: Session) -> Driver:
-    d = db.execute(select(Driver).where(Driver.user_id == user.id)).scalars().first()
+    d = db.first(Driver, user_id=user.id)
     if not d or not d.is_active:
         raise HTTPException(403, "Driver account is not active")
     return d
@@ -111,7 +110,5 @@ def end_trip(trip_id: int, body: TripEndIn | None = None, user: User = Depends(r
 @router.get("/trips")
 def trip_history(limit: int = 30, user: User = Depends(require_driver), db: Session = Depends(get_db)):
     d = _driver(user, db)
-    rows = db.execute(
-        select(Trip).where(Trip.driver_id == d.id).order_by(Trip.started_at.desc()).limit(min(limit, 100))
-    ).scalars().all()
+    rows = db.where(Trip, driver_id=d.id, order_by="started_at", desc=True, limit=min(limit, 100))
     return [trip_out(t) for t in rows]

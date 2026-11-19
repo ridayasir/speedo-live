@@ -1,12 +1,9 @@
-import { useEffect, useState } from "react";
 import { Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { DemoBanner } from "./src/components/ui";
-import { api } from "./src/lib/api";
 import { AuthProvider } from "./src/lib/hooks";
 import { registerForPush } from "./src/lib/push";
 import { C } from "./src/lib/theme";
@@ -50,17 +47,12 @@ function Tabs() {
 }
 
 export default function App() {
-  const [demo, setDemo] = useState(false);
-  useEffect(() => {
-    api<{ demo_mode: boolean }>("/api/meta").then((m) => setDemo(m.demo_mode)).catch(() => {});
-  }, []);
   return (
     <SafeAreaProvider>
       <AuthProvider onSignedIn={() => registerForPush()}>
-        <SafeAreaView edges={["top"]} style={{ flex: 0, backgroundColor: demo ? C.accent : C.brand }} />
+        <SafeAreaView edges={["top"]} style={{ flex: 0, backgroundColor: C.brand }} />
         <StatusBar style="light" />
-        <DemoBanner show={demo} />
-        {/* nested provider measures insets from below the banner, so headers do not add the status bar again */}
+        {/* nested provider measures insets below the status-bar strip, so headers do not add it again */}
         <SafeAreaProvider style={{ flex: 1 }}>
           <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: C.brand }, headerTintColor: "#fff" }}>

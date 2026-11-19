@@ -1,0 +1,729 @@
+route_code,route_name,sequence,stop_code,stop_name,lat,lng,offset_minutes,is_major,color
+FRT03,FRT03: Rana Town - Railway Station,1,PMA-RANA-TOWN,Rana Town,31.636848,74.284203,0.0,1,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,2,PMA-NAZIM-ROAD,Nazim Road,31.635342,74.284637,1.2,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,3,PMA-HAIDER-ROAD,Haider Road,31.633836,74.285071,2.5,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,4,PMA-COLLEGE-ROAD,College Road,31.632329,74.285505,3.7,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,5,PMA-RACHNA-TOWN,Rachna Town,31.630823,74.285939,5.0,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,6,PMA-FEROZ-WALA,Feroz Wala,31.629317,74.286374,6.2,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,7,PMA-IMAMIA-COLONY,Imamia Colony,31.627811,74.286808,7.5,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,8,PMA-KALA-KHATAI-COLONY,Kala Khatai Colony,31.626305,74.287242,8.7,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,9,PMA-BARKAT-TOWN,Barkat Town,31.624799,74.287676,10.0,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,10,PMA-MACHAS-FACTORY,Machas Factory,31.623292,74.28811,11.2,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,11,PMA-KASHMIR-PARK,Kashmir Park,31.621786,74.288545,12.5,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,12,PMA-WANDALA-ROAD,wandala Road,31.62028,74.288979,13.7,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,13,PMA-SHAHDRA-RAILWAY-STATION,Shahdra Railway Station,31.618774,74.289413,15.0,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,14,PMA-KOT-SHAHAB-UD-DIN,Kot Shahab-ud-Din,31.618774,74.289413,15.5,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,15,PMA-SHAHDRA-LARI-ADDA,Shahdra Lari Adda,31.618774,74.289413,16.0,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,16,PMA-SHAHDARA-METRO-STATION,Shahdara Metro Station,31.618774,74.289413,16.5,1,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,17,PMA-NAIZI-INTERCHANGE,Naizi Interchange,31.609879,74.294321,21.7,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,18,PMA-NIAZI-CHOWK,Niazi Chowk,31.600983,74.299229,26.9,1,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,19,PMA-METRO,Metro,31.596837,74.298341,29.5,1,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,20,PMA-TIMBER-MARKET,Timber Market,31.594494,74.302139,31.9,1,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,21,PMA-AZADI-CHOWK,Azadi Chowk,31.590712,74.306381,34.9,1,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,22,PMA-LARI-ADDA-GOAL-CHAKER,Lari Adda Goal Chaker,31.590988,74.312629,38.0,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,23,PMA-LARI-ADDA,Lari Adda,31.591264,74.318877,41.1,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,24,PMA-KASHMIRI-GATE,Kashmiri Gate,31.586842,74.321044,43.9,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,25,PMA-SHERANWALA-GATE,Sheranwala Gate,31.585517,74.324054,45.8,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,26,PMA-NAWAZ-SHARIF-HOSPITAL,Nawaz Sharif Hospital,31.585274,74.326774,47.4,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,27,PMA-RAILWAY-STATION-2,Railway Station-2,31.572384,74.336222,55.2,0,#1d4ed8
+FRT03,FRT03: Rana Town - Railway Station,28,PMA-RAILWAY-STATION,Railway Station,31.572384,74.336222,55.7,1,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,1,PMA-RAILWAY-STATION,Railway Station,31.572384,74.336222,0.0,1,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,2,PMA-RAILWAY-STATION-2,Railway Station-2,31.572384,74.336222,0.5,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,3,PMA-NAWAZ-SHARIF-HOSPITAL,Nawaz Sharif Hospital,31.585274,74.326774,8.3,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,4,PMA-SHERANWALA-GATE,Sheranwala Gate,31.585517,74.324054,9.9,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,5,PMA-KASHMIRI-GATE,Kashmiri Gate,31.586842,74.321044,11.8,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,6,PMA-LARI-ADDA,Lari Adda,31.591264,74.318877,14.6,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,7,PMA-LARI-ADDA-GOAL-CHAKER,Lari Adda Goal Chaker,31.590988,74.312629,17.7,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,8,PMA-AZADI-CHOWK,Azadi Chowk,31.590712,74.306381,20.8,1,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,9,PMA-TIMBER-MARKET,Timber Market,31.594494,74.302139,23.8,1,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,10,PMA-METRO,Metro,31.596837,74.298341,26.2,1,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,11,PMA-NIAZI-CHOWK,Niazi Chowk,31.600983,74.299229,28.8,1,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,12,PMA-NAIZI-INTERCHANGE,Naizi Interchange,31.609879,74.294321,34.0,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,13,PMA-SHAHDARA-METRO-STATION,Shahdara Metro Station,31.618774,74.289413,39.2,1,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,14,PMA-SHAHDRA-LARI-ADDA,Shahdra Lari Adda,31.618774,74.289413,39.7,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,15,PMA-KOT-SHAHAB-UD-DIN,Kot Shahab-ud-Din,31.618774,74.289413,40.2,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,16,PMA-SHAHDRA-RAILWAY-STATION,Shahdra Railway Station,31.618774,74.289413,40.7,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,17,PMA-WANDALA-ROAD,wandala Road,31.62028,74.288979,42.0,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,18,PMA-KASHMIR-PARK,Kashmir Park,31.621786,74.288545,43.2,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,19,PMA-MACHAS-FACTORY,Machas Factory,31.623292,74.28811,44.5,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,20,PMA-BARKAT-TOWN,Barkat Town,31.624799,74.287676,45.7,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,21,PMA-KALA-KHATAI-COLONY,Kala Khatai Colony,31.626305,74.287242,47.0,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,22,PMA-IMAMIA-COLONY,Imamia Colony,31.627811,74.286808,48.2,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,23,PMA-FEROZ-WALA,Feroz Wala,31.629317,74.286374,49.5,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,24,PMA-RACHNA-TOWN,Rachna Town,31.630823,74.285939,50.7,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,25,PMA-COLLEGE-ROAD,College Road,31.632329,74.285505,52.0,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,26,PMA-HAIDER-ROAD,Haider Road,31.633836,74.285071,53.2,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,27,PMA-NAZIM-ROAD,Nazim Road,31.635342,74.284637,54.4,0,#1d4ed8
+FRT03R,FRT03 (return): Railway Station - Rana Town,28,PMA-RANA-TOWN,Rana Town,31.636848,74.284203,55.7,1,#1d4ed8
+FRT04,FRT04: R.A Bazar - Chungi Amar Sidhu,1,PMA-R-A-BAZAR,R.A Bazar,31.537931,74.334411,0.0,1,#ea580c
+FRT04,FRT04: R.A Bazar - Chungi Amar Sidhu,2,PMA-NADEEM-CHOWK,Nadeem Chowk,31.530713,74.337248,4.2,0,#ea580c
+FRT04,FRT04: R.A Bazar - Chungi Amar Sidhu,3,PMA-T-STOP,T-Stop,31.523495,74.340086,8.3,0,#ea580c
+FRT04,FRT04: R.A Bazar - Chungi Amar Sidhu,4,PMA-DEFENCE-MOR,Defence Mor,31.516277,74.342924,12.5,0,#ea580c
+FRT04,FRT04: R.A Bazar - Chungi Amar Sidhu,5,PMA-KORRAY-STOP,Korray Stop,31.509058,74.345761,16.7,0,#ea580c
+FRT04,FRT04: R.A Bazar - Chungi Amar Sidhu,6,PMA-SHAREEF-MARKET,Shareef Market,31.50184,74.348599,20.8,0,#ea580c
+FRT04,FRT04: R.A Bazar - Chungi Amar Sidhu,7,PMA-COLLEGE-STOP,College Stop,31.494622,74.351436,25.0,0,#ea580c
+FRT04,FRT04: R.A Bazar - Chungi Amar Sidhu,8,PMA-WALTON,Walton,31.487404,74.354274,29.2,0,#ea580c
+FRT04,FRT04: R.A Bazar - Chungi Amar Sidhu,9,PMA-BAB-BAB-E-PAKISTAN,Bab Bab e Pakistan,31.480186,74.357112,33.3,0,#ea580c
+FRT04,FRT04: R.A Bazar - Chungi Amar Sidhu,10,PMA-WORKSHOP,Workshop,31.474913,74.354146,36.7,0,#ea580c
+FRT04,FRT04: R.A Bazar - Chungi Amar Sidhu,11,PMA-PACKAGE,Package,31.46964,74.35118,40.0,0,#ea580c
+FRT04,FRT04: R.A Bazar - Chungi Amar Sidhu,12,PMA-QAINCHI,Qainchi,31.464367,74.348214,43.3,0,#ea580c
+FRT04,FRT04: R.A Bazar - Chungi Amar Sidhu,13,PMA-GHAZI-CHOWK,Ghazi Chowk,31.45801,74.350976,47.1,1,#ea580c
+FRT04,FRT04: R.A Bazar - Chungi Amar Sidhu,14,PMA-KOT-CHUNGI-AMAR-SIDHU,Kot Chungi Amar Sidhu,31.450361,74.353336,51.4,1,#ea580c
+FRT04R,FRT04 (return): Chungi Amar Sidhu - R.A Bazar,1,PMA-KOT-CHUNGI-AMAR-SIDHU,Kot Chungi Amar Sidhu,31.450361,74.353336,0.0,1,#ea580c
+FRT04R,FRT04 (return): Chungi Amar Sidhu - R.A Bazar,2,PMA-GHAZI-CHOWK,Ghazi Chowk,31.45801,74.350976,4.3,1,#ea580c
+FRT04R,FRT04 (return): Chungi Amar Sidhu - R.A Bazar,3,PMA-QAINCHI,Qainchi,31.464367,74.348214,8.1,0,#ea580c
+FRT04R,FRT04 (return): Chungi Amar Sidhu - R.A Bazar,4,PMA-PACKAGE,Package,31.46964,74.35118,11.4,0,#ea580c
+FRT04R,FRT04 (return): Chungi Amar Sidhu - R.A Bazar,5,PMA-WORKSHOP,Workshop,31.474913,74.354146,14.7,0,#ea580c
+FRT04R,FRT04 (return): Chungi Amar Sidhu - R.A Bazar,6,PMA-BAB-BAB-E-PAKISTAN,Bab Bab e Pakistan,31.480186,74.357112,18.0,0,#ea580c
+FRT04R,FRT04 (return): Chungi Amar Sidhu - R.A Bazar,7,PMA-WALTON,Walton,31.487404,74.354274,22.2,0,#ea580c
+FRT04R,FRT04 (return): Chungi Amar Sidhu - R.A Bazar,8,PMA-COLLEGE-STOP,College Stop,31.494622,74.351436,26.4,0,#ea580c
+FRT04R,FRT04 (return): Chungi Amar Sidhu - R.A Bazar,9,PMA-SHAREEF-MARKET,Shareef Market,31.50184,74.348599,30.5,0,#ea580c
+FRT04R,FRT04 (return): Chungi Amar Sidhu - R.A Bazar,10,PMA-KORRAY-STOP,Korray Stop,31.509058,74.345761,34.7,0,#ea580c
+FRT04R,FRT04 (return): Chungi Amar Sidhu - R.A Bazar,11,PMA-DEFENCE-MOR,Defence Mor,31.516277,74.342924,38.9,0,#ea580c
+FRT04R,FRT04 (return): Chungi Amar Sidhu - R.A Bazar,12,PMA-T-STOP,T-Stop,31.523495,74.340086,43.0,0,#ea580c
+FRT04R,FRT04 (return): Chungi Amar Sidhu - R.A Bazar,13,PMA-NADEEM-CHOWK,Nadeem Chowk,31.530713,74.337248,47.2,0,#ea580c
+FRT04R,FRT04 (return): Chungi Amar Sidhu - R.A Bazar,14,PMA-R-A-BAZAR,R.A Bazar,31.537931,74.334411,51.4,1,#ea580c
+FRT05,FRT05: Bhatti Chowk - Shadbagh Underpass,1,PMA-BHATTI-CHOWK,Bhatti Chowk,31.580525,74.306182,0.0,1,#0f766e
+FRT05,FRT05: Bhatti Chowk - Shadbagh Underpass,2,PMA-TEXALI-CHOWK,Texali Chowk,31.585968,74.306312,3.1,1,#0f766e
+FRT05,FRT05: Bhatti Chowk - Shadbagh Underpass,3,PMA-LARI-ADDA-GOL-CHAKER,Lari adda Gol Chaker,31.588268,74.313243,6.7,0,#0f766e
+FRT05,FRT05: Bhatti Chowk - Shadbagh Underpass,4,PMA-BADAMI-BAGH,Badami Bagh,31.590567,74.320174,10.2,0,#0f766e
+FRT05,FRT05: Bhatti Chowk - Shadbagh Underpass,5,PMA-SABZI-MANDI,Sabzi Mandi,31.580804,74.324914,15.8,0,#0f766e
+FRT05,FRT05: Bhatti Chowk - Shadbagh Underpass,6,PMA-USMAN-CHOWK,Usman Chowk,31.581305,74.325511,16.7,0,#0f766e
+FRT05,FRT05: Bhatti Chowk - Shadbagh Underpass,7,PMA-LOHAY-WALI-PULLY,Lohay Wali Pully,31.581807,74.326108,17.5,0,#0f766e
+FRT05,FRT05: Bhatti Chowk - Shadbagh Underpass,8,PMA-ALI-HAJWERY-SHADI-HALL,Ali Hajwery Shadi Hall,31.582309,74.326705,18.4,0,#0f766e
+FRT05,FRT05: Bhatti Chowk - Shadbagh Underpass,9,PMA-MASOOM-SHAH-DARBAR,Masoom Shah Darbar,31.582811,74.327302,19.2,0,#0f766e
+FRT05,FRT05: Bhatti Chowk - Shadbagh Underpass,10,PMA-MADINA-CHOWK,Madina Chowk,31.583313,74.327899,20.0,0,#0f766e
+FRT05,FRT05: Bhatti Chowk - Shadbagh Underpass,11,PMA-RAJPUT-PARK,Rajput Park,31.588678,74.339351,25.9,0,#0f766e
+FRT05,FRT05: Bhatti Chowk - Shadbagh Underpass,12,PMA-SHADBAGH-UNDERPASS,Shadbagh Underpass,31.594044,74.350802,31.8,1,#0f766e
+FRT05R,FRT05 (return): Shadbagh Underpass - Bhatti Chowk,1,PMA-SHADBAGH-UNDERPASS,Shadbagh Underpass,31.594044,74.350802,0.0,1,#0f766e
+FRT05R,FRT05 (return): Shadbagh Underpass - Bhatti Chowk,2,PMA-RAJPUT-PARK,Rajput Park,31.588678,74.339351,5.9,0,#0f766e
+FRT05R,FRT05 (return): Shadbagh Underpass - Bhatti Chowk,3,PMA-MADINA-CHOWK,Madina Chowk,31.583313,74.327899,11.7,0,#0f766e
+FRT05R,FRT05 (return): Shadbagh Underpass - Bhatti Chowk,4,PMA-MASOOM-SHAH-DARBAR,Masoom Shah Darbar,31.582811,74.327302,12.6,0,#0f766e
+FRT05R,FRT05 (return): Shadbagh Underpass - Bhatti Chowk,5,PMA-ALI-HAJWERY-SHADI-HALL,Ali Hajwery Shadi Hall,31.582309,74.326705,13.4,0,#0f766e
+FRT05R,FRT05 (return): Shadbagh Underpass - Bhatti Chowk,6,PMA-LOHAY-WALI-PULLY,Lohay Wali Pully,31.581807,74.326108,14.3,0,#0f766e
+FRT05R,FRT05 (return): Shadbagh Underpass - Bhatti Chowk,7,PMA-USMAN-CHOWK,Usman Chowk,31.581305,74.325511,15.1,0,#0f766e
+FRT05R,FRT05 (return): Shadbagh Underpass - Bhatti Chowk,8,PMA-SABZI-MANDI,Sabzi Mandi,31.580804,74.324914,16.0,0,#0f766e
+FRT05R,FRT05 (return): Shadbagh Underpass - Bhatti Chowk,9,PMA-BADAMI-BAGH,Badami Bagh,31.590567,74.320174,21.5,0,#0f766e
+FRT05R,FRT05 (return): Shadbagh Underpass - Bhatti Chowk,10,PMA-LARI-ADDA-GOL-CHAKER,Lari adda Gol Chaker,31.588268,74.313243,25.1,0,#0f766e
+FRT05R,FRT05 (return): Shadbagh Underpass - Bhatti Chowk,11,PMA-TEXALI-CHOWK,Texali Chowk,31.585968,74.306312,28.6,1,#0f766e
+FRT05R,FRT05 (return): Shadbagh Underpass - Bhatti Chowk,12,PMA-BHATTI-CHOWK,Bhatti Chowk,31.580525,74.306182,31.8,1,#0f766e
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,1,PMA-DEPOT-CHOWK,Depot Chowk,31.446882,74.32083,0.0,1,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,2,PMA-PULLY-BUS-STOP,Pully Bus Stop,31.44743,74.316999,2.1,0,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,3,PMA-MINHAJ-UNIVERSITY,Minhaj University,31.447978,74.313168,4.2,0,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,4,PMA-HAMDARD-CHOWK,Hamdard Chowk,31.447039,74.320433,7.7,0,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,5,PMA-SOMI-CENTRE-BUS-STOP,Somi Centre Bus Stop,31.45114,74.319297,10.2,0,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,6,PMA-NURSARY-BUS-STOP,Nursary Bus Stop,31.453954,74.319969,12.1,0,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,7,PMA-REHMAT-EYE-HOSPITAL,Rehmat Eye Hospital,31.456769,74.320641,14.0,0,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,8,PMA-PINDI-STOP,Pindi Stop,31.454574,74.323879,16.2,0,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,9,PMA-TREET-STOP,Treet Stop,31.452378,74.327118,18.4,0,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,10,PMA-PECO-MOR,Peco Mor,31.450183,74.330356,20.6,0,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,11,PMA-KOTLAKHPAT-RAILWAY-STATI,Kotlakhpat Railway Station,31.454521,74.335775,24.2,0,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,12,PMA-PHATKI-STOP,Phatki Stop,31.456982,74.338885,26.4,0,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,13,PMA-PHATTAK-MANDI-STOP,Phattak Mandi Stop,31.459444,74.341995,28.7,0,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,14,PMA-KOT-MODEL-TOWN-KATCHERY,Kot Model Town Katchery,31.461906,74.345104,30.9,0,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,15,PMA-QAINCHI-STOP,Qainchi Stop,31.464367,74.348214,33.1,0,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,16,PMA-GHAZI-CHOWK,Ghazi Chowk,31.45801,74.350976,36.9,1,#7c3aed
+FRT07,FRT07: Depot Chowk - Chungi Amer Sidhu,17,PMA-CHUNGI-AMER-SIDHU,Chungi Amer Sidhu,31.450361,74.353336,41.2,1,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,1,PMA-CHUNGI-AMER-SIDHU,Chungi Amer Sidhu,31.450361,74.353336,0.0,1,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,2,PMA-GHAZI-CHOWK,Ghazi Chowk,31.45801,74.350976,4.3,1,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,3,PMA-QAINCHI-STOP,Qainchi Stop,31.464367,74.348214,8.1,0,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,4,PMA-KOT-MODEL-TOWN-KATCHERY,Kot Model Town Katchery,31.461906,74.345104,10.3,0,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,5,PMA-PHATTAK-MANDI-STOP,Phattak Mandi Stop,31.459444,74.341995,12.6,0,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,6,PMA-PHATKI-STOP,Phatki Stop,31.456982,74.338885,14.8,0,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,7,PMA-KOTLAKHPAT-RAILWAY-STATI,Kotlakhpat Railway Station,31.454521,74.335775,17.1,0,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,8,PMA-PECO-MOR,Peco Mor,31.450183,74.330356,20.6,0,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,9,PMA-TREET-STOP,Treet Stop,31.452378,74.327118,22.8,0,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,10,PMA-PINDI-STOP,Pindi Stop,31.454574,74.323879,25.0,0,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,11,PMA-REHMAT-EYE-HOSPITAL,Rehmat Eye Hospital,31.456769,74.320641,27.2,0,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,12,PMA-NURSARY-BUS-STOP,Nursary Bus Stop,31.453954,74.319969,29.1,0,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,13,PMA-SOMI-CENTRE-BUS-STOP,Somi Centre Bus Stop,31.45114,74.319297,31.0,0,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,14,PMA-HAMDARD-CHOWK,Hamdard Chowk,31.447039,74.320433,33.5,0,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,15,PMA-MINHAJ-UNIVERSITY,Minhaj University,31.447978,74.313168,37.0,0,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,16,PMA-PULLY-BUS-STOP,Pully Bus Stop,31.44743,74.316999,39.1,0,#7c3aed
+FRT07R,FRT07 (return): Chungi Amer Sidhu - Depot Chowk,17,PMA-DEPOT-CHOWK,Depot Chowk,31.446882,74.32083,41.2,1,#7c3aed
+FRT08,FRT08: Canal - Daewoo Terminal,1,PMA-CANAL,Canal,31.519329,74.326938,0.0,1,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,2,PMA-QADDAFI-STADIUM,Qaddafi stadium,31.512022,74.328812,4.1,1,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,3,PMA-KALMA-CHOWK,Kalma Chowk,31.504445,74.331501,8.4,1,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,4,PMA-BARKAT-MARKET,Barkat Market,31.500683,74.321154,13.5,1,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,5,PMA-CAMPUS-PULL,Campus Pull,31.497978,74.317131,16.1,0,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,6,PMA-GATE-NO-4,Gate No.4,31.495273,74.313109,18.7,0,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,7,PMA-HAILY-COLLAGE,Haily Collage,31.492568,74.309086,21.4,0,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,8,PMA-IBA-STOP,IBA Stop,31.489863,74.305063,24.0,0,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,9,PMA-SHAH-DI-KHOI,Shah Di Khoi,31.487158,74.301041,26.6,0,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,10,PMA-JINNAH-HOSPITAL,Jinnah Hospital,31.484452,74.297018,29.2,0,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,11,PMA-WAFAQI-COLONY,wafaqi Colony,31.481735,74.290773,32.6,0,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,12,PMA-DOCTOR-HOSPITAL,Doctor Hospital,31.481489,74.282929,36.3,0,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,13,PMA-PCSIR-1,PCSIR-1,31.481243,74.275084,40.0,0,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,14,PMA-G-4-JOHAR-TOWN,G-4 Johar Town,31.46983,74.279426,46.3,0,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,15,PMA-KOT-HANJARWAL,Kot Hanjarwal,31.470934,74.270242,50.6,0,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,16,PMA-MUGHAL-EYE-HOSPITAL,Mughal Eye Hospital,31.472039,74.261058,54.9,0,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,17,PMA-CANAL-VIEW-GATE-1,Canal View Gate 1,31.47432,74.253461,58.7,0,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,18,PMA-JUDICIAL-COLONY,Judicial Colony,31.467822,74.245653,63.7,1,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,19,PMA-THOKAR-NIAZ-BAIG,Thokar Niaz Baig,31.470542,74.240541,66.7,1,#be123c
+FRT08,FRT08: Canal - Daewoo Terminal,20,PMA-DAEWOO-TERMINAL,Daewoo Terminal,31.469179,74.238373,68.3,1,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,1,PMA-DAEWOO-TERMINAL,Daewoo Terminal,31.469179,74.238373,0.0,1,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,2,PMA-THOKAR-NIAZ-BAIG,Thokar Niaz Baig,31.470542,74.240541,1.6,1,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,3,PMA-JUDICIAL-COLONY,Judicial Colony,31.467822,74.245653,4.6,1,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,4,PMA-CANAL-VIEW-GATE-1,Canal View Gate 1,31.47432,74.253461,9.6,0,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,5,PMA-MUGHAL-EYE-HOSPITAL,Mughal Eye Hospital,31.472039,74.261058,13.4,0,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,6,PMA-KOT-HANJARWAL,Kot Hanjarwal,31.470934,74.270242,17.7,0,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,7,PMA-G-4-JOHAR-TOWN,G-4 Johar Town,31.46983,74.279426,22.0,0,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,8,PMA-PCSIR-1,PCSIR-1,31.481243,74.275084,28.3,0,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,9,PMA-DOCTOR-HOSPITAL,Doctor Hospital,31.481489,74.282929,32.0,0,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,10,PMA-WAFAQI-COLONY,wafaqi Colony,31.481735,74.290773,35.7,0,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,11,PMA-JINNAH-HOSPITAL,Jinnah Hospital,31.484452,74.297018,39.1,0,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,12,PMA-SHAH-DI-KHOI,Shah Di Khoi,31.487158,74.301041,41.7,0,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,13,PMA-IBA-STOP,IBA Stop,31.489863,74.305063,44.3,0,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,14,PMA-HAILY-COLLAGE,Haily Collage,31.492568,74.309086,46.9,0,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,15,PMA-GATE-NO-4,Gate No.4,31.495273,74.313109,49.5,0,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,16,PMA-CAMPUS-PULL,Campus Pull,31.497978,74.317131,52.1,0,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,17,PMA-BARKAT-MARKET,Barkat Market,31.500683,74.321154,54.7,1,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,18,PMA-KALMA-CHOWK,Kalma Chowk,31.504445,74.331501,59.9,1,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,19,PMA-QADDAFI-STADIUM,Qaddafi stadium,31.512022,74.328812,64.2,1,#be123c
+FRT08R,FRT08 (return): Daewoo Terminal - Canal,20,PMA-CANAL,Canal,31.519329,74.326938,68.3,1,#be123c
+FRT09,FRT09: Railway Station - Chuburji,1,PMA-RAILWAY-STATION,Railway Station,31.572384,74.336222,0.0,1,#0369a1
+FRT09,FRT09: Railway Station - Chuburji,2,PMA-HAJI-CAMP,Haji Camp,31.571108,74.334406,1.5,0,#0369a1
+FRT09,FRT09: Railway Station - Chuburji,3,PMA-POLICE-LINE,Police Line,31.566918,74.33335,4.0,0,#0369a1
+FRT09,FRT09: Railway Station - Chuburji,4,PMA-SHIMLA-PAHARI,Shimla Pahari,31.562122,74.336514,7.2,0,#0369a1
+FRT09,FRT09: Railway Station - Chuburji,5,PMA-SHIMLA-PAHARI-2,Shimla Pahari-2,31.562122,74.336514,7.7,0,#0369a1
+FRT09,FRT09: Railway Station - Chuburji,6,PMA-AIWAN-E-IQBAL,Aiwan-e-Iqbal,31.560778,74.330518,10.7,0,#0369a1
+FRT09,FRT09: Railway Station - Chuburji,7,PMA-IMAMIA-COLONY-2,Imamia Colony,31.560735,74.328039,12.2,0,#0369a1
+FRT09,FRT09: Railway Station - Chuburji,8,PMA-CHARING-CROSS,Charing Cross,31.560692,74.32556,13.8,1,#0369a1
+FRT09,FRT09: Railway Station - Chuburji,9,PMA-GANGA-RAM-HOSPITAL,Ganga Ram Hospital,31.562276,74.316722,18.0,0,#0369a1
+FRT09,FRT09: Railway Station - Chuburji,10,PMA-WARIS-ROAD,Waris Road,31.548576,74.319609,25.2,0,#0369a1
+FRT09,FRT09: Railway Station - Chuburji,11,PMA-QARTABA-CHOWK,Qartaba Chowk,31.548724,74.315118,27.5,1,#0369a1
+FRT09,FRT09: Railway Station - Chuburji,12,PMA-CHUBURJI,Chuburji,31.553933,74.304593,33.0,1,#0369a1
+FRT09R,FRT09 (return): Chuburji - Railway Station,1,PMA-CHUBURJI,Chuburji,31.553933,74.304593,0.0,1,#0369a1
+FRT09R,FRT09 (return): Chuburji - Railway Station,2,PMA-QARTABA-CHOWK,Qartaba Chowk,31.548724,74.315118,5.5,1,#0369a1
+FRT09R,FRT09 (return): Chuburji - Railway Station,3,PMA-WARIS-ROAD,Waris Road,31.548576,74.319609,7.8,0,#0369a1
+FRT09R,FRT09 (return): Chuburji - Railway Station,4,PMA-GANGA-RAM-HOSPITAL,Ganga Ram Hospital,31.562276,74.316722,15.1,0,#0369a1
+FRT09R,FRT09 (return): Chuburji - Railway Station,5,PMA-CHARING-CROSS,Charing Cross,31.560692,74.32556,19.3,1,#0369a1
+FRT09R,FRT09 (return): Chuburji - Railway Station,6,PMA-IMAMIA-COLONY-2,Imamia Colony,31.560735,74.328039,20.8,0,#0369a1
+FRT09R,FRT09 (return): Chuburji - Railway Station,7,PMA-AIWAN-E-IQBAL,Aiwan-e-Iqbal,31.560778,74.330518,22.3,0,#0369a1
+FRT09R,FRT09 (return): Chuburji - Railway Station,8,PMA-SHIMLA-PAHARI-2,Shimla Pahari-2,31.562122,74.336514,25.3,0,#0369a1
+FRT09R,FRT09 (return): Chuburji - Railway Station,9,PMA-SHIMLA-PAHARI,Shimla Pahari,31.562122,74.336514,25.8,0,#0369a1
+FRT09R,FRT09 (return): Chuburji - Railway Station,10,PMA-POLICE-LINE,Police Line,31.566918,74.33335,29.0,0,#0369a1
+FRT09R,FRT09 (return): Chuburji - Railway Station,11,PMA-HAJI-CAMP,Haji Camp,31.571108,74.334406,31.6,0,#0369a1
+FRT09R,FRT09 (return): Chuburji - Railway Station,12,PMA-RAILWAY-STATION,Railway Station,31.572384,74.336222,33.0,1,#0369a1
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,1,PMA-WAHDAT-ROAD-STATION,Wahdat Road Station,31.495069,74.263565,0.0,1,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,2,PMA-MULTAN-CHUNGI,Multan Chungi,31.496147,74.264083,1.1,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,3,PMA-ELEPHANT-LINK-ROAD,Elephant Link Road,31.495981,74.268778,3.5,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,4,PMA-MUSTAFA-TOWN,Mustafa Town,31.495815,74.273474,5.9,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,5,PMA-KARIM-BLOCK-MARKET,Karim Block Market,31.503334,74.28016,11.0,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,6,PMA-SIKANDAR-BLOCK,Sikandar Block,31.504609,74.284396,13.3,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,7,PMA-RAZA-BLOCK,Raza Block,31.505885,74.288632,15.7,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,8,PMA-PU-EXAMINATION-HALL,PU Examination Hall,31.507161,74.292869,18.0,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,9,PMA-SCIENCE-COLLAGE,Science Collage,31.508436,74.297105,20.4,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,10,PMA-BHEKEWAL-MORR,Bhekewal Morr,31.509712,74.301341,22.7,1,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,11,PMA-WAHDAT-COLONY,Wahdat Colony,31.515499,74.307962,27.1,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,12,PMA-SCHOOL-STOP,School Stop,31.516936,74.310326,28.8,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,13,PMA-BANK-STOP,Bank Stop,31.518372,74.31269,30.5,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,14,PMA-KOT-NAQSHA-STOP,Kot Naqsha Stop,31.519809,74.315054,32.2,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,15,PMA-KARMA-ABAD,Karma Abad,31.521246,74.317418,33.9,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,16,PMA-AAB-PARA-MARKET,Aab Para Market,31.520177,74.321019,35.9,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,17,PMA-CANAL,Canal,31.519329,74.326938,38.9,1,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,18,PMA-REHMAN-PURA,Rehman Pura,31.522756,74.319592,42.8,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,19,PMA-ICHARA,Ichara,31.530555,74.319,47.1,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,20,PMA-SHAMA,Shama,31.539077,74.319069,51.7,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,21,PMA-LOS,LOS,31.543901,74.317094,54.7,0,#15803d
+FRT10,FRT10: Wahdat Road Station - Qartaba Chowk,22,PMA-QARTABA-CHOWK,Qartaba Chowk,31.548724,74.315118,57.6,1,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,1,PMA-QARTABA-CHOWK,Qartaba Chowk,31.548724,74.315118,0.0,1,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,2,PMA-LOS,LOS,31.543901,74.317094,3.0,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,3,PMA-SHAMA,Shama,31.539077,74.319069,5.9,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,4,PMA-ICHARA,Ichara,31.530555,74.319,10.5,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,5,PMA-REHMAN-PURA,Rehman Pura,31.522756,74.319592,14.8,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,6,PMA-CANAL,Canal,31.519329,74.326938,18.7,1,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,7,PMA-AAB-PARA-MARKET,Aab Para Market,31.520177,74.321019,21.7,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,8,PMA-KARMA-ABAD,Karma Abad,31.521246,74.317418,23.8,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,9,PMA-KOT-NAQSHA-STOP,Kot Naqsha Stop,31.519809,74.315054,25.5,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,10,PMA-BANK-STOP,Bank Stop,31.518372,74.31269,27.2,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,11,PMA-SCHOOL-STOP,School Stop,31.516936,74.310326,28.8,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,12,PMA-WAHDAT-COLONY,Wahdat Colony,31.515499,74.307962,30.5,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,13,PMA-BHEKEWAL-MORR,Bhekewal Morr,31.509712,74.301341,34.9,1,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,14,PMA-SCIENCE-COLLAGE,Science Collage,31.508436,74.297105,37.3,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,15,PMA-PU-EXAMINATION-HALL,PU Examination Hall,31.507161,74.292869,39.6,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,16,PMA-RAZA-BLOCK,Raza Block,31.505885,74.288632,42.0,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,17,PMA-SIKANDAR-BLOCK,Sikandar Block,31.504609,74.284396,44.3,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,18,PMA-KARIM-BLOCK-MARKET,Karim Block Market,31.503334,74.28016,46.7,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,19,PMA-MUSTAFA-TOWN,Mustafa Town,31.495815,74.273474,51.7,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,20,PMA-ELEPHANT-LINK-ROAD,Elephant Link Road,31.495981,74.268778,54.1,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,21,PMA-MULTAN-CHUNGI,Multan Chungi,31.496147,74.264083,56.6,0,#15803d
+FRT10R,FRT10 (return): Qartaba Chowk - Wahdat Road Station,22,PMA-WAHDAT-ROAD-STATION,Wahdat Road Station,31.495069,74.263565,57.6,1,#15803d
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,1,PMA-MAIN-MARKET-GULBERG,Main Market Gulberg,31.526435,74.349468,0.0,1,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,2,PMA-MCDONALD-S-1,McDonald's 1,31.525865,74.348821,0.9,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,3,PMA-SIDDIQUE-TRADE-CENTER,Siddique Trade Center,31.525296,74.348175,1.8,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,4,PMA-MCDONALDS-2,McDonalds 2,31.524727,74.347529,2.6,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,5,PMA-MAIN-MARKET-2,Main Market-2,31.524157,74.346883,3.5,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,6,PMA-MINI-MARKET,Mini Market,31.521575,74.351001,6.1,1,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,7,PMA-HAFEEZ-CENTER,Hafeez Center,31.516063,74.342989,10.9,1,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,8,PMA-LIBERTY-CHOWK,Liberty Chowk,31.510018,74.34061,14.4,1,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,9,PMA-CENTER-POINT,Center Point,31.50713,74.336064,17.3,1,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,10,PMA-BARKAT-MARKET,Barkat Market,31.500683,74.321154,24.6,1,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,11,PMA-CAMPUS-PULL-2,Campus Pull,31.50294,74.316201,27.4,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,12,PMA-PU-CAMPUS,PU Campus,31.505198,74.311248,30.2,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,13,PMA-SHAIKH-ZAID-HOSPITAL,Shaikh Zaid Hospital,31.507455,74.306294,33.0,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,14,PMA-BHEKEWAL-MORR,Bhekewal Morr,31.509712,74.301341,35.9,1,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,15,PMA-PILOT-SCHOOL,Pilot School,31.51149,74.298998,37.6,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,16,PMA-FAROOQ-HOSPITAL,Farooq Hospital,31.513269,74.296656,39.4,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,17,PMA-GULSHAN-E-IQBAL,Gulshan-E-Iqbal,31.515048,74.294313,41.2,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,18,PMA-DUBAI-CHOWK,Dubai Chowk,31.517696,74.291649,43.4,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,19,PMA-FLAT-STOP,Flat Stop,31.520344,74.288985,45.6,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,20,PMA-KALI-KHTHI-STOP,Kali Khthi Stop,31.522993,74.286321,47.8,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,21,PMA-SCHEME-MORR,Scheme Morr,31.525641,74.283657,49.9,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,22,PMA-GRAND-BATTERY-STOP,Grand Battery Stop,31.528073,74.285053,51.7,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,23,PMA-CHOWK-YATEEM-KHANA,Chowk Yateem Khana,31.53584,74.273903,58.2,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,24,PMA-CITY-BUS-STAND,City Bus Stand,31.536292,74.273704,58.9,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,25,PMA-SHEZAN-FACTORY,Shezan Factory,31.536744,74.273505,59.6,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,26,PMA-NIAZI-ADDA,Niazi Adda,31.537196,74.273306,60.4,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,27,PMA-BILAL-DAEWOO,Bilal Daewoo,31.538632,74.270624,62.2,0,#a16207
+FRT11,FRT11: Main Market Gulberg - Babu Sabu,28,PMA-BABU-SABU,Babu Sabu,31.540068,74.267941,64.0,1,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,1,PMA-BABU-SABU,Babu Sabu,31.540068,74.267941,0.0,1,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,2,PMA-BILAL-DAEWOO,Bilal Daewoo,31.538632,74.270624,1.8,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,3,PMA-NIAZI-ADDA,Niazi Adda,31.537196,74.273306,3.6,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,4,PMA-SHEZAN-FACTORY,Shezan Factory,31.536744,74.273505,4.3,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,5,PMA-CITY-BUS-STAND,City Bus Stand,31.536292,74.273704,5.1,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,6,PMA-CHOWK-YATEEM-KHANA,Chowk Yateem Khana,31.53584,74.273903,5.8,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,7,PMA-GRAND-BATTERY-STOP,Grand Battery Stop,31.528073,74.285053,12.2,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,8,PMA-SCHEME-MORR,Scheme Morr,31.525641,74.283657,14.0,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,9,PMA-KALI-KHTHI-STOP,Kali Khthi Stop,31.522993,74.286321,16.2,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,10,PMA-FLAT-STOP,Flat Stop,31.520344,74.288985,18.4,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,11,PMA-DUBAI-CHOWK,Dubai Chowk,31.517696,74.291649,20.6,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,12,PMA-GULSHAN-E-IQBAL,Gulshan-E-Iqbal,31.515048,74.294313,22.7,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,13,PMA-FAROOQ-HOSPITAL,Farooq Hospital,31.513269,74.296656,24.5,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,14,PMA-PILOT-SCHOOL,Pilot School,31.51149,74.298998,26.3,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,15,PMA-BHEKEWAL-MORR,Bhekewal Morr,31.509712,74.301341,28.1,1,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,16,PMA-SHAIKH-ZAID-HOSPITAL,Shaikh Zaid Hospital,31.507455,74.306294,30.9,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,17,PMA-PU-CAMPUS,PU Campus,31.505198,74.311248,33.7,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,18,PMA-CAMPUS-PULL-2,Campus Pull,31.50294,74.316201,36.5,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,19,PMA-BARKAT-MARKET,Barkat Market,31.500683,74.321154,39.3,1,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,20,PMA-CENTER-POINT,Center Point,31.50713,74.336064,46.7,1,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,21,PMA-LIBERTY-CHOWK,Liberty Chowk,31.510018,74.34061,49.5,1,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,22,PMA-HAFEEZ-CENTER,Hafeez Center,31.516063,74.342989,53.1,1,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,23,PMA-MINI-MARKET,Mini Market,31.521575,74.351001,57.8,1,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,24,PMA-MAIN-MARKET-2,Main Market-2,31.524157,74.346883,60.4,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,25,PMA-MCDONALDS-2,McDonalds 2,31.524727,74.347529,61.3,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,26,PMA-SIDDIQUE-TRADE-CENTER,Siddique Trade Center,31.525296,74.348175,62.2,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,27,PMA-MCDONALD-S-1,McDonald's 1,31.525865,74.348821,63.1,0,#a16207
+FRT11R,FRT11 (return): Babu Sabu - Main Market Gulberg,28,PMA-MAIN-MARKET-GULBERG,Main Market Gulberg,31.526435,74.349468,64.0,1,#a16207
+FRT12,FRT12: R.A Bazar - Nasir Bagh,1,PMA-R-A-BAZAR-2,R.A Bazar,31.518426,74.383127,0.0,1,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,2,PMA-PAF-MARKET,PAF Market,31.519608,74.381796,1.3,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,3,PMA-TELEPHONE-EXCHANGE,Telephone Exchange,31.520791,74.380464,2.6,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,4,PMA-GIRJA-CHOWK,Girja Chowk,31.521974,74.379133,3.9,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,5,PMA-ALLA-UD-DIN-ROAD,Alla-Ud-Din Road,31.524508,74.378361,5.6,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,6,PMA-AFSHAN-CHOWK,Afshan Chowk,31.527043,74.377589,7.4,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,7,PMA-RAHAT-BAKERY,Rahat Bakery,31.529578,74.376817,9.2,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,8,PMA-FORTRESS-STADIUM,Fortress Stadium,31.530494,74.369273,12.8,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,9,PMA-MIAN-MIR,Mian Mir,31.548637,74.359518,22.9,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,10,PMA-GYMKHANA,GymKhana,31.549147,74.355223,25.2,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,11,PMA-CANAL-BRIDGE,Canal Bridge,31.549658,74.350927,27.5,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,12,PMA-AITCHISON-COLLEGE,Aitchison College,31.550168,74.346632,29.7,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,13,PMA-CLUB-ROAD,Club Road,31.547825,74.3421,32.4,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,14,PMA-PC-HOTEL,PC Hotel,31.552363,74.338798,35.5,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,15,PMA-GOVERNOR-HOUSE,Governor House,31.5569,74.335496,38.6,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,16,PMA-LAHORE-ZOO,Lahore Zoo,31.556284,74.325859,43.0,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,17,PMA-CHARING-CROSS,Charing Cross,31.560692,74.32556,45.7,1,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,18,PMA-REGAL-CHOWK,Regal Chowk,31.561648,74.319426,48.7,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,19,PMA-GPO,GPO,31.565555,74.314246,52.1,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,20,PMA-ANARKALI,Anarkali,31.568167,74.310345,54.6,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,21,PMA-PU-OLD-CAMPUS,PU Old Campus,31.570646,74.309123,56.4,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,22,PMA-GOVERNMENT-COLLEGE-UNIVE,Government College University,31.573125,74.307901,58.2,0,#9333ea
+FRT12,FRT12: R.A Bazar - Nasir Bagh,23,PMA-NASIR-BAGH,Nasir Bagh,31.570926,74.30616,60.0,1,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,1,PMA-NASIR-BAGH,Nasir Bagh,31.570926,74.30616,0.0,1,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,2,PMA-GOVERNMENT-COLLEGE-UNIVE,Government College University,31.573125,74.307901,1.8,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,3,PMA-PU-OLD-CAMPUS,PU Old Campus,31.570646,74.309123,3.6,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,4,PMA-ANARKALI,Anarkali,31.568167,74.310345,5.4,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,5,PMA-GPO,GPO,31.565555,74.314246,7.9,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,6,PMA-REGAL-CHOWK,Regal Chowk,31.561648,74.319426,11.2,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,7,PMA-CHARING-CROSS,Charing Cross,31.560692,74.32556,14.3,1,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,8,PMA-LAHORE-ZOO,Lahore Zoo,31.556284,74.325859,16.9,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,9,PMA-GOVERNOR-HOUSE,Governor House,31.5569,74.335496,21.4,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,10,PMA-PC-HOTEL,PC Hotel,31.552363,74.338798,24.5,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,11,PMA-CLUB-ROAD,Club Road,31.547825,74.3421,27.5,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,12,PMA-AITCHISON-COLLEGE,Aitchison College,31.550168,74.346632,30.2,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,13,PMA-CANAL-BRIDGE,Canal Bridge,31.549658,74.350927,32.5,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,14,PMA-GYMKHANA,GymKhana,31.549147,74.355223,34.8,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,15,PMA-MIAN-MIR,Mian Mir,31.548637,74.359518,37.1,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,16,PMA-FORTRESS-STADIUM,Fortress Stadium,31.530494,74.369273,47.2,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,17,PMA-RAHAT-BAKERY,Rahat Bakery,31.529578,74.376817,50.8,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,18,PMA-AFSHAN-CHOWK,Afshan Chowk,31.527043,74.377589,52.6,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,19,PMA-ALLA-UD-DIN-ROAD,Alla-Ud-Din Road,31.524508,74.378361,54.3,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,20,PMA-GIRJA-CHOWK,Girja Chowk,31.521974,74.379133,56.1,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,21,PMA-TELEPHONE-EXCHANGE,Telephone Exchange,31.520791,74.380464,57.4,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,22,PMA-PAF-MARKET,PAF Market,31.519608,74.381796,58.7,0,#9333ea
+FRT12R,FRT12 (return): Nasir Bagh - R.A Bazar,23,PMA-R-A-BAZAR-2,R.A Bazar,31.518426,74.383127,60.0,1,#9333ea
+FRT13,FRT13: Depot Chowk - Kalma Chowk,1,PMA-DEPOT-CHOWK-2,Depot Chowk,31.419168,74.304128,0.0,1,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,2,PMA-BAGRIAN,Bagrian,31.427335,74.298845,5.0,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,3,PMA-MUSLIM-CHOWK,Muslim Chowk,31.435502,74.293562,10.0,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,4,PMA-GHAZI-CHOWK-2,Ghazi Chowk,31.436662,74.290935,11.7,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,5,PMA-GONDAL-CHOWK,Gondal Chowk,31.439954,74.292662,13.9,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,6,PMA-BUTT-CHOWK,Butt Chowk,31.443161,74.294319,16.1,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,7,PMA-LAJHNA-CHOWK,Lajhna Chowk,31.447552,74.293782,18.8,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,8,PMA-UMT-STOP,UMT Stop,31.451943,74.293245,21.4,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,9,PMA-KHOKHAR-CHOWK,Khokhar Chowk,31.455369,74.300827,25.4,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,10,PMA-M-ALI-CHOWK,M. Ali Chowk,31.459037,74.302722,27.8,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,11,PMA-ASLAM-CHOWK,Aslam Chowk,31.463329,74.304816,30.6,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,12,PMA-AKBER-CHOWK,Akber Chowk,31.467621,74.306911,33.3,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,13,PMA-BANK-STOP-2,Bank Stop,31.468067,74.310471,35.3,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,14,PMA-MOCHIPURA-MORR,Mochipura Morr,31.468513,74.314032,37.3,1,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,15,PMA-MODEL-TOWN-LINK-ROAD,Model Town Link Road,31.468958,74.317593,39.3,1,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,16,PMA-AL-HABIB-STOP,Al-Habib Stop,31.469686,74.324364,42.6,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,17,PMA-PINDI-STOP-2,Pindi Stop,31.470414,74.331136,45.9,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,18,PMA-TREET-STOP-2,Treet Stop,31.471141,74.337907,49.2,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,19,PMA-PECO-MORR,Peco Morr,31.471869,74.344679,52.5,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,20,PMA-KOT-LAKHPAT-RAILWAY-STAT,Kot Lakhpat Railway Stationi,31.466419,74.338257,56.7,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,21,PMA-PHATKI,Phatki,31.469634,74.339193,58.8,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,22,PMA-PHATAK-MANDI,Phatak Mandi,31.472848,74.340129,60.9,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,23,PMA-SABZI-MANDI-2,Sabzi Mandi,31.476063,74.341065,63.0,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,24,PMA-ITTEFAQ-HOSPITAL,Ittefaq Hospital,31.479278,74.342,65.1,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,25,PMA-GULAB-DEVI-HOSPITAL,Gulab Devi Hospital,31.4825,74.342215,67.1,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,26,PMA-NASEERABAD,Naseerabad,31.487064,74.338735,70.3,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,27,PMA-BHABRA-STOP,Bhabra Stop,31.489207,74.341307,72.2,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,28,PMA-MODEL-TOWN,Model Town,31.4975,74.334397,77.6,0,#c2410c
+FRT13,FRT13: Depot Chowk - Kalma Chowk,29,PMA-KALMA-CHOWK,Kalma Chowk,31.504445,74.331501,81.7,1,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,1,PMA-KALMA-CHOWK,Kalma Chowk,31.504445,74.331501,0.0,1,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,2,PMA-MODEL-TOWN,Model Town,31.4975,74.334397,4.1,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,3,PMA-BHABRA-STOP,Bhabra Stop,31.489207,74.341307,9.5,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,4,PMA-NASEERABAD,Naseerabad,31.487064,74.338735,11.4,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,5,PMA-GULAB-DEVI-HOSPITAL,Gulab Devi Hospital,31.4825,74.342215,14.6,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,6,PMA-ITTEFAQ-HOSPITAL,Ittefaq Hospital,31.479278,74.342,16.6,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,7,PMA-SABZI-MANDI-2,Sabzi Mandi,31.476063,74.341065,18.7,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,8,PMA-PHATAK-MANDI,Phatak Mandi,31.472848,74.340129,20.8,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,9,PMA-PHATKI,Phatki,31.469634,74.339193,22.9,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,10,PMA-KOT-LAKHPAT-RAILWAY-STAT,Kot Lakhpat Railway Stationi,31.466419,74.338257,25.0,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,11,PMA-PECO-MORR,Peco Morr,31.471869,74.344679,29.2,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,12,PMA-TREET-STOP-2,Treet Stop,31.471141,74.337907,32.5,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,13,PMA-PINDI-STOP-2,Pindi Stop,31.470414,74.331136,35.8,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,14,PMA-AL-HABIB-STOP,Al-Habib Stop,31.469686,74.324364,39.1,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,15,PMA-MODEL-TOWN-LINK-ROAD,Model Town Link Road,31.468958,74.317593,42.4,1,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,16,PMA-MOCHIPURA-MORR,Mochipura Morr,31.468513,74.314032,44.4,1,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,17,PMA-BANK-STOP-2,Bank Stop,31.468067,74.310471,46.4,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,18,PMA-AKBER-CHOWK,Akber Chowk,31.467621,74.306911,48.4,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,19,PMA-ASLAM-CHOWK,Aslam Chowk,31.463329,74.304816,51.1,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,20,PMA-M-ALI-CHOWK,M. Ali Chowk,31.459037,74.302722,53.9,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,21,PMA-KHOKHAR-CHOWK,Khokhar Chowk,31.455369,74.300827,56.3,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,22,PMA-UMT-STOP,UMT Stop,31.451943,74.293245,60.3,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,23,PMA-LAJHNA-CHOWK,Lajhna Chowk,31.447552,74.293782,62.9,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,24,PMA-BUTT-CHOWK,Butt Chowk,31.443161,74.294319,65.6,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,25,PMA-GONDAL-CHOWK,Gondal Chowk,31.439954,74.292662,67.8,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,26,PMA-GHAZI-CHOWK-2,Ghazi Chowk,31.436662,74.290935,70.0,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,27,PMA-MUSLIM-CHOWK,Muslim Chowk,31.435502,74.293562,71.7,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,28,PMA-BAGRIAN,Bagrian,31.427335,74.298845,76.7,0,#c2410c
+FRT13R,FRT13 (return): Kalma Chowk - Depot Chowk,29,PMA-DEPOT-CHOWK-2,Depot Chowk,31.419168,74.304128,81.7,1,#c2410c
+FRT14,FRT14: Purana Kahna - R.A Bazar,1,PMA-PURANA-KAHNA,Purana Kahna,31.365704,74.366378,0.0,1,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,2,PMA-MALIK-PURA,Malik Pura,31.369329,74.365842,2.3,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,3,PMA-5-NUMBER-STOP,5 Number Stop,31.372954,74.365306,4.5,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,4,PMA-RAILU-WALI-MASJID,Railu Wali Masjid,31.376579,74.36477,6.8,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,5,PMA-KAHNA,Kahna,31.380204,74.364234,9.0,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,6,PMA-DARBAR-BARKET-SHAH,Darbar Barket Shah,31.383828,74.363698,11.3,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,7,PMA-AHLU-ROAD,Ahlu Road,31.387453,74.363162,13.6,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,8,PMA-REHMAT-PARK,Rehmat Park,31.391078,74.362625,15.8,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,9,PMA-LDA-GOL-CHAKAR,LDA Gol Chakar,31.394703,74.362089,18.1,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,10,PMA-GAJJUMATTA,Gajjumatta,31.398328,74.361553,20.3,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,11,PMA-MASJID-IBRAHIM,Masjid Ibrahim,31.401952,74.361017,22.6,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,12,PMA-DULLA-KHURD,Dulla Khurd,31.405577,74.360481,24.9,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,13,PMA-DULAM,Dulam,31.410326,74.359782,27.7,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,14,PMA-YOHANABAD,Yohanabad,31.415076,74.359083,30.5,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,15,PMA-NISHTAR-COLONY,Nishtar Colony,31.419825,74.358384,33.3,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,16,PMA-DESCON-HEADQUARTERS,Descon Headquarters,31.425455,74.357822,36.5,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,17,PMA-ATTARI-SAROBA,Attari Saroba,31.431058,74.356728,39.7,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,18,PMA-VENUS-HOUSING,Venus Housing,31.43709,74.352015,43.7,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,19,PMA-KAMAHAN,Kamahan,31.440913,74.355274,46.5,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,20,PMA-CHUNGI-METRO-STATION,Chungi Metro Station,31.450361,74.353336,51.6,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,21,PMA-GHAZI-CHOWK,Ghazi Chowk,31.45801,74.350976,55.9,1,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,22,PMA-SHOUKAT-TOWN,Shoukat Town,31.459202,74.36053,60.4,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,23,PMA-NAKA-STOP,Naka Stop,31.461802,74.366017,63.5,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,24,PMA-CHOTA-ISHARA-STOP,Chota Ishara Stop,31.464403,74.371503,66.6,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,25,PMA-SECTOR-C-Y-BLOCK,Sector C (Y-Block),31.467003,74.37699,69.7,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,26,PMA-LESCO,LESCO,31.469603,74.382477,72.7,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,27,PMA-CHARA-PIND,Chara Pind,31.472204,74.387963,75.8,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,28,PMA-DHA-NURSERY,DHA Nursery,31.474804,74.39345,78.9,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,29,PMA-DEFENCE-CHOWK,Defence Chowk,31.477404,74.398937,82.0,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,30,PMA-PSO,PSO,31.481518,74.405172,85.7,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,31,PMA-BHATTA-CHOWK,Bhatta Chowk,31.487521,74.412082,90.3,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,32,PMA-ARIFABAD,Arifabad,31.491094,74.408231,93.1,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,33,PMA-NADIRABAD,Nadirabad,31.494667,74.40438,95.9,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,34,PMA-ALI-VIEW-GARDEN,Ali View Garden,31.494764,74.403095,97.0,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,35,PMA-CANTT-BUS-STOP,Cantt. Bus Stop,31.496841,74.399425,99.3,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,36,PMA-FAUJI-FOUNDATION,Fauji Foundation,31.498918,74.395754,101.6,0,#0e7490
+FRT14,FRT14: Purana Kahna - R.A Bazar,37,PMA-RA-BAZAR,RA Bazar,31.50576,74.383798,108.0,1,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,1,PMA-RA-BAZAR,RA Bazar,31.50576,74.383798,0.0,1,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,2,PMA-FAUJI-FOUNDATION,Fauji Foundation,31.498918,74.395754,6.4,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,3,PMA-CANTT-BUS-STOP,Cantt. Bus Stop,31.496841,74.399425,8.7,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,4,PMA-ALI-VIEW-GARDEN,Ali View Garden,31.494764,74.403095,11.0,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,5,PMA-NADIRABAD,Nadirabad,31.494667,74.40438,12.1,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,6,PMA-ARIFABAD,Arifabad,31.491094,74.408231,14.9,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,7,PMA-BHATTA-CHOWK,Bhatta Chowk,31.487521,74.412082,17.7,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,8,PMA-PSO,PSO,31.481518,74.405172,22.3,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,9,PMA-DEFENCE-CHOWK,Defence Chowk,31.477404,74.398937,26.0,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,10,PMA-DHA-NURSERY,DHA Nursery,31.474804,74.39345,29.1,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,11,PMA-CHARA-PIND,Chara Pind,31.472204,74.387963,32.2,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,12,PMA-LESCO,LESCO,31.469603,74.382477,35.3,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,13,PMA-SECTOR-C-Y-BLOCK,Sector C (Y-Block),31.467003,74.37699,38.4,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,14,PMA-CHOTA-ISHARA-STOP,Chota Ishara Stop,31.464403,74.371503,41.4,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,15,PMA-NAKA-STOP,Naka Stop,31.461802,74.366017,44.5,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,16,PMA-SHOUKAT-TOWN,Shoukat Town,31.459202,74.36053,47.6,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,17,PMA-GHAZI-CHOWK,Ghazi Chowk,31.45801,74.350976,52.1,1,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,18,PMA-CHUNGI-METRO-STATION,Chungi Metro Station,31.450361,74.353336,56.4,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,19,PMA-KAMAHAN,Kamahan,31.440913,74.355274,61.5,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,20,PMA-VENUS-HOUSING,Venus Housing,31.43709,74.352015,64.3,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,21,PMA-ATTARI-SAROBA,Attari Saroba,31.431058,74.356728,68.3,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,22,PMA-DESCON-HEADQUARTERS,Descon Headquarters,31.425455,74.357822,71.5,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,23,PMA-NISHTAR-COLONY,Nishtar Colony,31.419825,74.358384,74.7,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,24,PMA-YOHANABAD,Yohanabad,31.415076,74.359083,77.5,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,25,PMA-DULAM,Dulam,31.410326,74.359782,80.3,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,26,PMA-DULLA-KHURD,Dulla Khurd,31.405577,74.360481,83.1,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,27,PMA-MASJID-IBRAHIM,Masjid Ibrahim,31.401952,74.361017,85.4,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,28,PMA-GAJJUMATTA,Gajjumatta,31.398328,74.361553,87.7,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,29,PMA-LDA-GOL-CHAKAR,LDA Gol Chakar,31.394703,74.362089,89.9,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,30,PMA-REHMAT-PARK,Rehmat Park,31.391078,74.362625,92.2,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,31,PMA-AHLU-ROAD,Ahlu Road,31.387453,74.363162,94.4,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,32,PMA-DARBAR-BARKET-SHAH,Darbar Barket Shah,31.383828,74.363698,96.7,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,33,PMA-KAHNA,Kahna,31.380204,74.364234,99.0,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,34,PMA-RAILU-WALI-MASJID,Railu Wali Masjid,31.376579,74.36477,101.2,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,35,PMA-5-NUMBER-STOP,5 Number Stop,31.372954,74.365306,103.5,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,36,PMA-MALIK-PURA,Malik Pura,31.369329,74.365842,105.7,0,#0e7490
+FRT14R,FRT14 (return): R.A Bazar - Purana Kahna,37,PMA-PURANA-KAHNA,Purana Kahna,31.365704,74.366378,108.0,1,#0e7490
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,1,PMA-BHATTI-CHOWK,Bhatti Chowk,31.580525,74.306182,0.0,1,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,2,PMA-KATCHERY,Katchery,31.574684,74.306507,3.3,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,3,PMA-NASIR-BAGH,Nasir Bagh,31.570926,74.30616,5.6,1,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,4,PMA-CIVIL-SECRETARIAT,Civil Secretariat,31.568746,74.304265,7.4,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,5,PMA-M-A-O-COLLEGE,M.A.O College,31.565741,74.306383,9.6,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,6,PMA-ANARKALI-METRO-STATION,Anarkali Metro Station,31.562736,74.308502,11.8,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,7,PMA-JANAZGAH,Janazgah,31.553895,74.311432,16.7,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,8,PMA-QARTABA-CHOWK,Qartaba Chowk,31.548724,74.315118,20.2,1,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,9,PMA-MAZANG,Mazang,31.548827,74.315015,20.7,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,10,PMA-ROZNAMA-PAKISTAN,Roznama Pakistan,31.54608,74.320132,23.7,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,11,PMA-LAHORE-COLLEGE,Lahore College,31.543334,74.32525,26.7,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,12,PMA-SERVICES-HOSPITAL,Services Hospital,31.540587,74.330367,29.7,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,13,PMA-PUNJAB-INSTITUTE-OF-CARD,Punjab Institute of Cardiology,31.53784,74.335484,32.7,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,14,PMA-KINNAIRD-COLLEGE,Kinnaird College,31.537466,74.340433,35.2,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,15,PMA-ZAFAR-ALI-ROAD,Zafar Ali Road,31.534072,74.340778,37.3,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,16,PMA-SIDDIQUE-TRADE-CENTER-2,Siddique Trade Center,31.530767,74.342813,39.6,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,17,PMA-MCDONALD,McDonald,31.527462,74.344848,41.9,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,18,PMA-MAIN-MARKET,Main Market,31.524157,74.346883,44.2,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,19,PMA-MINI-MARKET,Mini Market,31.521575,74.351001,46.8,1,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,20,PMA-HAFEEZ-CENTER,Hafeez Center,31.516063,74.342989,51.6,1,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,21,PMA-KALMA-CHOWK,Kalma Chowk,31.504445,74.331501,59.4,1,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,22,PMA-LIBERTY-CHOWK,Liberty Chowk,31.510018,74.34061,64.5,1,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,23,PMA-CENTER-POINT,Center Point,31.50713,74.336064,67.3,1,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,24,PMA-FIRDOUS-MARKET,Firdous Market,31.502931,74.348008,73.1,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,25,PMA-CAVALRY-ROAD,Cavalry Road,31.501927,74.362779,79.7,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,26,PMA-T-STOP-2,T-Stop,31.500923,74.377551,86.3,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,27,PMA-NADEEM-CHOWK-2,Nadeem Chowk,31.49992,74.392323,92.9,0,#4d7c0f
+FRT15,FRT15: Bhatti Chowk - R.A Bazar,28,PMA-R-A-BAZAR-3,R.A Bazar,31.498916,74.407094,99.5,1,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,1,PMA-R-A-BAZAR-3,R.A Bazar,31.498916,74.407094,0.0,1,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,2,PMA-NADEEM-CHOWK-2,Nadeem Chowk,31.49992,74.392323,6.6,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,3,PMA-T-STOP-2,T-Stop,31.500923,74.377551,13.2,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,4,PMA-CAVALRY-ROAD,Cavalry Road,31.501927,74.362779,19.8,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,5,PMA-FIRDOUS-MARKET,Firdous Market,31.502931,74.348008,26.4,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,6,PMA-CENTER-POINT,Center Point,31.50713,74.336064,32.2,1,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,7,PMA-LIBERTY-CHOWK,Liberty Chowk,31.510018,74.34061,35.0,1,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,8,PMA-KALMA-CHOWK,Kalma Chowk,31.504445,74.331501,40.1,1,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,9,PMA-HAFEEZ-CENTER,Hafeez Center,31.516063,74.342989,47.9,1,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,10,PMA-MINI-MARKET,Mini Market,31.521575,74.351001,52.6,1,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,11,PMA-MAIN-MARKET,Main Market,31.524157,74.346883,55.2,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,12,PMA-MCDONALD,McDonald,31.527462,74.344848,57.5,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,13,PMA-SIDDIQUE-TRADE-CENTER-2,Siddique Trade Center,31.530767,74.342813,59.8,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,14,PMA-ZAFAR-ALI-ROAD,Zafar Ali Road,31.534072,74.340778,62.1,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,15,PMA-KINNAIRD-COLLEGE,Kinnaird College,31.537466,74.340433,64.3,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,16,PMA-PUNJAB-INSTITUTE-OF-CARD,Punjab Institute of Cardiology,31.53784,74.335484,66.8,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,17,PMA-SERVICES-HOSPITAL,Services Hospital,31.540587,74.330367,69.8,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,18,PMA-LAHORE-COLLEGE,Lahore College,31.543334,74.32525,72.8,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,19,PMA-ROZNAMA-PAKISTAN,Roznama Pakistan,31.54608,74.320132,75.8,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,20,PMA-MAZANG,Mazang,31.548827,74.315015,78.8,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,21,PMA-QARTABA-CHOWK,Qartaba Chowk,31.548724,74.315118,79.3,1,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,22,PMA-JANAZGAH,Janazgah,31.553895,74.311432,82.7,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,23,PMA-ANARKALI-METRO-STATION,Anarkali Metro Station,31.562736,74.308502,87.7,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,24,PMA-M-A-O-COLLEGE,M.A.O College,31.565741,74.306383,89.9,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,25,PMA-CIVIL-SECRETARIAT,Civil Secretariat,31.568746,74.304265,92.0,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,26,PMA-NASIR-BAGH,Nasir Bagh,31.570926,74.30616,93.8,1,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,27,PMA-KATCHERY,Katchery,31.574684,74.306507,96.2,0,#4d7c0f
+FRT15R,FRT15 (return): R.A Bazar - Bhatti Chowk,28,PMA-BHATTI-CHOWK,Bhatti Chowk,31.580525,74.306182,99.5,1,#4d7c0f
+FRT16,FRT16: Canal - Daewoo Terminal,1,PMA-CANAL,Canal,31.519329,74.326938,0.0,1,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,2,PMA-QADDAFI-STADIUM,Qaddafi stadium,31.512022,74.328812,4.1,1,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,3,PMA-KALMA-CHOWK,Kalma Chowk,31.504445,74.331501,8.4,1,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,4,PMA-MODEL-TOWN-MORR,Model Town Morr,31.49742,74.328899,12.5,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,5,PMA-PAKISTANI-CHOWK,Pakistani Chowk,31.49343,74.327085,15.0,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,6,PMA-BANK-SQUARE-C-BLOCK,Bank Square C-Block,31.48944,74.32527,17.6,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,7,PMA-LADIES-CLUB-D-BLOCK,Ladies Club D-Block,31.485449,74.323456,20.2,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,8,PMA-GIRLS-COLLEGE-E-BLOCK,Girls College E-Block,31.481459,74.321641,22.7,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,9,PMA-F-BLOCK,F-Block,31.477469,74.319827,25.3,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,10,PMA-CLUB-CHOWK,Club Chowk,31.475235,74.318982,26.9,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,11,PMA-QUID-E-AZAM-LAW-COLLEGE,Quid-e-Azam Law College,31.473001,74.318137,28.5,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,12,PMA-SHAHEED-CHOWK,Shaheed Chowk,31.470768,74.317293,30.2,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,13,PMA-PACE-SHOPPING-CENTRE,Pace Shopping Centre,31.468534,74.316448,31.8,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,14,PMA-MCDONALD-S,McDonald's,31.4663,74.315603,33.4,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,15,PMA-MODEL-TOWN-LINK-ROAD,Model Town Link Road,31.468958,74.317593,35.5,1,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,16,PMA-MOCHIPURA-MORR,Mochipura Morr,31.468513,74.314032,37.4,1,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,17,PMA-AKBAR-CHOWK,Akbar Chowk,31.467621,74.306911,40.9,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,18,PMA-SHOUQ-CHOWK,Shouq Chowk,31.471183,74.302785,43.8,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,19,PMA-ALLAH-HOO-CHOWK,Allah-Hoo Chowk,31.469477,74.298975,46.1,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,20,PMA-ALEEM-DAR-STADIUM,Aleem Dar Stadium,31.464851,74.291643,50.3,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,21,PMA-LDA-PLAZA,LDA Plaza,31.460226,74.28431,54.6,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,22,PMA-SHADIWAL-CHOWK,Shadiwal Chowk,31.4556,74.276977,58.8,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,23,PMA-SHAUKAT-KHANUM-HOSPITAL,Shaukat Khanum Hospital,31.44803,74.269956,64.0,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,24,PMA-WAPDA-TOWN-GATE-1-STOP-1,Wapda Town Gate 1 Stop 1,31.44389,74.269822,66.5,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,25,PMA-WAPDA-TOWN-GATE-1-STOP-2,Wapda Town Gate 1 Stop 2,31.44389,74.269822,67.0,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,26,PMA-UCP,UCP,31.447464,74.268747,69.2,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,27,PMA-PCSIR,PCSIR,31.451039,74.267672,71.5,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,28,PMA-ABDALIAN-SOCIETY,Abdalian Society,31.454613,74.266597,73.8,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,29,PMA-AYUB-CHOWK,Ayub Chowk,31.458931,74.26318,76.8,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,30,PMA-EXPO-CENTRE,Expo Centre,31.463248,74.259762,79.8,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,31,PMA-SHAN-CHOWK,Shan Chowk,31.464679,74.249364,84.6,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,32,PMA-RING-CHOWK,Ring Chowk,31.46625,74.247508,86.2,0,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,33,PMA-JUDICIAL-COLONY,Judicial Colony,31.467822,74.245653,87.8,1,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,34,PMA-THOKAR-NIAZ-BAIG,Thokar Niaz Baig,31.470542,74.240541,90.8,1,#b91c1c
+FRT16,FRT16: Canal - Daewoo Terminal,35,PMA-DAEWOO-TERMINAL,Daewoo Terminal,31.469179,74.238373,92.4,1,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,1,PMA-DAEWOO-TERMINAL,Daewoo Terminal,31.469179,74.238373,0.0,1,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,2,PMA-THOKAR-NIAZ-BAIG,Thokar Niaz Baig,31.470542,74.240541,1.6,1,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,3,PMA-JUDICIAL-COLONY,Judicial Colony,31.467822,74.245653,4.6,1,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,4,PMA-RING-CHOWK,Ring Chowk,31.46625,74.247508,6.2,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,5,PMA-SHAN-CHOWK,Shan Chowk,31.464679,74.249364,7.7,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,6,PMA-EXPO-CENTRE,Expo Centre,31.463248,74.259762,12.6,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,7,PMA-AYUB-CHOWK,Ayub Chowk,31.458931,74.26318,15.6,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,8,PMA-ABDALIAN-SOCIETY,Abdalian Society,31.454613,74.266597,18.6,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,9,PMA-PCSIR,PCSIR,31.451039,74.267672,20.9,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,10,PMA-UCP,UCP,31.447464,74.268747,23.1,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,11,PMA-WAPDA-TOWN-GATE-1-STOP-2,Wapda Town Gate 1 Stop 2,31.44389,74.269822,25.4,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,12,PMA-WAPDA-TOWN-GATE-1-STOP-1,Wapda Town Gate 1 Stop 1,31.44389,74.269822,25.9,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,13,PMA-SHAUKAT-KHANUM-HOSPITAL,Shaukat Khanum Hospital,31.44803,74.269956,28.4,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,14,PMA-SHADIWAL-CHOWK,Shadiwal Chowk,31.4556,74.276977,33.6,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,15,PMA-LDA-PLAZA,LDA Plaza,31.460226,74.28431,37.8,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,16,PMA-ALEEM-DAR-STADIUM,Aleem Dar Stadium,31.464851,74.291643,42.1,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,17,PMA-ALLAH-HOO-CHOWK,Allah-Hoo Chowk,31.469477,74.298975,46.3,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,18,PMA-SHOUQ-CHOWK,Shouq Chowk,31.471183,74.302785,48.6,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,19,PMA-AKBAR-CHOWK,Akbar Chowk,31.467621,74.306911,51.5,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,20,PMA-MOCHIPURA-MORR,Mochipura Morr,31.468513,74.314032,54.9,1,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,21,PMA-MODEL-TOWN-LINK-ROAD,Model Town Link Road,31.468958,74.317593,56.9,1,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,22,PMA-MCDONALD-S,McDonald's,31.4663,74.315603,58.9,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,23,PMA-PACE-SHOPPING-CENTRE,Pace Shopping Centre,31.468534,74.316448,60.6,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,24,PMA-SHAHEED-CHOWK,Shaheed Chowk,31.470768,74.317293,62.2,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,25,PMA-QUID-E-AZAM-LAW-COLLEGE,Quid-e-Azam Law College,31.473001,74.318137,63.8,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,26,PMA-CLUB-CHOWK,Club Chowk,31.475235,74.318982,65.5,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,27,PMA-F-BLOCK,F-Block,31.477469,74.319827,67.1,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,28,PMA-GIRLS-COLLEGE-E-BLOCK,Girls College E-Block,31.481459,74.321641,69.7,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,29,PMA-LADIES-CLUB-D-BLOCK,Ladies Club D-Block,31.485449,74.323456,72.2,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,30,PMA-BANK-SQUARE-C-BLOCK,Bank Square C-Block,31.48944,74.32527,74.8,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,31,PMA-PAKISTANI-CHOWK,Pakistani Chowk,31.49343,74.327085,77.3,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,32,PMA-MODEL-TOWN-MORR,Model Town Morr,31.49742,74.328899,79.9,0,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,33,PMA-KALMA-CHOWK,Kalma Chowk,31.504445,74.331501,84.0,1,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,34,PMA-QADDAFI-STADIUM,Qaddafi stadium,31.512022,74.328812,88.3,1,#b91c1c
+FRT16R,FRT16 (return): Daewoo Terminal - Canal,35,PMA-CANAL,Canal,31.519329,74.326938,92.4,1,#b91c1c
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,1,PMA-GAJJUMATA,Gajjumata,31.492441,74.404337,0.0,1,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,2,PMA-ALI-MURTAZA-ASSOCIATES,Ali Murtaza Associates,31.490605,74.406389,1.7,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,3,PMA-NISHAT-MILLS,Nishat Mills,31.48877,74.408441,3.4,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,4,PMA-SHAFI-RESO,Shafi Reso,31.486934,74.410493,5.2,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,5,PMA-GHANKAR-STOP,Ghankar Stop,31.485098,74.412545,6.9,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,6,PMA-BHULLER-VILLAGE,Bhuller Village,31.483263,74.414597,8.6,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,7,PMA-TRANSPORT-HOUSING-SOCIET,Transport Housing Society,31.481427,74.416649,10.3,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,8,PMA-HUSH-PUPPIES,Hush Puppies,31.479591,74.418701,12.1,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,9,PMA-RAJA-BHULA-PULL,Raja Bhula Pull,31.477755,74.420753,13.8,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,10,PMA-NISHAT-DYING-MILLS,Nishat Dying Mills,31.47592,74.422805,15.5,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,11,PMA-DEO-PULL,Deo Pull,31.474084,74.424857,17.2,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,12,PMA-NISHAT-APPAREL,Nishat Apparel,31.472248,74.426909,18.9,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,13,PMA-SORA-STOP,Sora Stop,31.470413,74.428961,20.7,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,14,PMA-THETHAR-STOP,Thethar Stop,31.468577,74.431013,22.4,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,15,PMA-AVICINA-HOSPITAL,Avicina Hospital,31.466741,74.433065,24.1,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,16,PMA-DERA-CHAHAL,Dera Chahal,31.464906,74.435117,25.8,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,17,PMA-ELITE-SCHOOL,Elite School,31.46307,74.437169,27.6,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,18,PMA-WORKSHOP-STOP-1,Workshop Stop 1,31.461234,74.439221,29.3,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,19,PMA-SCHOOL-STOP-LIDHER-1,School Stop Lidher 1,31.459398,74.441273,31.0,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,20,PMA-SHEHBAZ-SHARIF-HOSPITAL-,Shehbaz Sharif Hospital 1,31.457563,74.443325,32.7,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,21,PMA-LIDHER-1,Lidher 1,31.459398,74.441273,34.4,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,22,PMA-NAWAZ-SHARIF-INTERCHANGE,Nawaz Sharif Interchange,31.459398,74.441273,34.9,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,23,PMA-LIDHER-2,Lidher 2,31.459398,74.441273,35.4,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,24,PMA-SHEHBAZ-SHARIF-HOSPITAL--2,Shehbaz Sharif Hospital 2,31.457563,74.443325,37.2,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,25,PMA-SCHOOL-STOP-LIDHER-2,School Stop Lidher 2,31.459398,74.441273,38.9,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,26,PMA-WORKSHOP-STOP-2,Workshop Stop 2,31.461234,74.439221,40.6,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,27,PMA-RAMZAN-NURSERY-1,Ramzan Nursery 1,31.46307,74.437169,42.3,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,28,PMA-PKLI-2,PKLI-2,31.464906,74.435117,44.1,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,29,PMA-BANKERS-SOCIETY,Bankers Society,31.466741,74.433065,45.8,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,30,PMA-KARBATH,Karbath,31.468577,74.431013,47.5,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,31,PMA-TOTAL-PUMP-HEIR,Total Pump Heir,31.470413,74.428961,49.2,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,32,PMA-MASJID-GHOSIA-HEIR,Masjid Ghosia Heir,31.472248,74.426909,50.9,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,33,PMA-HEIR-ADDA,Heir Adda,31.474084,74.424857,52.7,0,#1e40af
+FRT17,FRT17: Gajjumata - Rangers Wing Headquarter,34,PMA-RANGERS-WING-HEADQUARTER,Rangers Wing Headquarter,31.47592,74.422805,54.4,1,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,1,PMA-RANGERS-WING-HEADQUARTER,Rangers Wing Headquarter,31.47592,74.422805,0.0,1,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,2,PMA-HEIR-ADDA,Heir Adda,31.474084,74.424857,1.7,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,3,PMA-MASJID-GHOSIA-HEIR,Masjid Ghosia Heir,31.472248,74.426909,3.4,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,4,PMA-TOTAL-PUMP-HEIR,Total Pump Heir,31.470413,74.428961,5.2,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,5,PMA-KARBATH,Karbath,31.468577,74.431013,6.9,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,6,PMA-BANKERS-SOCIETY,Bankers Society,31.466741,74.433065,8.6,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,7,PMA-PKLI-2,PKLI-2,31.464906,74.435117,10.3,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,8,PMA-RAMZAN-NURSERY-1,Ramzan Nursery 1,31.46307,74.437169,12.1,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,9,PMA-WORKSHOP-STOP-2,Workshop Stop 2,31.461234,74.439221,13.8,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,10,PMA-SCHOOL-STOP-LIDHER-2,School Stop Lidher 2,31.459398,74.441273,15.5,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,11,PMA-SHEHBAZ-SHARIF-HOSPITAL--2,Shehbaz Sharif Hospital 2,31.457563,74.443325,17.2,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,12,PMA-LIDHER-2,Lidher 2,31.459398,74.441273,18.9,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,13,PMA-NAWAZ-SHARIF-INTERCHANGE,Nawaz Sharif Interchange,31.459398,74.441273,19.4,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,14,PMA-LIDHER-1,Lidher 1,31.459398,74.441273,19.9,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,15,PMA-SHEHBAZ-SHARIF-HOSPITAL-,Shehbaz Sharif Hospital 1,31.457563,74.443325,21.7,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,16,PMA-SCHOOL-STOP-LIDHER-1,School Stop Lidher 1,31.459398,74.441273,23.4,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,17,PMA-WORKSHOP-STOP-1,Workshop Stop 1,31.461234,74.439221,25.1,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,18,PMA-ELITE-SCHOOL,Elite School,31.46307,74.437169,26.8,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,19,PMA-DERA-CHAHAL,Dera Chahal,31.464906,74.435117,28.6,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,20,PMA-AVICINA-HOSPITAL,Avicina Hospital,31.466741,74.433065,30.3,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,21,PMA-THETHAR-STOP,Thethar Stop,31.468577,74.431013,32.0,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,22,PMA-SORA-STOP,Sora Stop,31.470413,74.428961,33.7,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,23,PMA-NISHAT-APPAREL,Nishat Apparel,31.472248,74.426909,35.4,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,24,PMA-DEO-PULL,Deo Pull,31.474084,74.424857,37.2,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,25,PMA-NISHAT-DYING-MILLS,Nishat Dying Mills,31.47592,74.422805,38.9,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,26,PMA-RAJA-BHULA-PULL,Raja Bhula Pull,31.477755,74.420753,40.6,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,27,PMA-HUSH-PUPPIES,Hush Puppies,31.479591,74.418701,42.3,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,28,PMA-TRANSPORT-HOUSING-SOCIET,Transport Housing Society,31.481427,74.416649,44.1,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,29,PMA-BHULLER-VILLAGE,Bhuller Village,31.483263,74.414597,45.8,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,30,PMA-GHANKAR-STOP,Ghankar Stop,31.485098,74.412545,47.5,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,31,PMA-SHAFI-RESO,Shafi Reso,31.486934,74.410493,49.2,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,32,PMA-NISHAT-MILLS,Nishat Mills,31.48877,74.408441,50.9,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,33,PMA-ALI-MURTAZA-ASSOCIATES,Ali Murtaza Associates,31.490605,74.406389,52.7,0,#1e40af
+FRT17R,FRT17 (return): Rangers Wing Headquarter - Gajjumata,34,PMA-GAJJUMATA,Gajjumata,31.492441,74.404337,54.4,1,#1e40af
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,1,PMA-BHATTI-CHOWK,Bhatti Chowk,31.580525,74.306182,0.0,1,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,2,PMA-TEXALI-CHOWK,Texali Chowk,31.585968,74.306312,3.1,1,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,3,PMA-AZADI-CHOWK,Azadi Chowk,31.590712,74.306381,5.9,1,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,4,PMA-TIMBER-MARKET,Timber Market,31.594494,74.302139,8.9,1,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,5,PMA-METRO,Metro,31.596837,74.298341,11.4,1,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,6,PMA-NIAZI-CHOWK,Niazi Chowk,31.600983,74.299229,13.9,1,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,7,PMA-NIAZI-INTERCHANGE,Niazi Interchange,31.609879,74.294321,19.1,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,8,PMA-SHAHDARA-METRO-STATION,Shahdara Metro Station,31.618774,74.289413,24.4,1,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,9,PMA-SHAHDARA,Shahdara,31.615272,74.290864,26.6,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,10,PMA-JIYA-MUSA,Jiya Musa,31.620324,74.282222,31.4,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,11,PMA-25-NUMBER-STOP,25 Number Stop,31.618704,74.278096,33.8,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,12,PMA-RUSTAM-SOHRAB-FACTORY,Rustam Sohrab Factory,31.617085,74.27397,36.2,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,13,PMA-YOUSUF-PARK,Yousuf Park,31.615466,74.269844,38.5,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,14,PMA-BAIGUM-KOT,Baigum Kot,31.613847,74.265718,40.9,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,15,PMA-MAIRAJ-PARK,Mairaj Park,31.611284,74.259829,44.1,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,16,PMA-CHUNGI-STOP,Chungi Stop,31.608721,74.253941,47.3,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,17,PMA-NAIN-SUKH,Nain Sukh,31.606157,74.248052,50.5,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,18,PMA-DOSAKO-CHOWK,Dosako Chowk,31.614779,74.241007,56.1,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,19,PMA-KOT-ABDUL-MALIK,Kot Abdul Malik,31.623401,74.233962,61.7,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,20,PMA-MAIN-BAZAR-KOT-ABDUL-MAL,Main Bazar kot Abdul Malik,31.623401,74.233962,62.2,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,21,PMA-AL-WAHAB-GARDEN,Al-Wahab Garden,31.623401,74.233962,62.7,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,22,PMA-MOTORWAY-CITY,Motorway City,31.623401,74.233962,63.2,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,23,PMA-JAVAID-NAGAR,javaid Nagar,31.623401,74.233962,63.7,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,24,PMA-FAZAL-TOWN,Fazal Town,31.623401,74.233962,64.2,0,#86198f
+FRT18,FRT18: Bhatti Chowk - Mandiali Toll Plaza,25,PMA-MANDIALI-TOLL-PLAZA,Mandiali Toll Plaza,31.623401,74.233962,64.7,1,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,1,PMA-MANDIALI-TOLL-PLAZA,Mandiali Toll Plaza,31.623401,74.233962,0.0,1,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,2,PMA-FAZAL-TOWN,Fazal Town,31.623401,74.233962,0.5,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,3,PMA-JAVAID-NAGAR,javaid Nagar,31.623401,74.233962,1.0,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,4,PMA-MOTORWAY-CITY,Motorway City,31.623401,74.233962,1.5,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,5,PMA-AL-WAHAB-GARDEN,Al-Wahab Garden,31.623401,74.233962,2.0,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,6,PMA-MAIN-BAZAR-KOT-ABDUL-MAL,Main Bazar kot Abdul Malik,31.623401,74.233962,2.5,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,7,PMA-KOT-ABDUL-MALIK,Kot Abdul Malik,31.623401,74.233962,3.0,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,8,PMA-DOSAKO-CHOWK,Dosako Chowk,31.614779,74.241007,8.6,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,9,PMA-NAIN-SUKH,Nain Sukh,31.606157,74.248052,14.1,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,10,PMA-CHUNGI-STOP,Chungi Stop,31.608721,74.253941,17.3,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,11,PMA-MAIRAJ-PARK,Mairaj Park,31.611284,74.259829,20.6,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,12,PMA-BAIGUM-KOT,Baigum Kot,31.613847,74.265718,23.8,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,13,PMA-YOUSUF-PARK,Yousuf Park,31.615466,74.269844,26.1,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,14,PMA-RUSTAM-SOHRAB-FACTORY,Rustam Sohrab Factory,31.617085,74.27397,28.5,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,15,PMA-25-NUMBER-STOP,25 Number Stop,31.618704,74.278096,30.9,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,16,PMA-JIYA-MUSA,Jiya Musa,31.620324,74.282222,33.2,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,17,PMA-SHAHDARA,Shahdara,31.615272,74.290864,38.0,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,18,PMA-SHAHDARA-METRO-STATION,Shahdara Metro Station,31.618774,74.289413,40.3,1,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,19,PMA-NIAZI-INTERCHANGE,Niazi Interchange,31.609879,74.294321,45.5,0,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,20,PMA-NIAZI-CHOWK,Niazi Chowk,31.600983,74.299229,50.8,1,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,21,PMA-METRO,Metro,31.596837,74.298341,53.3,1,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,22,PMA-TIMBER-MARKET,Timber Market,31.594494,74.302139,55.7,1,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,23,PMA-AZADI-CHOWK,Azadi Chowk,31.590712,74.306381,58.8,1,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,24,PMA-TEXALI-CHOWK,Texali Chowk,31.585968,74.306312,61.5,1,#86198f
+FRT18R,FRT18 (return): Mandiali Toll Plaza - Bhatti Chowk,25,PMA-BHATTI-CHOWK,Bhatti Chowk,31.580525,74.306182,64.7,1,#86198f
