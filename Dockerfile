@@ -1,26 +1,22 @@
-# Speedo Live — backend API + web apps in one image.
-# Build:  docker build -t speedo-live .
-# Works with zero configuration (e.g. Render "New Web Service" -> pick repo -> Free): demo mode,
-# built-in SQLite, and a random JWT_SECRET per start if none is set. Override any of these with env vars.
-
-FROM node:22-slim AS web
+# Single container: FastAPI API + exported Next.js web app on one port.
+FROM node:22-alpine AS web
 WORKDIR /web
-COPY web/package.json web/tsconfig.json ./
-RUN npm install --no-audit --no-fund
-COPY web/src ./src
-COPY web/public ./public
-RUN npx tsc -p .
+COPY web/package.json web/package-lock.json ./
+RUN npm ci --no-audit --no-fund
+COPY web/ ./
+# empty = call the API on the same origin
+ENV NEXT_PUBLIC_API_URL="" NEXT_TELEMETRY_DISABLED=1
+RUN npx next build
 
 FROM python:3.12-slim
-ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 WEB_DIR=/app/web \
-    APP_ENV=production SPEEDO_MODE=demo TRUST_PROXY=true ENABLE_POSTGIS=false
 WORKDIR /app/backend
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 WEB_DIST=/app/web
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY backend/ .
-COPY --from=web /web/public /app/web
-RUN useradd --create-home speedo && mkdir -p data && chown -R speedo /app
-USER speedo
+COPY backend/ ./
+COPY --from=web /web/out /app/web
 EXPOSE 8000
-HEALTHCHECK --interval=30s --timeout=5s CMD python -c "import os,urllib.request;urllib.request.urlopen('http://127.0.0.1:%s/health' % os.environ.get('PORT','8000'))"
-CMD ["sh", "-c", "export JWT_SECRET=\"${JWT_SECRET:-$(python -c 'import secrets;print(secrets.token_urlsafe(48))')}\"; exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips='*'"]
+# Firebase settings come from the environment (FIREBASE_PROJECT_ID, FIREBASE_WEB_API_KEY,
+# FIREBASE_CREDENTIALS_JSON, FIREBASE_STORAGE_BUCKET). Create the first admin once with:
+#   python -m app.seed --admin-email ... --admin-password ...
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips='*'"]

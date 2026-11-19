@@ -14,6 +14,18 @@ web/out/
 *.db-shm
 *.db-wal
 .env.local
-linkedin/
-backend/data/
-.vercel
+# Firebase secrets
+*service-account*.json
+*-firebase-adminsdk-*.json
+.firebaserc
+.firebase/
+firebase-debug.log
+firestore-debug.log
+mobile/*/google-services.json
+# demo driver passwords (local only)
+data/demo/
+data/pma/__pycache__/
+# large downloaded / derived geocoding data (rebuild with data/pma/*.py)
+data/pma/osm_lahore_named_places.json
+data/pma/geocode_candidates.json
+data/pma/geocode_cache.json

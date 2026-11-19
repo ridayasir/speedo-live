@@ -1,26 +1,25 @@
-# Render.com blueprint: free web service (Docker), one-click: https://render.com/deploy?repo=https://github.com/ridayasir/speedo-live
-# Uses the built-in SQLite database, which resets when the free service restarts or wakes from sleep
-# (demo routes, buses and accounts are recreated automatically). For data that persists, add a
-# DATABASE_URL env var with a free PostgreSQL from neon.tech.
-# Free plan note: the web service sleeps after ~15 min idle (first visit then takes ~1 min).
+# Render Blueprint: New > Blueprint > pick this repo. The database is your Firebase project (Firestore),
+# so only the web service is created. Fill in the FIREBASE_* values when Render asks for them.
+# Run ONE instance: the API keeps a live mirror of Firestore data in memory.
 services:
   - type: web
     name: speedo-live
     runtime: docker
     plan: free
-    region: singapore          # closest Render region to Pakistan
-    dockerfilePath: ./Dockerfile
-    dockerContext: .
+    numInstances: 1
     healthCheckPath: /health
-    autoDeploy: true           # redeploys on every push to main
     envVars:
-      - key: APP_ENV
+      - key: ENVIRONMENT
         value: production
-      - key: SPEEDO_MODE
-        value: demo            # simulated buses on the real Speedo routes; switch to "live" once drivers report GPS
-      - key: JWT_SECRET
-        generateValue: true
-      - key: TRUST_PROXY
-        value: "true"
-      - key: ENABLE_POSTGIS
-        value: "false"
+      - key: DATA_SOURCE
+        value: driver
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: FIREBASE_WEB_API_KEY
+        sync: false
+      - key: FIREBASE_CREDENTIALS_JSON
+        sync: false
+      - key: FIREBASE_STORAGE_BUCKET
+        sync: false

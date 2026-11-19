@@ -1,0 +1,12 @@
+# Local container: docker compose up --build   ->  http://localhost:8000
+# Data lives in your Firebase project (Firestore + Authentication); fill in backend/.env first.
+services:
+  app:
+    build: .
+    ports: ["8000:8000"]
+    env_file: backend/.env
+    environment:
+      FIREBASE_CREDENTIALS_FILE: /secrets/firebase-service-account.json
+      CORS_ORIGINS: "*"
+    volumes:
+      - ./backend/firebase-service-account.json:/secrets/firebase-service-account.json:ro
