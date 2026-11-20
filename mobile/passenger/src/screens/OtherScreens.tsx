@@ -3,7 +3,7 @@ import { Pressable, ScrollView, Switch, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import LiveMap from "../components/LiveMap";
-import { Btn, Card, Demo, ErrorText, Field, Loading, Muted, RouteChip, Section, Title, s } from "../components/ui";
+import { Btn, Card, ErrorText, Field, Loading, Muted, RouteChip, Section, Title, s } from "../components/ui";
 import { api } from "../lib/api";
 import { ago, km } from "../lib/format";
 import { useAuth, useFetch, useLiveBuses } from "../lib/hooks";
@@ -31,7 +31,7 @@ export function RouteScreen({ route, navigation }: NativeStackScreenProps<RootSt
         onStopPress={(sid) => navigation.navigate("Stop", { id: sid, routeId: id })}
         onBusPress={(bid) => navigation.navigate("Tabs", { screen: "LiveMap", params: { busId: bid, routeId: id } } as never)} />
       <View style={{ padding: 14 }}>
-        <View style={s.row}><RouteChip code={d.code} color={d.color} />{d.is_demo && <Demo />}</View>
+        <View style={s.row}><RouteChip code={d.code} color={d.color} /></View>
         <Text style={{ fontSize: 19, fontWeight: "800", color: C.brandDark, marginVertical: 6 }}>{d.name}</Text>
         <Muted>{d.stop_count} stops · {km(d.length_m)}{d.source_reference ? ` · Source: ${d.source_reference}` : ""}</Muted>
         <View style={[s.row, { gap: 8, marginVertical: 12 }]}>
@@ -68,7 +68,7 @@ export function TimetableScreen({ route }: NativeStackScreenProps<RootStack, "Ti
       {tt.error && <ErrorText error={tt.error} onRetry={tt.reload} />}
       {tt.data?.routes.map((r) => (
         <Card key={r.id}>
-          <View style={[s.row, { gap: 6 }]}><RouteChip code={r.code} color={r.color} />{r.is_demo && <Demo />}</View>
+          <View style={[s.row, { gap: 6 }]}><RouteChip code={r.code} color={r.color} /></View>
           <Text style={{ fontWeight: "700", marginVertical: 4 }}>{r.name}</Text>
           <Muted>{r.operating_today ? `First ${r.first_bus} · Last ${r.last_bus}` : "No service today"}</Muted>
           {r.schedules.map((sc) => <Muted key={sc.id}>{sc.days.join(", ")}: every {sc.frequency_minutes} min</Muted>)}

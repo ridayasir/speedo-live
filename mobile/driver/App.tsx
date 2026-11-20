@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import LiveMap from "./src/components/LiveMap";
-import { Btn, Card, Demo, ErrorText, Field, Loading, Muted, RouteChip, Section, StatusPill, Title, s } from "./src/components/ui";
+import { Btn, Card, ErrorText, Field, Loading, Muted, RouteChip, Section, StatusPill, Title, s } from "./src/components/ui";
 import { api, loadToken, setToken } from "./src/lib/api";
 import { ago, effectiveStatus, km } from "./src/lib/format";
 import { C } from "./src/lib/theme";
@@ -148,7 +148,6 @@ function Dashboard() {
           <View style={[s.row, { gap: 8, marginTop: 8 }]}>
             <RouteChip code={me.route.code} color={me.route.color} />
             <Text style={{ flex: 1, fontSize: 13 }}>{me.route.name}</Text>
-            {me.route.is_demo && <Demo />}
           </View>
         ) : <Muted>No route assigned. Contact your administrator.</Muted>}
       </Card>
@@ -337,7 +336,7 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView edges={["top"]} style={{ flex: 0, backgroundColor: me?.demo_mode ? C.accent : C.brand }} />
+      <SafeAreaView edges={["top"]} style={{ flex: 0, backgroundColor: C.brand }} />
       <StatusBar style="light" />
       {signedIn === null ? <Loading /> : !signedIn ? (
         <Login onIn={() => setSignedIn(true)} />

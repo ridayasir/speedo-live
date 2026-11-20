@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import MapView from "../MapView";
-import { Button, Card, DemoBadge, ErrorBox, Input, Modal, PageHeader, Spinner } from "../ui";
+import { Button, Card, ErrorBox, Input, Modal, PageHeader, Spinner } from "../ui";
 import { DataTable, nullIfEmpty, useForm } from "./common";
 import { api } from "@/lib/api";
 import { useApi } from "@/lib/hooks";
@@ -29,7 +29,7 @@ export function StopsAdmin() {
             rowKey={(s) => s.id}
             cols={[
               { h: "Code", c: (s) => <span className="font-mono text-xs">{s.code}</span> },
-              { h: "Name", c: (s) => <span className="font-medium">{s.name} {s.is_demo && <DemoBadge />}</span> },
+              { h: "Name", c: (s) => <span className="font-medium">{s.name}</span> },
               { h: "Coordinates", c: (s) => <span className="text-xs text-slate-500">{s.lat.toFixed(5)}, {s.lng.toFixed(5)}</span> },
               { h: "Routes", c: (s) => s.route_count },
               { h: "", c: (s) => <Button size="sm" variant="ghost" onClick={() => setEdit(s)}>Edit</Button>, className: "text-right" },

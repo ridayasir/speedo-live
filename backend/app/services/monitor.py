@@ -44,9 +44,8 @@ def check_delays(db: Session) -> int:
     for trip in db.where(Trip, status=TripStatus.active, delay_notified=False):
         state = bus_state(db, trip.bus, trip)
         if state["status"] == "delayed" and (state["delay_minutes"] or 0) >= s.delay_threshold_minutes:
-            label = " (DEMO)" if trip.bus.is_demo else ""
             sent += notify_route_followers(
-                db, trip.route_id, "delay", f"Bus {trip.bus.bus_number} is delayed{label}",
+                db, trip.route_id, "delay", f"Bus {trip.bus.bus_number} is delayed",
                 f"Running about {round(state['delay_minutes'])} min behind schedule on {trip.route.name}.",
                 dedupe_key=f"delay:{trip.id}",
             )
@@ -68,14 +67,13 @@ def check_watches(db: Session) -> int:
         if not live:
             continue
         nxt = live[0]
-        demo = " (DEMO)" if nxt["is_demo"] else ""
         if nxt["minutes"] <= 1:
-            notify(db, user, "bus_arriving", f"Bus {nxt['bus_number']} is arriving{demo}",
+            notify(db, user, "bus_arriving", f"Bus {nxt['bus_number']} is arriving",
                    f"{nxt['route_name']}: arriving at your stop now.", nxt, dedupe_key=f"arr:{w.id}:{nxt['trip_id']}")
             w.is_active = False
             sent += 1
         elif nxt["minutes"] <= w.minutes_before and not w.notified_approaching:
-            notify(db, user, "bus_approaching", f"Bus {nxt['bus_number']} is approaching{demo}",
+            notify(db, user, "bus_approaching", f"Bus {nxt['bus_number']} is approaching",
                    f"About {nxt['minutes']} min away ({nxt['distance_m']} m).", nxt,
                    dedupe_key=f"appr:{w.id}:{nxt['trip_id']}")
             w.notified_approaching = True

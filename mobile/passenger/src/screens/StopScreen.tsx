@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import LiveMap from "../components/LiveMap";
-import { Btn, Card, Demo, ErrorText, Loading, Muted, RouteChip, Section, s } from "../components/ui";
+import { Btn, Card, ErrorText, Loading, Muted, RouteChip, Section, s } from "../components/ui";
 import { api } from "../lib/api";
 import { ago, clock, km } from "../lib/format";
 import { useAuth, useFetch, useLiveBuses } from "../lib/hooks";
@@ -56,7 +56,6 @@ export default function StopScreen({ route, navigation }: Props) {
       <View style={{ padding: 14 }}>
         <View style={[s.row, { marginBottom: 8 }]}>
           <Text style={{ fontSize: 20, fontWeight: "800", color: C.brandDark, flex: 1 }}>{st.name}</Text>
-          {st.is_demo && <Demo />}
         </View>
         {tracking && <Muted style={{ marginBottom: 8 }}>Tracking your bus to this stop.{user ? " You'll be notified as it approaches." : ""}</Muted>}
         {user && (
@@ -85,7 +84,7 @@ export default function StopScreen({ route, navigation }: Props) {
           {arr.data?.live.slice(0, 6).map((a) => (
             <View key={a.trip_id} style={[s.row, { paddingVertical: 8, borderBottomWidth: 1, borderColor: "#f1f5f9" }]}>
               <View style={{ flex: 1 }}>
-                <View style={s.row}><Text style={{ fontWeight: "700" }}>{a.bus_number}</Text><Muted>  {a.route_code}</Muted>{a.is_demo && <Demo />}</View>
+                <View style={s.row}><Text style={{ fontWeight: "700" }}>{a.bus_number}</Text><Muted>  {a.route_code}</Muted></View>
                 <Muted>{km(a.distance_m)} away · GPS {ago(a.last_gps_at)}</Muted>
               </View>
               <View style={{ alignItems: "flex-end" }}>

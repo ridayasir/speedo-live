@@ -177,6 +177,13 @@ class FirebaseAuth:
     def set_display_name(self, uid: str, name: str) -> None:
         self._admin().update_user(uid, display_name=name)
 
+    def set_email(self, uid: str, email: str) -> None:
+        auth = self._admin()
+        try:
+            auth.update_user(uid, email=email)
+        except auth.EmailAlreadyExistsError as exc:
+            raise FirebaseError("EMAIL_EXISTS", 409, "An account with this email already exists") from exc
+
     def delete_user(self, uid: str) -> None:
         try:
             self._admin().delete_user(uid)

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { Button, DemoBadge, ErrorBox, Input, Modal, PageHeader, Select, Spinner, StatusPill, effectiveStatus } from "../ui";
+import { Button, ErrorBox, Input, Modal, PageHeader, Select, Spinner, StatusPill, effectiveStatus } from "../ui";
 import { DataTable, nullIfEmpty, useForm } from "./common";
 import { api } from "@/lib/api";
 import { ago, useApi } from "@/lib/hooks";
@@ -41,7 +41,7 @@ export function BusesAdmin() {
         rows={rows}
         rowKey={(b) => b.id}
         cols={[
-          { h: "Bus", c: (b) => <span className="font-semibold">{b.bus_number} {b.is_demo && <DemoBadge />}</span> },
+          { h: "Bus", c: (b) => <span className="font-semibold">{b.bus_number}</span> },
           { h: "Registration", c: (b) => b.registration_number || "–" },
           { h: "Route", c: (b) => b.route_code || <span className="text-slate-400">Unassigned</span> },
           { h: "Driver", c: (b) => b.driver?.name || <span className="text-slate-400">–</span> },

@@ -2,7 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Card, DemoBadge, Empty, ErrorBox, PageHeader, Select, Spinner } from "@/components/ui";
+import { Card, Empty, ErrorBox, PageHeader, Select, Spinner } from "@/components/ui";
 import { RouteChip } from "@/components/widgets";
 import { useApi } from "@/lib/hooks";
 import type { Alert, RouteSummary, Schedule, Stop } from "@/lib/types";
@@ -58,7 +58,6 @@ function TimetableInner() {
               <div className="flex items-center gap-2">
                 <RouteChip code={r.code} color={r.color} />
                 <h2 className="font-semibold text-slate-800">{r.name}</h2>
-                {r.is_demo && <DemoBadge />}
               </div>
               <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${r.operating_today && r.status === "active" ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-700"}`}>
                 {r.status !== "active" ? `Service ${r.status}` : r.operating_today ? "Operating today" : "No service today"}

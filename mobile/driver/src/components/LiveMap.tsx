@@ -45,7 +45,7 @@ window.setData=function(d){
   (d.points||[]).forEach(function(p){var c=p.kind==='origin'?'#16a34a':p.kind==='destination'?'#f59e0b':'#2563eb';L.circleMarker([p.lat,p.lng],{radius:9,color:'#fff',weight:3,fillColor:c,fillOpacity:1}).bindTooltip(p.label,{permanent:p.kind!=='me',direction:'top'}).addTo(layers.points)});
   var seen={};
   (d.buses||[]).forEach(function(b){ if(b.lat==null)return; seen[b.id]=1;
-    var html='<div class="b" style="opacity:'+(b.faded?.55:1)+'"><i style="background:'+b.color+';'+(b.sel?'border-color:#f59e0b;border-width:3px':'')+'">BUS</i>'+(b.demo?'<em>DEMO</em>':'')+'</div>';
+    var html='<div class="b" style="opacity:'+(b.faded?.55:1)+'"><i style="background:'+b.color+';'+(b.sel?'border-color:#f59e0b;border-width:3px':'')+'">BUS</i>'+'</div>';
     var icon=L.divIcon({className:'',html:html,iconSize:[34,34],iconAnchor:[17,17]});
     var m=busMarkers[b.id];
     if(m){m.setLatLng([b.lat,b.lng]);m.setIcon(icon)}else{m=busMarkers[b.id]=L.marker([b.lat,b.lng],{icon:icon}).on('click',function(){send({t:'bus',id:b.id})}).addTo(layers.buses)}

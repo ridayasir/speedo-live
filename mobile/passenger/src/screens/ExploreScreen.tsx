@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import LiveMap, { type MapLine } from "../components/LiveMap";
-import { Btn, Card, Demo, ErrorText, Loading, Muted, RouteChip, Section, s } from "../components/ui";
+import { Btn, Card, ErrorText, Loading, Muted, RouteChip, Section, s } from "../components/ui";
 import { api } from "../lib/api";
 import { km } from "../lib/format";
 import { useAuth, useFetch, useMyLocation } from "../lib/hooks";
@@ -124,7 +124,6 @@ export default function ExploreScreen() {
               <Pressable key={i} onPress={() => setChosen(i)} style={{ borderWidth: 1, borderColor: i === chosen ? C.brand : C.border, borderRadius: 12, padding: 10, marginTop: 8 }}>
                 <View style={[s.row, { gap: 6 }]}>
                   {(o.legs.filter((l) => l.type === "ride") as PlanLegRide[]).map((l, k) => <RouteChip key={k} code={l.route_code} color={l.color} />)}
-                  {o.is_demo && <Demo />}
                   <View style={{ flex: 1 }} />
                   <Text style={{ fontSize: 18, fontWeight: "800", color: C.brandDark }}>~{o.total_minutes} min</Text>
                 </View>

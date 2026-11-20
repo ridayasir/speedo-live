@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { ArrowDown, ArrowUp, Download, Plus, Trash2, Upload } from "lucide-react";
 import MapView from "../MapView";
-import { Button, Card, DemoBadge, ErrorBox, Input, Modal, PageHeader, SectionTitle, Select, Spinner } from "../ui";
+import { Button, Card, ErrorBox, Input, Modal, PageHeader, SectionTitle, Select, Spinner } from "../ui";
 import { RouteChip } from "../widgets";
 import { DataTable, nullIfEmpty } from "./common";
 import { api, download } from "@/lib/api";
@@ -35,7 +35,7 @@ export function RoutesAdmin() {
         rowKey={(r) => r.id}
         cols={[
           { h: "Code", c: (r) => <RouteChip code={r.code} color={r.color} /> },
-          { h: "Name", c: (r) => <span className="font-medium">{r.name} {r.is_demo && <DemoBadge />}</span> },
+          { h: "Name", c: (r) => <span className="font-medium">{r.name}</span> },
           { h: "From → To", c: (r) => <span className="text-xs text-slate-500">{r.start_stop?.name} → {r.end_stop?.name}</span> },
           { h: "Stops", c: (r) => r.stop_count },
           { h: "Length", c: (r) => km(r.length_m) },

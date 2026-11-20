@@ -7,7 +7,7 @@ both ways ("A <-> B"), 498 stops, one timetable per route and 49 simulated buses
     .venv\\Scripts\\python ..\\data\\nov12\\apply_nov12.py
 
 Stop the API first and start it again afterwards. Replaces the routes, stops and demo buses/drivers loaded
-earlier (e-Transit S* routes, PMA FRT* routes, DEMO-* buses). Demo drivers get Pakistani names; their
+earlier (e-Transit S* routes, PMA FRT* routes, earlier sample buses). Sample drivers get Pakistani names; their
 passwords go to data/demo/demo_driver_logins.csv (git-ignored).
 """
 import csv
@@ -23,7 +23,7 @@ sys.path.insert(0, str(HERE.parents[1] / "backend"))
 
 from app import firebase  # noqa: E402
 from app.db import SessionLocal  # noqa: E402
-from app.demo_fleet import DRIVER_NAMES, LOGINS  # noqa: E402
+from app.demo_fleet import DRIVER_DOMAIN, DRIVER_NAMES, LOGINS, is_sample_driver  # noqa: E402
 from app.models import (ArrivalWatch, Bus, BusStop, Driver, FavoriteStop, Journey, Role, Route,  # noqa: E402
                         ServiceAlert)
 from app.services import accounts, importer  # noqa: E402
@@ -75,7 +75,7 @@ def main() -> None:
         n_drv = 0
         for d in list(db.all(Driver)):
             u = d.user
-            if d.license_number.startswith("DEMO-LIC-") and u and (u.email or "").endswith("@speedolive.demo"):
+            if u and is_sample_driver(u.email):
                 firebase.auth_provider.delete_user(u.firebase_uid)
                 db.delete(d)
                 db.delete(u)
@@ -137,9 +137,9 @@ def main() -> None:
         rows = []
         for n, r in enumerate(NET["routes"], 1):
             bus = next((b for b in sorted(db.all(Bus), key=lambda x: x.bus_number) if b.route_id == by_code[r["code"]].id), None)
-            name, email, pw = DRIVER_NAMES[(n - 1) % len(DRIVER_NAMES)], f"driver{n:02d}@speedolive.demo", secrets.token_urlsafe(9)
+            name, email, pw = DRIVER_NAMES[(n - 1) % len(DRIVER_NAMES)], f"driver{n:02d}@{DRIVER_DOMAIN}", secrets.token_urlsafe(9)
             user = accounts.create_account(db, name, pw, Role.driver, email=email)
-            db.add(Driver(user_id=user.id, license_number=f"DEMO-LIC-{n:03d}", employee_code=f"DEMO-EMP-{n:03d}",
+            db.add(Driver(user_id=user.id, license_number=f"LIC-{n:03d}", employee_code=f"SP-DRV-{n:02d}",
                           assigned_bus_id=bus.id if bus else None))
             db.commit()
             rows.append({"driver": name, "login_email": email, "password": pw, "bus": bus.bus_number if bus else "",

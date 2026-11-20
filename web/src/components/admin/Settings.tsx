@@ -8,7 +8,7 @@ import { ago, useApi } from "@/lib/hooks";
 interface AuditRow { id: number; user_id: number | null; action: string; entity: string; entity_id: string | null; created_at: string }
 
 const LABELS: Record<string, string> = {
-  data_source: "Data source (demo / driver / provider)",
+  data_source: "Data source (demo = simulated buses / driver / provider)",
   simulator_tick_seconds: "Simulator update interval (s)",
   gps_min_interval_seconds: "Minimum seconds between GPS fixes",
   gps_max_accuracy_m: "Reject GPS fixes less accurate than (m)",
@@ -44,7 +44,7 @@ export function SettingsAdmin() {
           </dl>
         )}
         <p className="mt-4 text-xs text-slate-500">
-          To switch from DEMO to real-world mode, set <code>DATA_SOURCE=driver</code> (driver apps only) or <code>DATA_SOURCE=provider</code> (approved GPS feed) on the API server and restart it.
+          To stop the simulated buses and use real GPS only, set <code>DATA_SOURCE=driver</code> (driver apps only) or <code>DATA_SOURCE=provider</code> (approved GPS feed) on the API server and restart it.
           API documentation: <a className="text-brand-600 underline" href={`${API_URL}/docs`} target="_blank" rel="noreferrer">{API_URL}/docs</a>
         </p>
       </Card>

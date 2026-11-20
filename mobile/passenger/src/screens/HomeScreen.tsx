@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FlatList, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import LiveMap from "../components/LiveMap";
-import { Btn, Card, Demo, ErrorText, Loading, Muted, RouteChip, Section, s } from "../components/ui";
+import { Btn, Card, ErrorText, Loading, Muted, RouteChip, Section, s } from "../components/ui";
 import { api } from "../lib/api";
 import { effectiveStatus, km } from "../lib/format";
 import { useAuth, useFetch, useLiveBuses, useMyLocation } from "../lib/hooks";
@@ -128,7 +128,6 @@ export default function HomeScreen({ navigation }: Props) {
               <Pressable onPress={() => navigation.navigate("Route", { id: r.id })} style={[s.row, { paddingVertical: 8, gap: 8 }]}>
                 <RouteChip code={r.code} color={r.color} />
                 <Text style={{ flex: 1, fontSize: 13 }} numberOfLines={1}>{r.name}</Text>
-                {r.is_demo && <Demo />}
               </Pressable>
             )}
           />

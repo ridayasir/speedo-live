@@ -140,29 +140,6 @@ export function ErrorBox({ error, onRetry }: { error: string; onRetry?: () => vo
   );
 }
 
-export function DemoBadge({ className }: { className?: string }) {
-  return (
-    <span className={clsx("inline-flex items-center rounded-md bg-accent-500 px-1.5 py-0.5 text-[10px] font-bold tracking-wider text-white", className)}>
-      DEMO
-    </span>
-  );
-}
-
-export function DemoBanner() {
-  const meta = useMeta();
-  if (!meta?.demo_mode) return null;
-  return (
-    <div className="bg-accent-500 text-white text-xs sm:text-sm">
-      <div className="mx-auto max-w-7xl px-4 py-1.5 flex items-center gap-2">
-        <Info className="h-4 w-4 shrink-0" />
-        <span>
-          <b>DEMO MODE.</b> Buses marked DEMO are simulated; their positions and arrival times are not real.
-        </span>
-      </div>
-    </div>
-  );
-}
-
 /** Status as the passenger should see it now, re-checking GPS age on the client. */
 export function effectiveStatus(b: BusState, staleAfter = 60, offlineAfter = 300): BusState["status"] {
   if (b.status === "out_of_service") return b.status;

@@ -114,7 +114,7 @@ def test_route_and_stop_search(client):
 
 def test_meta_flags_demo(client):
     m = client.get("/api/meta").json()
-    assert m["demo_mode"] is True and "DEMO" in m["notice"]
+    assert m["demo_mode"] is True and "simulated" in m["notice"] and "DEMO" not in m["notice"]
 
 
 def test_journey_planning_direct_and_transfer(client):
@@ -251,7 +251,7 @@ def test_arrival_watch_notifies(client, passenger_h, db):
     assert r.status_code == 201
     assert monitor.check_watches(db) >= 1
     notes = client.get("/api/me/notifications", headers=passenger_h).json()
-    assert notes and notes[0]["kind"] in ("bus_approaching", "bus_arriving") and "DEMO" in notes[0]["title"]
+    assert notes and notes[0]["kind"] in ("bus_approaching", "bus_arriving") and "(DEMO)" not in notes[0]["title"]
 
 
 def test_favorites_prefs_and_disruption_notification(client, passenger_h, admin_h):

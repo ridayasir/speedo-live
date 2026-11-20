@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { BellRing } from "lucide-react";
 import FavoriteButton from "@/components/FavoriteButton";
 import MapView from "@/components/MapView";
-import { Button, Card, DemoBadge, ErrorBox, SectionTitle, Spinner } from "@/components/ui";
+import { Button, Card, ErrorBox, SectionTitle, Spinner } from "@/components/ui";
 import { ArrivalsList, RouteChip } from "@/components/widgets";
 import { api } from "@/lib/api";
 import { useApi, useAuth, useLiveBuses } from "@/lib/hooks";
@@ -44,7 +44,7 @@ function StopInner() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Bus stop</p>
-          <h1 className="text-2xl font-bold text-brand-900 flex items-center gap-2">{s.name} {s.is_demo && <DemoBadge />}</h1>
+          <h1 className="text-2xl font-bold text-brand-900 flex items-center gap-2">{s.name}</h1>
           {s.name_ur && <p className="text-slate-500" dir="rtl">{s.name_ur}</p>}
         </div>
         <div className="flex gap-2">

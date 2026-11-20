@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { MapPin, Star, Trash2 } from "lucide-react";
-import { Card, DemoBadge, Empty, ErrorBox, PageHeader, SectionTitle, Spinner } from "@/components/ui";
+import { Card, Empty, ErrorBox, PageHeader, SectionTitle, Spinner } from "@/components/ui";
 import { ArrivalsList, RouteChip } from "@/components/widgets";
 import { api } from "@/lib/api";
 import { useApi, useAuth } from "@/lib/hooks";
@@ -41,7 +41,7 @@ export default function FavoritesPage() {
               <Card key={s.id} className="p-4">
                 <div className="mb-3 flex items-center justify-between">
                   <Link href={`/stop/?id=${s.id}`} className="flex items-center gap-2 font-semibold text-slate-800 hover:text-brand-700">
-                    <MapPin className="h-4 w-4 text-brand-500" /> {s.name} {s.is_demo && <DemoBadge />}
+                    <MapPin className="h-4 w-4 text-brand-500" /> {s.name}
                   </Link>
                   <button onClick={() => remove("stops", s.id)} className="rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600" aria-label={`Remove ${s.name}`}>
                     <Trash2 className="h-4 w-4" />

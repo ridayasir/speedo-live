@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import MapView from "../MapView";
-import { Button, Card, DemoBadge, ErrorBox, PageHeader, StatusPill, effectiveStatus } from "../ui";
+import { Button, Card, ErrorBox, PageHeader, StatusPill, effectiveStatus } from "../ui";
 import { api } from "@/lib/api";
 import { ago, km, useLiveBuses } from "@/lib/hooks";
 import type { BusState } from "@/lib/types";
@@ -13,6 +13,8 @@ interface FleetBus extends BusState {
   assigned_driver: { id: number; name: string; phone: string | null } | null;
   trip: { id: number; status: string; started_at: string; progress_m: number; route_length_m: number; gps_points: number; source: string } | null;
 }
+
+const SOURCE_LABEL: Record<string, string> = { demo: "simulated", driver: "driver app", provider: "GPS provider" };
 
 export function FleetAdmin() {
   const { buses: live, conn } = useLiveBuses();
@@ -48,7 +50,7 @@ export function FleetAdmin() {
           {sel ? (
             <Card className="p-4 space-y-2 text-sm">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-brand-900">{sel.bus_number} {sel.is_demo && <DemoBadge />}</h3>
+                <h3 className="text-lg font-bold text-brand-900">{sel.bus_number}</h3>
                 <button onClick={() => setSelected(null)} className="text-slate-400" aria-label="Close">✕</button>
               </div>
               <StatusPill status={effectiveStatus(sel)} />
@@ -60,7 +62,7 @@ export function FleetAdmin() {
                 <dt>Last GPS</dt><dd className="text-right">{ago(sel.last_gps_at)}</dd>
                 <dt>GPS link</dt><dd className="text-right capitalize">{sel.gps}</dd>
                 <dt>Accuracy</dt><dd className="text-right">{sel.accuracy_m != null ? `${Math.round(sel.accuracy_m)} m` : "–"}</dd>
-                <dt>Trip</dt><dd className="text-right">{sel.trip ? `#${sel.trip.id} (${sel.trip.source})` : "None"}</dd>
+                <dt>Trip</dt><dd className="text-right">{sel.trip ? `#${sel.trip.id} (${SOURCE_LABEL[sel.trip.source] || sel.trip.source})` : "None"}</dd>
                 {sel.trip && <><dt>Progress</dt><dd className="text-right">{km(sel.trip.progress_m)} / {km(sel.trip.route_length_m)}</dd></>}
                 <dt>Next stop</dt><dd className="text-right">{sel.next_stop?.name || "–"}</dd>
                 <dt>Delay</dt><dd className="text-right">{sel.delay_minutes != null ? `${Math.round(sel.delay_minutes)} min` : "–"}</dd>

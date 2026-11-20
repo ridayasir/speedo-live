@@ -6,7 +6,7 @@ import { Bus, Clock, Flag, LocateFixed, MapPin, Navigation, Radio, Search } from
 import { api } from "@/lib/api";
 import { ago, clock, km, useApi } from "@/lib/hooks";
 import type { Arrivals, BusState, RouteSummary, Stop } from "@/lib/types";
-import { DemoBadge, Empty, ErrorBox, Spinner, StatusPill, effectiveStatus } from "./ui";
+import { Empty, ErrorBox, Spinner, StatusPill, effectiveStatus } from "./ui";
 import clsx from "./clsx";
 
 export interface Place {
@@ -90,7 +90,6 @@ export function PlaceInput({
               >
                 <MapPin className="h-4 w-4 text-brand-500" />
                 <span className="flex-1">{s.name}</span>
-                {s.is_demo && <DemoBadge />}
               </button>
             </li>
           ))}
@@ -204,7 +203,6 @@ export function BusDetailPanel({ bus, onClose }: { bus: BusState; onClose?: () =
         <div>
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-bold text-brand-900">Bus {bus.bus_number}</h3>
-            {bus.is_demo && <DemoBadge />}
           </div>
           {data?.route && <p className="text-sm text-slate-500">{data.route.name}</p>}
         </div>
@@ -288,7 +286,6 @@ export function ArrivalsList({ stopId, routeId, compact }: { stopId: number; rou
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 text-sm font-semibold text-slate-800">
                   {a.bus_number} <span className="text-xs font-normal text-slate-500 truncate">{a.route_code}</span>
-                  {a.is_demo && <DemoBadge />}
                 </div>
                 <div className="text-xs text-slate-500">
                   {km(a.distance_m)} away · GPS {ago(a.last_gps_at)}

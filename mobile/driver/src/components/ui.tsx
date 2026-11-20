@@ -43,19 +43,6 @@ export function Field({ label, ...rest }: TextInputProps & { label?: string }) {
   );
 }
 
-export function Demo() {
-  return <Text style={s.demo}>DEMO</Text>;
-}
-
-export function DemoBanner({ show }: { show: boolean }) {
-  if (!show) return null;
-  return (
-    <View style={s.banner}>
-      <Text style={s.bannerText}>DEMO MODE: buses marked DEMO are simulated; their positions and arrival times are not real.</Text>
-    </View>
-  );
-}
-
 export function StatusPill({ status }: { status: string }) {
   const st = STATUS[status] || { label: status, color: C.muted, bg: "#f1f5f9" };
   return (

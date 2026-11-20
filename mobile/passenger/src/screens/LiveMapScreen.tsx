@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import LiveMap from "../components/LiveMap";
-import { Card, Demo, Loading, Muted, RouteChip, StatusPill, s } from "../components/ui";
+import { Card, Loading, Muted, RouteChip, StatusPill, s } from "../components/ui";
 import { ago, effectiveStatus, km } from "../lib/format";
 import { useFetch, useLiveBuses } from "../lib/hooks";
 import { C } from "../lib/theme";
@@ -59,7 +59,7 @@ export default function LiveMapScreen() {
         {bus && (
           <Card style={{ borderColor: C.accent }}>
             <View style={[s.row, { justifyContent: "space-between" }]}>
-              <View style={s.row}><Text style={{ fontSize: 18, fontWeight: "800", color: C.brandDark }}>Bus {bus.bus_number}</Text>{bus.is_demo && <Demo />}</View>
+              <View style={s.row}><Text style={{ fontSize: 18, fontWeight: "800", color: C.brandDark }}>Bus {bus.bus_number}</Text></View>
               <Text onPress={() => setSel(null)} style={{ color: C.muted, fontSize: 18 }}>✕</Text>
             </View>
             {bus.route_id && byId[bus.route_id] && <Muted>{byId[bus.route_id].name}</Muted>}

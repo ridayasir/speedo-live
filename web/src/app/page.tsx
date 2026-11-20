@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Flag, History, LocateFixed, MapPin, Navigation, Radio, Star } from "lucide-react";
 import MapView from "@/components/MapView";
-import { Button, Card, DemoBadge, Empty, ErrorBox, SectionTitle, Spinner, effectiveStatus } from "@/components/ui";
+import { Button, Card, Empty, ErrorBox, SectionTitle, Spinner, effectiveStatus } from "@/components/ui";
 import { GlobalSearch, NavLinkCard, RouteChip } from "@/components/widgets";
 import { km, loadRecent, useApi, useAuth, useGeolocation, useLiveBuses, type RecentSearch } from "@/lib/hooks";
 import type { Alert, RouteDetail, RouteSummary, Stop } from "@/lib/types";
@@ -167,7 +167,6 @@ export default function Home() {
                   <Link href={`/route/?id=${r.id}`} className="flex items-center gap-3 rounded-xl border border-slate-100 px-3 py-2.5 hover:bg-slate-50">
                     <RouteChip code={r.code} color={r.color} />
                     <span className="flex-1 text-sm text-slate-700">{r.name}</span>
-                    {r.is_demo && <DemoBadge />}
                     <span className="text-xs text-slate-400">{r.stop_count} stops</span>
                   </Link>
                 </li>

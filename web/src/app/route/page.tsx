@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Clock, Radio } from "lucide-react";
 import FavoriteButton from "@/components/FavoriteButton";
 import MapView from "@/components/MapView";
-import { Card, DemoBadge, Empty, ErrorBox, SectionTitle, Spinner } from "@/components/ui";
+import { Card, Empty, ErrorBox, SectionTitle, Spinner } from "@/components/ui";
 import { BusRow, RouteChip } from "@/components/widgets";
 import { km, useApi, useLiveBuses } from "@/lib/hooks";
 import type { RouteDetail } from "@/lib/types";
@@ -26,7 +26,6 @@ function RouteInner() {
         <div>
           <div className="flex items-center gap-2">
             <RouteChip code={r.code} color={r.color} className="text-sm" />
-            {r.is_demo && <DemoBadge />}
             {r.status !== "active" && <span className="rounded-md bg-red-50 px-2 py-0.5 text-xs text-red-700">{r.status}</span>}
           </div>
           <h1 className="mt-2 text-2xl font-bold text-brand-900">{r.name}</h1>

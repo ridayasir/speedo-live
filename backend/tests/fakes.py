@@ -126,6 +126,11 @@ class FakeAuth:
     def set_display_name(self, uid, name):
         self.users[uid]["display_name"] = name
 
+    def set_email(self, uid, email):
+        if any(u["email"] == email for k, u in self.users.items() if k != uid):
+            raise FirebaseError("EMAIL_EXISTS", 409, "An account with this email already exists")
+        self.users[uid]["email"] = email
+
     def delete_user(self, uid):
         self.users.pop(uid, None)
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { Button, DemoBadge, ErrorBox, Input, Modal, PageHeader, Select, Spinner } from "../ui";
+import { Button, ErrorBox, Input, Modal, PageHeader, Select, Spinner } from "../ui";
 import { DataTable } from "./common";
 import { api } from "@/lib/api";
 import { useApi } from "@/lib/hooks";
@@ -36,7 +36,7 @@ export function SchedulesAdmin() {
           { h: "First", c: (s) => s.first_departure },
           { h: "Last", c: (s) => s.last_departure },
           { h: "Every", c: (s) => `${s.frequency_minutes} min` },
-          { h: "Notes", c: (s) => <span className="text-xs text-slate-500">{s.notes} {s.is_demo && <DemoBadge />}</span> },
+          { h: "Notes", c: (s) => <span className="text-xs text-slate-500">{s.notes}</span> },
           { h: "", c: (s) => <Button size="sm" variant="ghost" onClick={() => setEdit(s)}>Edit</Button>, className: "text-right" },
         ]}
       />

@@ -5,7 +5,7 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowDownUp, Bus, Footprints, Repeat } from "lucide-react";
 import MapView, { type MapRoute } from "@/components/MapView";
-import { Button, Card, DemoBadge, Empty, ErrorBox, Input, SectionTitle, Spinner } from "@/components/ui";
+import { Button, Card, Empty, ErrorBox, Input, SectionTitle, Spinner } from "@/components/ui";
 import { PlaceInput, RouteChip, type Place } from "@/components/widgets";
 import { api } from "@/lib/api";
 import { km, saveRecent, useApi, useAuth, useGeolocation } from "@/lib/hooks";
@@ -164,7 +164,6 @@ function RoutesInner() {
                         l.type === "ride" ? <RouteChip key={k} code={l.route_code} color={l.color} /> : null,
                       )}
                       {o.transfers > 0 && <span className="flex items-center gap-1 text-xs text-slate-500"><Repeat className="h-3 w-3" /> {o.transfers} transfer</span>}
-                      {o.is_demo && <DemoBadge />}
                     </div>
                     <div className="text-right">
                       <div className="text-lg font-bold text-brand-800">~{o.total_minutes} min</div>
@@ -224,7 +223,6 @@ function RoutesInner() {
                 <Link href={`/route/?id=${r.id}`} className="flex items-center gap-3 rounded-xl border border-slate-100 bg-white px-3 py-2.5 hover:bg-slate-50">
                   <RouteChip code={r.code} color={r.color} />
                   <span className="flex-1 text-sm">{r.name}</span>
-                  {r.is_demo && <DemoBadge />}
                 </Link>
               </li>
             ))}

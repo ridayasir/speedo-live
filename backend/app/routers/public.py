@@ -42,7 +42,7 @@ def meta():
         "data_source": s.data_source,
         "demo_mode": s.is_demo,
         "notice": (
-            "DEMO MODE: buses marked DEMO are simulated; their positions and times are not real."
+            "Some buses are simulated until their GPS is connected."
             if s.is_demo else "Live data from authorised GPS sources."
         ),
         "stale_after_seconds": s.stale_after_seconds,

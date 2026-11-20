@@ -1,11 +1,11 @@
-"""Add a DEMO fleet to the real routes: one simulated bus per route and one demo driver per bus.
+"""Add a sample fleet to the real routes: one simulated bus per route and one sample driver per bus.
 
     python -m app.demo_fleet            add (skips what already exists)
-    python -m app.demo_fleet --remove   delete the demo buses and demo drivers again
+    python -m app.demo_fleet --remove   delete the sample buses and sample drivers again
 
-Everything is clearly labelled: buses are numbered DEMO-<route> with is_demo=True (the apps show a DEMO
-badge, and the simulator moves them when DATA_SOURCE=demo); drivers have DEMO licence/employee codes and
-@speedolive.demo sign-in addresses. Driver passwords are random and written only to
+Buses are numbered SP-001, SP-002 ... and flagged is_demo=True (internally: the simulator moves them when
+DATA_SOURCE=demo; the apps show no label). Drivers sign in with driverNN@speedolive.example (".example" can never
+be a real mailbox) and have LIC-/SP-DRV- codes. Passwords are random and written only to
 data/demo/demo_driver_logins.csv on this computer (git-ignored).
 """
 import argparse
@@ -25,6 +25,13 @@ DRIVER_NAMES = [
     "Arshad Mahmood", "Junaid Akram", "Shoaib Anwar", "Irfan Saeed", "Mudassar Hussain", "Qaiser Abbas",
 ]
 LOGINS = Path(__file__).resolve().parents[2] / "data" / "demo" / "demo_driver_logins.csv"
+# Sample driver accounts sign in with <name>@speedolive.example (".example" is reserved and can never be a real
+# mailbox). Older runs used @speedolive.demo; both are recognised as sample accounts.
+DRIVER_DOMAIN = "speedolive.example"
+
+
+def is_sample_driver(email: str | None) -> bool:
+    return bool(email) and email.endswith(("@" + DRIVER_DOMAIN, "@speedolive.demo"))
 
 
 def add(db) -> None:
@@ -34,20 +41,20 @@ def add(db) -> None:
     LOGINS.parent.mkdir(parents=True, exist_ok=True)
     new_logins = []
     for n, route in enumerate(routes, 1):
-        number = f"DEMO-{route.code}"
+        number = f"SP-{n:03d}"
         bus = db.first(Bus, bus_number=number)
         if not bus:
-            bus = Bus(bus_number=number, registration_number=f"DEMO-REG-{n:03d}", capacity=60, route_id=route.id,
+            bus = Bus(bus_number=number, registration_number=f"REG-SP-{n:03d}", capacity=60, route_id=route.id,
                       is_demo=True)
             db.add(bus)
             db.commit()
-        email = f"driver{n:02d}@speedolive.demo"
+        email = f"driver{n:02d}@{DRIVER_DOMAIN}"
         if accounts.find_user(email=email):
             continue
         name = DRIVER_NAMES[(n - 1) % len(DRIVER_NAMES)]
         password = secrets.token_urlsafe(9)
         user = accounts.create_account(db, name, password, Role.driver, email=email)
-        db.add(Driver(user_id=user.id, license_number=f"DEMO-LIC-{n:03d}", employee_code=f"DEMO-EMP-{n:03d}",
+        db.add(Driver(user_id=user.id, license_number=f"LIC-{n:03d}", employee_code=f"SP-DRV-{n:02d}",
                       assigned_bus_id=bus.id if not bus.driver else None))
         db.commit()
         new_logins.append({"driver": name, "login_email": email, "password": password, "bus": number,
@@ -60,24 +67,24 @@ def add(db) -> None:
             if not exists:
                 w.writeheader()
             w.writerows(new_logins)
-    print(f"Demo buses: {sum(1 for b in db.all(Bus) if b.is_demo)} | demo drivers added now: {len(new_logins)}")
+    print(f"Sample buses: {sum(1 for b in db.all(Bus) if b.is_demo)} | sample drivers added now: {len(new_logins)}")
     print(f"Driver logins saved to {LOGINS}")
 
 
 def remove(db) -> None:
     for d in list(db.all(Driver)):
         u = d.user
-        if d.license_number.startswith("DEMO-LIC-") and u and u.email and u.email.endswith("@speedolive.demo"):
+        if u and is_sample_driver(u.email):
             firebase.auth_provider.delete_user(u.firebase_uid)
             db.delete(d)
             db.delete(u)
     for b in list(db.all(Bus)):
-        if b.is_demo and b.bus_number.startswith("DEMO-"):
+        if b.is_demo:
             db.delete(b)
     db.commit()
     if LOGINS.exists():
         LOGINS.unlink()
-    print("Demo buses and drivers removed.")
+    print("Sample buses and drivers removed.")
 
 
 if __name__ == "__main__":

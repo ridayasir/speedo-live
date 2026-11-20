@@ -54,6 +54,12 @@ def tick(db: Session, dt: float | None = None) -> int:
         st = _state.get(bus.id)
         if st is None:
             st = _state[bus.id] = SimBus(speed=_rng.uniform(6.0, 10.0))
+            if trip is not None:
+                # resuming after a restart: the saved position can be minutes old, so line the trip's schedule up
+                # with where the bus is now instead of reporting a delay that never happened
+                from datetime import timedelta
+
+                trip.started_at = utcnow() - timedelta(minutes=geom.offset_at(trip.progress_m))
         if trip is None:
             # stagger demo buses along their route the first time
             start = _rng.uniform(0, geom.length_m * 0.8) if bus.last_gps_at is None else 0.0
