@@ -7,7 +7,7 @@ import AuthForm from "@/components/AuthForm";
 import { Button, Card, Empty, ErrorBox, Input, PageHeader, SectionTitle, Spinner } from "@/components/ui";
 import { RouteChip } from "@/components/widgets";
 import { api } from "@/lib/api";
-import { ago, useApi, useAuth, useMeta } from "@/lib/hooks";
+import { ago, useApi, useAuth } from "@/lib/hooks";
 import type { NotificationPrefs, RouteSummary, Stop } from "@/lib/types";
 
 interface Note { id: number; kind: string; title: string; body: string; created_at: string; read_at: string | null }
@@ -22,7 +22,6 @@ const PREF_LABELS: [keyof NotificationPrefs, string][] = [
 
 export default function ProfilePage() {
   const { user, ready, logout, refresh } = useAuth();
-  const meta = useMeta();
   if (!ready) return <Spinner />;
   if (!user)
     return (
@@ -30,9 +29,7 @@ export default function ProfilePage() {
         <Card className="p-6">
           <h1 className="mb-1 text-xl font-bold text-brand-900">Welcome to Speedo Live</h1>
           <p className="mb-4 text-sm text-slate-500">Route search and live tracking work without an account. Sign in to save favorites and get bus alerts.</p>
-          <AuthForm
-            hint={meta?.demo_mode ? <p className="text-xs text-slate-500">Demo passenger: passenger@speedolive.demo / Passenger@123</p> : null}
-          />
+          <AuthForm />
         </Card>
       </div>
     );

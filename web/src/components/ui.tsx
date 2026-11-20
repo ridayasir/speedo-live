@@ -179,7 +179,7 @@ const STATUS_STYLE: Record<string, [string, string]> = {
   stale: ["bg-slate-100 text-slate-600 border-slate-200", "GPS signal lost"],
   offline: ["bg-slate-100 text-slate-500 border-slate-200", "Offline"],
   idle: ["bg-sky-50 text-sky-700 border-sky-200", "Not on a trip"],
-  out_of_service: ["bg-red-50 text-red-700 border-red-200", "Out of service"],
+  out_of_service: ["bg-slate-200 text-slate-700 border-slate-300", "Out of service"],
 };
 
 export function StatusPill({ status }: { status: string }) {

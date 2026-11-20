@@ -165,7 +165,7 @@ export function BusRow({ b, routeCode, color, onClick, selected }: { b: BusState
       onClick={onClick}
       className={clsx(
         "flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition",
-        selected ? "border-accent-400 bg-orange-50" : "border-slate-100 bg-white hover:bg-slate-50",
+        selected ? "border-accent-400 bg-amber-50" : "border-slate-100 bg-white hover:bg-slate-50",
       )}
     >
       <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-700 text-white">
@@ -174,7 +174,7 @@ export function BusRow({ b, routeCode, color, onClick, selected }: { b: BusState
       <span className="flex-1 min-w-0">
         <span className="flex flex-wrap items-center gap-1.5">
           <span className="font-semibold text-slate-800 whitespace-nowrap">{b.bus_number}</span>
-          {routeCode && <RouteChip code={routeCode} color={color || "#173693"} className="whitespace-nowrap" />}
+          {routeCode && <RouteChip code={routeCode} color={color || "#b91c1c"} className="whitespace-nowrap" />}
         </span>
         <span className="block truncate text-xs text-slate-500">
           {b.next_stop ? `Next: ${b.next_stop.name} · ${km(b.next_stop.distance_m)}` : "No active trip"}

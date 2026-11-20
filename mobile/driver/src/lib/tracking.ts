@@ -153,7 +153,7 @@ export async function startTracking(tripId: number) {
     foregroundService: {
       notificationTitle: "Speedo Live: sharing bus location",
       notificationBody: "Your bus's location is shared with passengers until you end the trip.",
-      notificationColor: "#173693",
+      notificationColor: "#b91c1c",
       killServiceOnDestroy: false,
     },
   });

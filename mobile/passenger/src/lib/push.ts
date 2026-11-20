@@ -20,7 +20,7 @@ export async function registerForPush(): Promise<string | null> {
       name: "Bus alerts",
       importance: Notifications.AndroidImportance.HIGH,
       vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#f97316",
+      lightColor: "#f59e0b",
     });
   }
   const { status: existing } = await Notifications.getPermissionsAsync();

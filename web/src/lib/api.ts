@@ -106,7 +106,7 @@ export async function api<T = unknown>(path: string, opts: RequestInit & { json?
   const text = await res.text();
   const data = text ? (() => { try { return JSON.parse(text); } catch { return text; } })() : undefined;
   if (!res.ok) {
-    if (res.status === 401 && token && !retried && !path.startsWith("/api/auth/refresh") && (await refreshSession())) {
+    if (res.status === 401 && token && !retried && !path.startsWith("/api/auth/") && (await refreshSession())) {
       return api<T>(path, opts, true);
     }
     if (res.status === 401 && token) setToken(null);

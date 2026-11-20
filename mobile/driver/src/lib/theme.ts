@@ -1,8 +1,8 @@
 export const C = {
-  brand: "#173693",
-  brandDark: "#0c1d52",
-  brandLight: "#eef4ff",
-  accent: "#f97316",
+  brand: "#b91c1c",
+  brandDark: "#7f1d1d",
+  brandLight: "#fef2f2",
+  accent: "#f59e0b",
   bg: "#f4f6fa",
   card: "#ffffff",
   text: "#0f172a",
@@ -22,5 +22,5 @@ export const STATUS: Record<string, { label: string; color: string; bg: string }
   stale: { label: "GPS signal lost", color: C.muted, bg: "#f1f5f9" },
   offline: { label: "Offline", color: C.muted, bg: "#f1f5f9" },
   idle: { label: "Not on a trip", color: "#0369a1", bg: "#f0f9ff" },
-  out_of_service: { label: "Out of service", color: C.red, bg: C.redBg },
+  out_of_service: { label: "Out of service", color: "#334155", bg: "#e2e8f0" },
 };

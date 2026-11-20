@@ -91,7 +91,7 @@ export async function api<T = any>(path: string, opts: { method?: string; json?:
     data = text;
   }
   if (!res.ok) {
-    if (res.status === 401 && token && !retried && !path.startsWith("/api/auth/refresh") && (await refreshSession())) {
+    if (res.status === 401 && token && !retried && !path.startsWith("/api/auth/") && (await refreshSession())) {
       return api<T>(path, opts, true);
     }
     if (res.status === 401 && token) await setToken(null);

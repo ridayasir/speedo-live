@@ -7,11 +7,11 @@ module.exports = {
     orientation: "portrait",
     userInterfaceStyle: "light",
     icon: "./assets/icon.png",
-    splash: { image: "./assets/icon.png", resizeMode: "contain", backgroundColor: "#173693" },
+    splash: { image: "./assets/icon.png", resizeMode: "contain", backgroundColor: "#b91c1c" },
     android: {
       package: "pk.speedolive.driver",
       versionCode: 1,
-      adaptiveIcon: { foregroundImage: "./assets/icon.png", backgroundColor: "#173693" },
+      adaptiveIcon: { foregroundImage: "./assets/icon.png", backgroundColor: "#b91c1c" },
       permissions: [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION",

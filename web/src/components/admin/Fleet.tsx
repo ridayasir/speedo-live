@@ -72,7 +72,7 @@ export function FleetAdmin() {
           )}
           <Card className="max-h-[400px] overflow-y-auto scrollbar-thin divide-y divide-slate-100">
             {merged.sort((a, b) => a.bus_number.localeCompare(b.bus_number)).map((b) => (
-              <button key={b.bus_id} onClick={() => setSelected(b.bus_id)} className={`flex w-full items-center justify-between px-4 py-2 text-left text-sm hover:bg-slate-50 ${b.bus_id === selected ? "bg-orange-50" : ""}`}>
+              <button key={b.bus_id} onClick={() => setSelected(b.bus_id)} className={`flex w-full items-center justify-between px-4 py-2 text-left text-sm hover:bg-slate-50 ${b.bus_id === selected ? "bg-amber-50" : ""}`}>
                 <span><b>{b.bus_number}</b> <span className="text-xs text-slate-400">{b.route_code}</span></span>
                 <StatusPill status={effectiveStatus(b)} />
               </button>

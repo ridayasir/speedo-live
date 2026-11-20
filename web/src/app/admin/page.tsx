@@ -8,7 +8,7 @@ import AuthForm from "@/components/AuthForm";
 import { Logo } from "@/components/Shell";
 import { Card, Spinner } from "@/components/ui";
 import clsx from "@/components/clsx";
-import { useAuth, useMeta } from "@/lib/hooks";
+import { useAuth } from "@/lib/hooks";
 import { Overview } from "@/components/admin/Overview";
 import { BusesAdmin } from "@/components/admin/Buses";
 import { RoutesAdmin } from "@/components/admin/Routes";
@@ -35,7 +35,6 @@ const TABS = [
 
 function AdminInner() {
   const { user, ready, logout } = useAuth();
-  const meta = useMeta();
   const params = useSearchParams();
   const router = useRouter();
   const tab = TABS.find((t) => t.id === params.get("tab")) || TABS[0];
@@ -52,7 +51,7 @@ function AdminInner() {
             {user && user.role !== "admin" && (
               <p className="mb-3 rounded-lg bg-red-50 p-2 text-sm text-red-700">You are signed in as a {user.role}. Sign in with an admin account.</p>
             )}
-            <AuthForm allowRegister={false} hint={meta?.demo_mode ? <p className="text-xs text-slate-500">Demo admin: admin@speedolive.demo / Admin@12345</p> : null} />
+            <AuthForm allowRegister={false} />
           </Card>
           <p className="mt-4 text-center text-sm"><Link href="/" className="text-brand-600">← Back to passenger app</Link></p>
         </div>

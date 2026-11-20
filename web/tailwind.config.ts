@@ -5,11 +5,12 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Speedo red
         brand: {
-          50: "#eef4ff", 100: "#dbe6ff", 200: "#bcd0ff", 500: "#2f5bd8", 600: "#1f45b8",
-          700: "#173693", 800: "#122a73", 900: "#0c1d52",
+          50: "#fef2f2", 100: "#fee2e2", 200: "#fecaca", 500: "#e02424", 600: "#c81e1e",
+          700: "#b91c1c", 800: "#991b1b", 900: "#7f1d1d",
         },
-        accent: { 400: "#fb923c", 500: "#f97316", 600: "#ea580c" },
+        accent: { 400: "#fbbf24", 500: "#f59e0b", 600: "#d97706" },
         surface: "#f4f6fa",
       },
       fontFamily: { sans: ["Inter", "system-ui", "Segoe UI", "Roboto", "sans-serif"] },
