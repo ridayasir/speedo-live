@@ -29,3 +29,5 @@ data/pma/__pycache__/
 data/pma/osm_lahore_named_places.json
 data/pma/geocode_candidates.json
 data/pma/geocode_cache.json
+# e-Transit API downloads (re-create with: python data/etransit/build_etransit.py --fetch)
+data/etransit/raw/

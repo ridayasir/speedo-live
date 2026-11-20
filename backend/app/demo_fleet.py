@@ -22,6 +22,7 @@ DRIVER_NAMES = [
     "Muhammad Imran", "Ali Raza", "Usman Khalid", "Bilal Ahmed", "Asif Mehmood", "Zeeshan Haider",
     "Kashif Iqbal", "Naveed Akhtar", "Shahid Mehmood", "Rizwan Ali", "Faisal Javed", "Tariq Mehmood",
     "Waqas Ahmad", "Adnan Sarwar", "Nadeem Abbas", "Hamza Rafiq", "Sajid Hussain", "Imtiaz Ahmed",
+    "Arshad Mahmood", "Junaid Akram", "Shoaib Anwar", "Irfan Saeed", "Mudassar Hussain", "Qaiser Abbas",
 ]
 LOGINS = Path(__file__).resolve().parents[2] / "data" / "demo" / "demo_driver_logins.csv"
 

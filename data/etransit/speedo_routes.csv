@@ -1,0 +1,1156 @@
+route_code,route_name,sequence,stop_code,stop_name,lat,lng,offset_minutes,is_major,color
+S259,Speedo Askari X to Airport,1,ET4093,Askari 10,31.540871,74.418487,0.0,1,#b91c1c
+S259,Speedo Askari X to Airport,2,ET4846,Dher Pindi,31.529191,74.424286,4.0,0,#b91c1c
+S259,Speedo Askari X to Airport,3,ET867,Airport,31.524384,74.413719,8.0,1,#b91c1c
+S259R,Speedo Airport to Askari X,1,ET4094,Airport Stop,31.524384,74.413719,0.0,1,#b91c1c
+S259R,Speedo Airport to Askari X,2,ET4847,Dher Pindi,31.52926,74.424153,4.0,0,#b91c1c
+S259R,Speedo Airport to Askari X,3,ET4095,Askari 10,31.540634,74.419081,8.0,1,#b91c1c
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,1,ET4033,Bhatti Chowk,31.5813405,74.3065642,0.0,1,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,2,ET4650,Zila Katchery,31.574929,74.306708,4.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,3,ET4651,UVAS,31.573369,74.300782,8.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,4,ET4652,Corporation Chowk,31.573484,74.291386,12.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,5,ET4653,80 Foot Road,31.57324,74.277227,16.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,6,ET4654,Fatima Zahra Road,31.582658,74.261539,20.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,7,ET4655,Hazrat Ali Road,31.588693,74.256802,24.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,8,ET4656,Sui Gas Office,31.594762,74.254841,28.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,9,ET4626,Nain Sukh,31.610542,74.251517,32.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,10,ET4657,Saggian Chowk,31.608802,74.2503,36.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,11,ET4625,Dosako Chowk,31.618281,74.247648,40.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,12,ET4624,kot Abdul Malik,31.622267,74.239391,44.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,13,ET4623,Main Bazar kot Abdul Malik,31.624453,74.233479,48.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,14,ET4622,Al-Wahab Garden,31.628128,74.223201,52.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,15,ET4621,Motorway City,31.633967,74.207617,56.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,16,ET7942,Iqbal Garden (Forward),31.63662,74.20082,60.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,17,ET4620,Javaid Nagar,31.639336,74.194219,64.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,18,ET4619,Fazal Town,31.640541,74.191313,68.0,0,#1d4ed8
+S253,Speedo Bhatti Chowk to Mandiali Toll Plaza,19,ET430,Mandiali Toll Plaza,31.643656,74.18342,72.0,1,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,1,ET4086,Mandiali Toll Plaza,31.644263,74.182627,0.0,1,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,2,ET4648,Fazal Town,31.640871,74.191164,4.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,3,ET4647,Javaid Nagar,31.639628,74.194248,8.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,4,ET7943,Iqbal Garden (Backward),31.637043,74.200661,12.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,5,ET4646,Motorway City,31.634603,74.206683,16.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,6,ET4645,Al-Wahab Garden,31.628329,74.2234,20.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,7,ET4644,Main Bazar kot Abdul Malik,31.62461,74.233575,24.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,8,ET4643,kot Abdul Malik,31.62296,74.238254,28.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,9,ET4642,Dosako Chowk,31.6193581,74.2476323,32.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,10,ET4658,Saggian Chowk,31.608944,74.25046,36.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,11,ET4641,Nain Sukh,31.611105,74.24981,40.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,12,ET4659,Sui Gas Office,31.594901,74.255009,44.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,13,ET4660,Hazrat Ali Road,31.588641,74.257005,48.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,14,ET4661,Fatima Zahra Road,31.582595,74.262258,52.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,15,ET4662,80 Foot Road,31.573171,74.277856,56.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,16,ET4663,Corporation Chowk,31.57375,74.291803,60.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,17,ET4664,UVAS,31.573448,74.300471,64.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,18,ET4665,Zila Katchery,31.574992,74.306471,68.0,0,#1d4ed8
+S253R,Speedo Mandiali Toll Plaza to Bhatti Chowk,19,ET4050,Bhatti Chowk,31.582566,74.306748,72.0,1,#1d4ed8
+S241,Speedo Bhatti Chowk to Shadbagh Underpass,1,ET4033,Bhatti Chowk,31.5813405,74.3065642,0.0,1,#0f766e
+S241,Speedo Bhatti Chowk to Shadbagh Underpass,2,ET4035,texali Chowk 2,31.5855537,74.3062723,2.1,1,#0f766e
+S241,Speedo Bhatti Chowk to Shadbagh Underpass,3,ET4120,Lari Adda Gol Chakar 2,31.5953979,74.3112075,4.2,0,#0f766e
+S241,Speedo Bhatti Chowk to Shadbagh Underpass,4,ET4121,Badami Bagh,31.597661,74.314087,6.3,0,#0f766e
+S241,Speedo Bhatti Chowk to Shadbagh Underpass,5,ET4122,Sabzi Mandi,31.600282,74.311984,8.4,0,#0f766e
+S241,Speedo Bhatti Chowk to Shadbagh Underpass,6,ET4123,Usman Chowk,31.6002951,74.3177908,10.5,0,#0f766e
+S241,Speedo Bhatti Chowk to Shadbagh Underpass,7,ET4124,Lohay Wali Pulley,31.60351,74.318874,12.6,0,#0f766e
+S241,Speedo Bhatti Chowk to Shadbagh Underpass,8,ET4125,Ali Hajvery Shadi Hall,31.60286,74.32214,14.7,0,#0f766e
+S241,Speedo Bhatti Chowk to Shadbagh Underpass,9,ET4126,Masoom Shah Darbar,31.601319,74.325675,16.7,0,#0f766e
+S241,Speedo Bhatti Chowk to Shadbagh Underpass,10,ET4127,Madina Chowk,31.60073,74.3278,18.8,0,#0f766e
+S241,Speedo Bhatti Chowk to Shadbagh Underpass,11,ET4128,Rajput Park,31.60311,74.3336,20.9,0,#0f766e
+S241,Speedo Bhatti Chowk to Shadbagh Underpass,12,ET4078,Shadbagh Underpass,31.60795,74.33611,23.0,1,#0f766e
+S241R,Speedo Shadbagh Underpass to Bhatti Chowk,1,ET4079,Shadbagh Underpass,31.608108,74.336213,0.0,1,#0f766e
+S241R,Speedo Shadbagh Underpass to Bhatti Chowk,2,ET148,Rajput Park,31.6030783,74.3336005,2.1,0,#0f766e
+S241R,Speedo Shadbagh Underpass to Bhatti Chowk,3,ET4129,Madina Chowk,31.6005834,74.3270004,4.2,0,#0f766e
+S241R,Speedo Shadbagh Underpass to Bhatti Chowk,4,ET4130,Masoom Shah Darbar,31.60131,74.326057,6.3,0,#0f766e
+S241R,Speedo Shadbagh Underpass to Bhatti Chowk,5,ET4131,Ali Hajvery Shadi Hall,31.6026305,74.3221907,8.4,0,#0f766e
+S241R,Speedo Shadbagh Underpass to Bhatti Chowk,6,ET4132,Lohay Wali Pulley,31.603351,74.319062,10.5,0,#0f766e
+S241R,Speedo Shadbagh Underpass to Bhatti Chowk,7,ET4133,Usman Chowk,31.6004118,74.3179825,12.6,0,#0f766e
+S241R,Speedo Shadbagh Underpass to Bhatti Chowk,8,ET4134,Sabzi Mandi,31.60111,74.311711,14.7,0,#0f766e
+S241R,Speedo Shadbagh Underpass to Bhatti Chowk,9,ET4135,Badami Bagh,31.59754,74.314001,16.8,0,#0f766e
+S241R,Speedo Shadbagh Underpass to Bhatti Chowk,10,ET4048,Azadi Chowk,31.591493,74.306791,18.9,1,#0f766e
+S241R,Speedo Shadbagh Underpass to Bhatti Chowk,11,ET4052,Texali Chowk 2,31.5855227,74.3062372,21.0,1,#0f766e
+S241R,Speedo Shadbagh Underpass to Bhatti Chowk,12,ET4050,Bhatti Chowk,31.582566,74.306748,23.1,1,#0f766e
+S250,Speedo Bhatti to R.A Bazar,1,ET4033,Bhatti Chowk,31.5813405,74.3065642,0.0,1,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,2,ET4387,Katchery,31.57477,74.30663,2.5,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,3,ET269,Nasir Bagh,31.571753,74.305574,5.0,1,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,4,ET4388,Civil Secretariat,31.56851,74.30432,7.5,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,5,ET4389,M.A.O College,31.56246,74.30564,10.0,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,6,ET4390,Anarkali Metro Station,31.561857,74.308593,12.5,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,7,ET4391,Janazgah,31.55425,74.31135,15.1,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,8,ET1383,Qartaba Chowk,31.549176,74.3149354,17.6,1,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,9,ET4392,Mazang,31.54654,74.31767,20.1,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,10,ET4393,Roznama Pakistan,31.54416,74.32083,22.6,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,11,ET4394,Lahore College Women,31.54291,74.32827,25.1,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,12,ET4395,Services Hospital,31.54106,74.33365,27.6,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,13,ET4396,Punjab Institute of Cardiology,31.53981,74.334927,30.1,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,14,ET4397,Kinnaird College,31.53706,74.33899,32.6,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,15,ET4398,Zafar Ali Road,31.53492,74.34487,35.1,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,16,ET4264,Siddique Trade Center,31.5306026,74.3523149,37.6,1,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,17,ET4851,McDonald,31.52751,74.35026,40.1,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,18,ET4400,Main Market,31.522745,74.347848,42.6,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,19,ET4267,Mini market,31.521003,74.34677,45.1,1,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,20,ET4268,Hafeez Center,31.5161,74.344,47.6,1,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,21,ET4269,Liberty Chowk,31.510884,74.34129,50.1,1,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,22,ET297,Kalma Chowk,31.5043402,74.3316103,52.6,1,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,23,ET4270,Center Point,31.5064765,74.3367845,55.1,1,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,24,ET4401,Firdous Market,31.503022,74.349419,57.7,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,25,ET4402,Cavalry Road,31.502593,74.36789,60.2,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,26,ET4403,D Mess Stop,31.506663,74.36964,62.7,0,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,27,ET4097,Nadeem Chowk,31.5064665,74.378352,65.2,1,#7c3aed
+S250,Speedo Bhatti to R.A Bazar,28,ET4074,R A Bazar,31.506021,74.38468,67.7,1,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,1,ET4077,R A Bazar,31.506021,74.38468,0.0,1,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,2,ET4709,Nadeem Chowk,31.5065363,74.3793924,2.8,1,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,3,ET4119,D Mess Stop,31.506827,74.369234,5.6,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,4,ET55,Cavalry Road,31.502552,74.367725,8.3,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,5,ET4404,Firdous Market,31.5030144,74.3487305,11.1,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,6,ET297,Kalma Chowk,31.5043402,74.3316103,13.9,1,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,7,ET4303,Center Point,31.507499,74.337195,16.7,1,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,8,ET4304,Liberty Chowk,31.51091,74.340428,19.4,1,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,9,ET4305,Hafeez Center,31.51553,74.34327,22.2,1,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,10,ET4306,Mini market,31.520955,74.346432,25.0,1,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,11,ET4405,Main Market,31.524341,74.345755,27.8,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,12,ET4852,McDonald,31.527304,74.350244,30.6,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,13,ET4407,Siddique Trade Center,31.531442,74.351842,33.4,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,14,ET4408,Zafar Ali Road,31.534921,74.344871,36.1,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,15,ET4409,Kinnaird College,31.53647,74.33937,38.9,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,16,ET4410,Punjab Institute of Cardiology,31.5396891,74.3347358,41.7,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,17,ET4411,Services Hospital,31.5411245,74.3332174,44.5,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,18,ET4412,Lahore College Women,31.54267,74.32785,47.3,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,19,ET4413,Roznama Pakistan,31.54379,74.32091,50.0,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,20,ET4414,Mazang,31.5464311,74.317442,52.8,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,21,ET4242,LOS,31.54306,74.317585,55.6,1,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,22,ET4211,Qartaba Chowk,31.5500218,74.3150893,58.4,1,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,23,ET4415,Janazgah,31.55407,74.31124,61.2,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,24,ET4416,Jain Mandir,31.561192,74.307289,63.9,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,25,ET4417,M.A.O College,31.56253,74.30489,66.7,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,26,ET4418,Civil Secretariat,31.56808,74.30402,69.5,0,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,27,ET857,Nasir Bagh,31.571753,74.305574,72.3,1,#7c3aed
+S250R,Speedo R.A Bazar to Bhatti,28,ET4419,Katchery,31.57456,74.30632,75.1,1,#7c3aed
+S257,Speedo Canal to Chung,1,ET4236,Canal,31.520524,74.323334,0.0,1,#ea580c
+S257,Speedo Canal to Chung,2,ET4165,Qaddafi Stadium,31.512868,74.328808,4.0,1,#ea580c
+S257,Speedo Canal to Chung,3,ET297,Kalma Chowk,31.5043402,74.3316103,8.0,1,#ea580c
+S257,Speedo Canal to Chung,4,ET4166,Barkat Market,31.50102,74.3208302,12.0,1,#ea580c
+S257,Speedo Canal to Chung,5,ET4167,Campus Pull,31.5039451,74.3119961,16.0,1,#ea580c
+S257,Speedo Canal to Chung,6,ET4168,Gate No 4,31.501185,74.309437,20.0,1,#ea580c
+S257,Speedo Canal to Chung,7,ET4169,Hailey College,31.496556,74.305125,24.0,1,#ea580c
+S257,Speedo Canal to Chung,8,ET4170,IBA Stop,31.493444,74.302032,28.0,1,#ea580c
+S257,Speedo Canal to Chung,9,ET4171,Shah Di Khoi,31.490479,74.298541,32.0,1,#ea580c
+S257,Speedo Canal to Chung,10,ET4172,Jinnah Hospital,31.485967,74.294309,36.0,1,#ea580c
+S257,Speedo Canal to Chung,11,ET4173,Wafaqi Colony,31.4845447,74.2896385,40.0,1,#ea580c
+S257,Speedo Canal to Chung,12,ET4174,Doctor Hospital,31.480138,74.280406,44.0,1,#ea580c
+S257,Speedo Canal to Chung,13,ET4175,PCSIR 1,31.478491,74.274875,48.0,1,#ea580c
+S257,Speedo Canal to Chung,14,ET4176,G 4 Johar Town,31.477306,74.27008,52.0,1,#ea580c
+S257,Speedo Canal to Chung,15,ET4177,Hanjarwal,31.476574,74.266931,56.0,1,#ea580c
+S257,Speedo Canal to Chung,16,ET4178,Mughal Eye Hospital,31.474393,74.257079,60.0,1,#ea580c
+S257,Speedo Canal to Chung,17,ET181,Canal View Gate 1,31.4727668,74.2504801,64.0,0,#ea580c
+S257,Speedo Canal to Chung,18,ET4180,Judicial Colony,31.469915,74.244401,68.0,1,#ea580c
+S257,Speedo Canal to Chung,19,ET4181,Thokar Niaz Baig,31.470415,74.240941,72.0,1,#ea580c
+S257,Speedo Canal to Chung,20,ET4182,Daewoo Terminal,31.470109,74.238883,76.0,1,#ea580c
+S257,Speedo Canal to Chung,21,ET1584,Haroon Terminal,31.462458,74.224439,80.0,0,#ea580c
+S257,Speedo Canal to Chung,22,ET4829,Khanpur,31.457268,74.217398,84.0,0,#ea580c
+S257,Speedo Canal to Chung,23,ET4830,Kot Gujra,31.4506817,74.20794,88.0,0,#ea580c
+S257,Speedo Canal to Chung,24,ET4831,Manowal,31.432605,74.182849,92.0,0,#ea580c
+S257,Speedo Canal to Chung,25,ET4832,Gourmet baker Chung,31.426918,74.176334,96.0,0,#ea580c
+S257,Speedo Canal to Chung,26,ET4089,Adalat Ali Shah Darbar,31.422803,74.171172,100.0,1,#ea580c
+S257R,Speedo chung to canal,1,ET4090,Adalat Ali Shah Darbar,31.422803,74.171172,0.0,1,#ea580c
+S257R,Speedo chung to canal,2,ET4833,Chung,31.427544,74.176552,4.0,0,#ea580c
+S257R,Speedo chung to canal,3,ET4834,Manowal,31.433187,74.183255,8.0,0,#ea580c
+S257R,Speedo chung to canal,4,ET4835,Kot Gujra,31.449729,74.206309,12.0,0,#ea580c
+S257R,Speedo chung to canal,5,ET1415,Jinnah Terminal,31.467204,74.225585,16.0,1,#ea580c
+S257R,Speedo chung to canal,6,ET4183,Thokar Niaz Baig,31.471465,74.241715,20.0,1,#ea580c
+S257R,Speedo chung to canal,7,ET4184,Canal View Gate1,31.47334,74.250183,24.0,1,#ea580c
+S257R,Speedo chung to canal,8,ET4185,Canal View Gate 2,31.474759,74.25659,28.0,1,#ea580c
+S257R,Speedo chung to canal,9,ET4848,Hanjarwal,31.47693,74.266305,32.0,1,#ea580c
+S257R,Speedo chung to canal,10,ET4186,PCSIR-1,31.479057,74.275207,36.0,1,#ea580c
+S257R,Speedo chung to canal,11,ET4187,Doctor Hospital,31.48124,74.28171,40.0,1,#ea580c
+S257R,Speedo chung to canal,12,ET4188,Wafaqi Colony,31.4845758,74.2887052,44.0,1,#ea580c
+S257R,Speedo chung to canal,13,ET4189,Shah Di Khoi,31.49004,74.29717,48.0,1,#ea580c
+S257R,Speedo chung to canal,14,ET4190,IBA Stop,31.49322,74.30113,52.0,1,#ea580c
+S257R,Speedo chung to canal,15,ET4191,Hailey College,31.49667,74.304685,56.0,1,#ea580c
+S257R,Speedo chung to canal,16,ET4168,Gate No 4,31.501185,74.309437,60.0,1,#ea580c
+S257R,Speedo chung to canal,17,ET4192,Gate No.4,31.50104,74.30869,64.0,1,#ea580c
+S257R,Speedo chung to canal,18,ET4193,Campus Pull,31.5039451,74.3119961,68.0,1,#ea580c
+S257R,Speedo chung to canal,19,ET4194,Barkat Market,31.501048,74.320067,72.0,1,#ea580c
+S257R,Speedo chung to canal,20,ET297,Kalma Chowk,31.5043402,74.3316103,76.0,1,#ea580c
+S257R,Speedo chung to canal,21,ET4195,Qaddafi Stadium,31.51206,74.32856,80.0,1,#ea580c
+S251,Speedo RT-16: Canal to Jinnah Terminal,1,ET4236,Canal,31.520524,74.323334,0.0,1,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,2,ET4165,Qaddafi Stadium,31.512868,74.328808,2.5,1,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,3,ET297,Kalma Chowk,31.5043402,74.3316103,5.1,1,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,4,ET4490,Model Town Morr,31.496164,74.332767,7.6,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,5,ET4491,Pakistani Chowk,31.491576,74.330113,10.2,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,6,ET4492,Bank Square C-Block,31.489163,74.327137,12.8,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,7,ET4493,Ladies Club D-Block,31.487752,74.322288,15.3,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,8,ET4494,Girls College E-Block,31.484593,74.320865,17.9,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,9,ET4495,F-Block,31.481569,74.322199,20.4,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,10,ET4496,Club Chowk,31.480128,74.323774,23.0,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,11,ET4497,Quid-e-Azam Law College,31.477596,74.322371,25.5,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,12,ET4498,Shaheed Chowk,31.472996,74.319879,28.1,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,13,ET4499,Pace Shopping Centre,31.470462,74.31849,30.6,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,14,ET4399,McDonald Model Town,31.466248,74.316114,33.2,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,15,ET4500,Ayesha Heights,31.46574,74.31174,35.7,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,16,ET4849,Akbar Chowk,31.466646,74.306799,38.2,1,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,17,ET4375,Shouq Chowk,31.470294,74.303296,40.8,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,18,ET4501,Allah-Hoo Chowk,31.468802,74.297997,43.3,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,19,ET4502,Aleem Dar Stadium,31.464627,74.290148,45.9,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,20,ET4503,LDA Plaza,31.460264,74.283151,48.4,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,21,ET4504,Shadiwal Chowk,31.455623,74.276917,51.0,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,22,ET4505,Shaukat Khanum Hospital,31.449685,74.270265,53.5,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,23,ET4506,WAPDA Town Stop 1,31.440323,74.266938,56.1,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,24,ET4507,WAPDA Town Stop 2,31.441025,74.26731,58.6,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,25,ET4508,UCP,31.448975,74.268913,61.2,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,26,ET4509,PCSIR,31.452454,74.267952,63.7,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,27,ET4510,Abdalian Society,31.456255,74.266921,66.3,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,28,ET4511,Ayub Chowk,31.458793,74.264034,68.8,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,29,ET4512,Expo Centre,31.462944,74.258068,71.4,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,30,ET4513,Shan Chowk,31.465768,74.252419,73.9,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,31,ET4514,Ring Chowk,31.471225,74.247918,76.5,0,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,32,ET4180,Judicial Colony,31.469915,74.244401,79.0,1,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,33,ET4181,Thokar Niaz Baig,31.470415,74.240941,81.6,1,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,34,ET4182,Daewoo Terminal,31.470109,74.238883,84.1,1,#0369a1
+S251,Speedo RT-16: Canal to Jinnah Terminal,35,ET1353,Jinnah terminal,31.467455,74.226003,86.7,1,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,1,ET1353,Jinnah terminal,31.467455,74.226003,0.0,1,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,2,ET4183,Thokar Niaz Baig,31.471465,74.241715,2.3,1,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,3,ET1502,Judicial Colony,31.469915,74.244401,4.7,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,4,ET4515,Ring Chowk,31.471392,74.248062,7.0,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,5,ET4516,Shan Chowk,31.466076,74.252466,9.4,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,6,ET4517,Expo Centre,31.462945,74.258619,11.7,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,7,ET4518,Ayub Chowk,31.45811,74.265752,14.0,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,8,ET4519,Abdalian Society,31.455837,74.267441,16.4,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,9,ET4520,PCSIR,31.452045,74.268236,18.7,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,10,ET4521,Shaukat Khanum Hospital,31.449555,74.269904,21.1,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,11,ET4522,Shadiwal Chowk,31.456277,74.27743,23.4,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,12,ET4523,LDA Plaza,31.45989,74.282265,25.7,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,13,ET4524,Aleem Dar Stadium,31.46373,74.287946,28.1,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,14,ET4525,Allah-Hoo Chowk,31.469679,74.299316,30.4,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,15,ET4526,Shouq Chowk,31.470519,74.303507,32.8,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,16,ET4527,Akbar Chowk,31.467351,74.307967,35.1,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,17,ET4528,Mochipura Morr,31.465663,74.312297,37.4,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,18,ET4529,Pace Shopping Centre,31.470104,74.318063,39.8,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,19,ET4530,Shaheed Chowk,31.473041,74.319727,42.1,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,20,ET4531,Quid-e-Azam Law College,31.477693,74.322346,44.5,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,21,ET4532,Club Chowk,31.48,74.323591,46.8,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,22,ET4533,F-Block,31.481344,74.322171,49.1,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,23,ET4534,Girls College (E-Block),31.48477,74.320658,51.5,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,24,ET4535,Ladies Club (D-Block),31.488044,74.322377,53.8,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,25,ET4536,Bank Square (C-Block),31.489352,74.326341,56.2,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,26,ET4537,Pakistani Chowk,31.491428,74.329855,58.5,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,27,ET4538,Model Town Morr,31.496367,74.33256,60.8,0,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,28,ET297,Kalma Chowk,31.5043402,74.3316103,63.2,1,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,29,ET4195,Qaddafi Stadium,31.51206,74.32856,65.5,1,#0369a1
+S251R,Speedo RT-16: Jinnah Terminal to Canal,30,ET4247,Canal,31.520579,74.324552,67.9,1,#0369a1
+S243,Speedo RT-8: Canal to Jinnah Terminal,1,ET4236,Canal,31.520524,74.323334,0.0,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,2,ET4165,Qaddafi Stadium,31.512868,74.328808,2.9,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,3,ET5524,Rt 8 kalma chowk,31.5037477,74.3304818,5.8,0,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,4,ET4166,Barkat Market,31.50102,74.3208302,8.6,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,5,ET4167,Campus Pull,31.5039451,74.3119961,11.5,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,6,ET4168,Gate No 4,31.501185,74.309437,14.4,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,7,ET4169,Hailey College,31.496556,74.305125,17.3,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,8,ET4170,IBA Stop,31.493444,74.302032,20.2,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,9,ET4171,Shah Di Khoi,31.490479,74.298541,23.0,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,10,ET4172,Jinnah Hospital,31.485967,74.294309,25.9,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,11,ET4173,Wafaqi Colony,31.4845447,74.2896385,28.8,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,12,ET4174,Doctor Hospital,31.480138,74.280406,31.7,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,13,ET4175,PCSIR 1,31.478491,74.274875,34.6,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,14,ET4176,G 4 Johar Town,31.477306,74.27008,37.4,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,15,ET4177,Hanjarwal,31.476574,74.266931,40.3,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,16,ET4178,Mughal Eye Hospital,31.474393,74.257079,43.2,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,17,ET4179,Canal View Gate1,31.47279,74.25036,46.1,0,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,18,ET4180,Judicial Colony,31.469915,74.244401,49.0,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,19,ET4181,Thokar Niaz Baig,31.470415,74.240941,51.8,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,20,ET4182,Daewoo Terminal,31.470109,74.238883,54.7,1,#15803d
+S243,Speedo RT-8: Canal to Jinnah Terminal,21,ET1353,Jinnah terminal,31.467455,74.226003,57.6,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,1,ET1415,Jinnah Terminal,31.467204,74.225585,0.0,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,2,ET4183,Thokar Niaz Baig,31.471465,74.241715,2.9,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,3,ET4184,Canal View Gate1,31.47334,74.250183,5.8,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,4,ET4185,Canal View Gate 2,31.474759,74.25659,8.7,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,5,ET4848,Hanjarwal,31.47693,74.266305,11.6,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,6,ET4186,PCSIR-1,31.479057,74.275207,14.6,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,7,ET4187,Doctor Hospital,31.48124,74.28171,17.5,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,8,ET4188,Wafaqi Colony,31.4845758,74.2887052,20.4,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,9,ET4189,Shah Di Khoi,31.49004,74.29717,23.3,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,10,ET4190,IBA Stop,31.49322,74.30113,26.2,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,11,ET4191,Hailey College,31.49667,74.304685,29.1,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,12,ET4192,Gate No.4,31.50104,74.30869,32.0,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,13,ET4193,Campus Pull,31.5039451,74.3119961,34.9,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,14,ET4194,Barkat Market,31.501048,74.320067,37.8,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,15,ET5523,RT 8 Kalma chowk,31.505301,74.330891,40.7,0,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,16,ET4195,Qaddafi Stadium,31.51206,74.32856,43.6,1,#15803d
+S243R,Speedo RT-8: Jinnah Terminal to Canal,17,ET4247,Canal,31.520579,74.324552,46.6,1,#15803d
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,1,ET149,Depot Chowk,31.430981,74.31142,0.0,1,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,2,ET4137,Pulley Bus Stop,31.435786,74.314203,2.8,0,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,3,ET4138,Keer Kalan,31.43579,74.3142,5.6,0,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,4,ET4139,Minhaj University,31.443559,74.318321,8.3,0,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,5,ET4140,Hamdard Chowk,31.4464791,74.320939,11.1,0,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,6,ET4141,Somi Center Bus Stop,31.449801,74.321906,13.9,0,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,7,ET4142,Nursery Bus Stop,31.452807,74.323573,16.7,0,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,8,ET4143,Rehmat Eye Hospital,31.454615,74.324617,19.5,0,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,9,ET4144,Pindi Stop,31.459565,74.327906,22.2,1,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,10,ET4145,Treet Stop,31.457825,74.33245,25.0,1,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,11,ET4146,Peco Mor,31.456716,74.335253,27.8,1,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,12,ET4147,Kot lakhpat Railway Station,31.45914,74.337371,30.6,1,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,13,ET4148,Phatki stop,31.464117,74.340389,33.4,1,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,14,ET4149,Phattak mandi Stop,31.47097,74.344201,36.1,0,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,15,ET4150,Model Town Katchery,31.47341,74.344857,38.9,0,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,16,ET4151,Qainchi stop,31.466325,74.3481,41.7,0,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,17,ET4109,Ghazi Chowk,31.456512,74.351226,44.5,1,#a16207
+S242,Speedo Depot Chowk to Chungi Amer Sidhu,18,ET4075,Chungi Amar Sidhu,31.449822,74.353557,47.3,1,#a16207
+S242R,Speedo Chungi Amer Sidhu to Depot Chowk,1,ET4470,Chungi Amer Sidhu,31.447943,74.354202,0.0,1,#a16207
+S242R,Speedo Chungi Amer Sidhu to Depot Chowk,2,ET4152,Qainchi stop,31.463541,74.348333,2.1,1,#a16207
+S242R,Speedo Chungi Amer Sidhu to Depot Chowk,3,ET4153,Phatki stop,31.4642,74.34066,4.3,1,#a16207
+S242R,Speedo Chungi Amer Sidhu to Depot Chowk,4,ET4154,Kot lakhpat Railway Station,31.45924,74.337496,6.4,1,#a16207
+S242R,Speedo Chungi Amer Sidhu to Depot Chowk,5,ET4155,Peco Mor,31.456423,74.335488,8.5,1,#a16207
+S242R,Speedo Chungi Amer Sidhu to Depot Chowk,6,ET4156,Treet Stop,31.45763,74.332326,10.6,1,#a16207
+S242R,Speedo Chungi Amer Sidhu to Depot Chowk,7,ET4157,Pindi Stop,31.459213,74.327256,12.8,1,#a16207
+S242R,Speedo Chungi Amer Sidhu to Depot Chowk,8,ET4158,Rehmat Eye Hospital,31.45486,74.324768,14.9,0,#a16207
+S242R,Speedo Chungi Amer Sidhu to Depot Chowk,9,ET4159,Nursary Bus Stop,31.453078,74.32386,17.0,0,#a16207
+S242R,Speedo Chungi Amer Sidhu to Depot Chowk,10,ET4160,Somi Center Bus Stop,31.450237,74.32209,19.2,0,#a16207
+S242R,Speedo Chungi Amer Sidhu to Depot Chowk,11,ET4161,Hamdard Chowk,31.447729,74.320763,21.3,0,#a16207
+S242R,Speedo Chungi Amer Sidhu to Depot Chowk,12,ET4162,Minhaj University,31.443849,74.318596,23.4,0,#a16207
+S242R,Speedo Chungi Amer Sidhu to Depot Chowk,13,ET4163,Keer Kalan,31.43587,74.31415,25.6,0,#a16207
+S242R,Speedo Chungi Amer Sidhu to Depot Chowk,14,ET4164,Pulley Bus Stop,31.435867,74.314153,27.7,0,#a16207
+S242R,Speedo Chungi Amer Sidhu to Depot Chowk,15,ET73,Depot Chowk,31.430791,74.311401,29.8,1,#a16207
+S248,Speedo Depot Chowk to Kalma Chowk,1,ET149,Depot Chowk,31.430981,74.31142,0.0,1,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,2,ET4343,Ameer Chowk,31.43271,74.29975,2.1,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,3,ET4344,Bagrian,31.43271,74.29975,4.1,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,4,ET4345,Muslim Chowk,31.435416,74.293554,6.2,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,5,ET4346,Ghazi Chowk 2,31.436385,74.2913517,8.2,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,6,ET4347,Gondal Chowk,31.4397,74.292489,10.3,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,7,ET4348,Butt Chowk,31.442974,74.294163,12.4,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,8,ET4349,Lajhna Chowk,31.447203,74.2966689,14.4,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,9,ET4350,UMT Stop,31.451033,74.298512,16.5,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,10,ET4351,Khokhar Chowk,31.45375,74.299826,18.5,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,11,ET4352,M. Ali Chowk,31.458575,74.302536,20.6,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,12,ET4353,Aslam Chowk,31.463927,74.305269,22.7,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,13,ET4849,Akbar Chowk,31.466646,74.306799,24.7,1,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,14,ET4355,Mochipura Morr,31.465663,74.312297,26.8,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,15,ET4356,Model Town Link Road,31.46396,74.316614,28.8,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,16,ET4357,Al-Habib Stop,31.463119,74.318729,30.9,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,17,ET4144,Pindi Stop,31.459565,74.327906,33.0,1,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,18,ET4145,Treet Stop,31.457825,74.33245,35.0,1,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,19,ET4146,Peco Mor,31.456716,74.335253,37.1,1,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,20,ET4147,Kot lakhpat Railway Station,31.45914,74.337371,39.1,1,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,21,ET4148,Phatki stop,31.464117,74.340389,41.2,1,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,22,ET4358,Phatak Mandi,31.47097,74.344201,43.3,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,23,ET4359,Traffic Police Station,31.474603,74.344002,45.3,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,24,ET4360,Ittefaq Hospital,31.478715,74.342111,47.4,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,25,ET4361,Gulab Devi Hospital,31.4833495,74.3402042,49.4,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,26,ET4362,Naseerabad,31.48615,74.339034,51.5,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,27,ET4363,Bhabra Stop,31.491596,74.336762,53.6,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,28,ET4364,Model Town,31.497637,74.334321,55.6,0,#9333ea
+S248,Speedo Depot Chowk to Kalma Chowk,29,ET297,Kalma Chowk,31.5043402,74.3316103,57.7,1,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,1,ET297,Kalma Chowk,31.5043402,74.3316103,0.0,1,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,2,ET4365,Model Town,31.498093,74.334276,2.2,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,3,ET4366,Bhabra Stop,31.491533,74.336836,4.4,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,4,ET4367,Naseerabad,31.48712,74.33892,6.6,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,5,ET4368,Gulab Devi Hospital,31.482583,74.340703,8.8,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,6,ET4369,Ittefaq Hospital,31.479476,74.342008,11.0,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,7,ET4370,Traffic Police Station,31.475407,74.343847,13.2,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,8,ET4371,Phatak Mandi,31.470923,74.344421,15.4,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,9,ET4153,Phatki stop,31.4642,74.34066,17.6,1,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,10,ET4154,Kot lakhpat Railway Station,31.45924,74.337496,19.8,1,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,11,ET4155,Peco Mor,31.456423,74.335488,22.0,1,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,12,ET4156,Treet Stop,31.45763,74.332326,24.2,1,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,13,ET4157,Pindi Stop,31.459213,74.327256,26.4,1,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,14,ET4373,Al-Habib Stop,31.462727,74.319357,28.6,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,15,ET4374,Ayesha Heights,31.46574,74.31174,30.8,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,16,ET1100,Akbar chowk,31.467538,74.307755,33.0,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,17,ET4376,Aslam Chowk,31.463733,74.305195,35.2,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,18,ET4377,M. Ali Chowk,31.458791,74.302684,37.4,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,19,ET4378,Khokhar Chowk,31.454562,74.3003,39.6,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,20,ET4379,UMT Stop,31.45109,74.29867,41.8,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,21,ET4380,Lajhna Chowk,31.447657,74.2966689,44.0,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,22,ET4381,Butt Chowk,31.44298,74.29432,46.2,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,23,ET4382,Gondal Chowk,31.440355,74.292868,48.4,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,24,ET4383,Ghazi Chowk 2,31.437045,74.291003,50.6,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,25,ET4384,Muslim Chowk,31.435594,74.293389,52.8,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,26,ET4385,Bagrian,31.432935,74.2997439,55.0,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,27,ET4386,Ameer Chowk,31.430377,74.307202,57.2,0,#9333ea
+S248R,Speedo Kalma Chowk to Depot Chowk,28,ET73,Depot Chowk,31.430791,74.311401,59.4,1,#9333ea
+S252,Speedo Gajjumata to Rangers Wing Headquarter,1,ET94,Gajjumata,31.397068,74.361766,0.0,1,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,2,ET4539,Ali Murtaza Associates,31.3965524,74.3688896,4.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,3,ET4540,Nishat Mills,31.399343,74.381187,8.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,4,ET4541,Shafi Reso,31.4001871,74.3906518,12.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,5,ET4542,Ghankar Stop,31.4003611,74.39376,16.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,6,ET4543,Bhuller Village,31.401011,74.396134,20.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,7,ET4544,Transport Housing Society,31.4015695,74.3978474,24.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,8,ET4545,Hush Puppies,31.401736,74.402018,28.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,9,ET4546,Raja Bhula Pull,31.402211,74.406283,32.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,10,ET4547,Nishat Dying Mills,31.402998,74.414619,36.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,11,ET4548,Deo Pull,31.407375,74.419364,40.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,12,ET4549,Nishat Apparel,31.415248,74.431086,44.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,13,ET4550,Sora Stop,31.417955,74.434998,48.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,14,ET4551,Thethar Stop,31.423237,74.456728,52.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,15,ET4552,Avicina Hospital,31.433635,74.468158,56.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,16,ET4553,Dera Chahal,31.440563,74.468018,60.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,17,ET4554,Elite School,31.445789,74.462061,64.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,18,ET4555,Ramzan Nursery 1,31.448182,74.457733,68.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,19,ET4556,PKLI-1,31.454503,74.461384,72.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,20,ET4557,PKLI-2,31.456982,74.463125,76.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,21,ET4558,PKLI-1 (u-turn),31.4533244,74.462639,80.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,22,ET4559,Ramzan Nursery 2,31.447901,74.457788,84.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,23,ET8778,Mota Singh Wala 1 (FWD),31.448946,74.454513,88.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,24,ET4560,Workshop Stop 1,31.450999,74.4514,92.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,25,ET4561,School Stop Lidher 1,31.454353,74.446957,96.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,26,ET4562,Shehbaz Sharif Hospital 1,31.456938,74.44325,100.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,27,ET4563,Lidher 1,31.458958,74.439789,104.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,28,ET4564,Nawaz Shareef Interchange,31.4660684,74.4322516,108.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,29,ET4565,Nawaz Shareef Interchange 2,31.4664752,74.4326163,112.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,30,ET4566,Lidher 2,31.459003,74.439828,116.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,31,ET4567,Shehbaz Sharif Hospital 2,31.457106,74.4432832,120.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,32,ET4568,School Stop Lidher 2,31.4545924,74.4469586,124.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,33,ET4569,Workshop Stop 2,31.451161,74.451417,128.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,34,ET8779,Mota Singh Wala 2 (FWD),31.448945,74.454673,132.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,35,ET4570,Elite School 2,31.445533,74.462552,136.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,36,ET4571,Dera Chahal 2,31.440556,74.468203,140.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,37,ET4572,Bankers Society,31.426248,74.478756,144.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,38,ET4573,Karbath,31.426248,74.478756,148.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,39,ET4574,Total Pump Heir,31.417368,74.484452,152.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,40,ET4575,Shareef Pura Market,31.41428,74.486567,156.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,41,ET8776,"Govt. College for Girls, Heir (FWD)",31.41206,74.488115,160.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,42,ET4576,Masjid Ghosia Heir,31.41065,74.489212,164.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,43,ET4577,Heir Adda Lfrf,31.405195,74.492266,168.0,0,#c2410c
+S252,Speedo Gajjumata to Rangers Wing Headquarter,44,ET4082,Rangers Wing Headquarter,31.393522,74.499506,172.0,1,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,1,ET4083,Rangers Wing Headquarter,31.39358,74.499471,0.0,1,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,2,ET4578,Heir Adda,31.405239,74.492214,4.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,3,ET4579,Masjid Ghosia Heir,31.410717,74.489367,8.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,4,ET8777,"Govt. College for Girls, Heir (BWD)",31.412379,74.48775,12.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,5,ET4580,Shareef Pura Market,31.41428,74.486567,16.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,6,ET4581,Total Pump Heir,31.405239,74.492214,20.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,7,ET4582,Karbath,31.426294,74.478668,24.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,8,ET4583,Bankers Society,31.435213,74.472146,28.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,9,ET4584,Dera Chahal 2,31.440511,74.468123,32.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,10,ET4585,Elite School 2,31.445718,74.462234,36.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,11,ET8780,Mota Singh Wala 1 (BWD),31.448946,74.454513,40.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,12,ET4586,Workshop Stop 1,31.450769,74.452181,44.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,13,ET4587,School Stop Lidher 1,31.453878,74.4463761,48.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,14,ET4588,Shehbaz Sharif Hospital 1,31.457064,74.443197,52.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,15,ET4589,Lidher 1,31.459053,74.439733,56.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,16,ET4590,Nawaz Sharif Interchange,31.466128,74.4323,60.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,17,ET4591,Nawaz Sharif Interchange 2,31.466381,74.432517,64.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,18,ET4592,Lidher 2,31.458925,74.439764,68.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,19,ET4593,Shehbaz Sharif Hospital 2,31.456947,74.443239,72.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,20,ET4594,School Stop Lidher 2,31.454562,74.4469003,76.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,21,ET4595,Workshop Stop 2,31.451036,74.4514,80.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,22,ET8781,Mota Singh Wala 2 (BWD),31.448945,74.454673,84.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,23,ET4596,Ramzan Nursery 2,31.448336,74.457797,88.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,24,ET4597,PKLI-1,31.4544446,74.4614209,92.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,25,ET4598,PKLI-2,31.456982,74.463125,96.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,26,ET4599,PKLI-1 (u-turn),31.453367,74.462253,100.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,27,ET4600,Ramzan Nursery 1,31.448186,74.457947,104.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,28,ET4601,Elite School 1,31.445718,74.462234,108.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,29,ET4602,Dera Chahal 1,31.44051,74.468116,112.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,30,ET4603,Avicina Hospital,31.43327,74.46779,116.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,31,ET4604,Thethar Stop,31.4231762,74.4567629,120.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,32,ET4605,Sora Stop,31.417986,74.435111,124.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,33,ET4606,Nishat Apparel,31.415121,74.430652,128.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,34,ET4607,Deo Pull,31.406945,74.419122,132.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,35,ET4608,Nishat Dying Mills,31.402864,74.41443,136.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,36,ET4609,Raja Bhula Pull,31.402154,74.406288,140.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,37,ET4610,Hush Puppies,31.401791,74.401806,144.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,38,ET4611,Transport Housing Society,31.401502,74.397881,148.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,39,ET4612,Bhuller Village,31.400882,74.39585,152.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,40,ET4613,Ghankar Stop,31.4003176,74.3937882,156.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,41,ET4614,Shafi Reso,31.4000785,74.3899226,160.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,42,ET4615,Nishat Mills,31.399272,74.38113,164.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,43,ET4616,Ali Murtaza Associates,31.396529,74.368895,168.0,0,#c2410c
+S252R,Speedo Rangers Wing Headquarter to Gajjumata,44,ET494,Gajjumata,31.396858,74.361687,172.0,1,#c2410c
+S270,Speedo Jinnah Bus Terminal to Bahria Town,1,ET1353,Jinnah terminal,31.467455,74.226003,0.0,1,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,2,ET4181,Thokar Niaz Baig,31.470415,74.240941,4.5,1,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,3,ET4182,Daewoo Terminal,31.470109,74.238883,9.0,1,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,4,ET5647,Rabani Hospital,31.466811,74.236899,13.5,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,5,ET5648,Doctor Society,31.462016,74.231481,18.0,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,6,ET5649,Eden Canal Villa's,31.459531,74.228899,22.5,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,7,ET5650,Basco Society,31.455626,74.22076,27.0,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,8,ET5651,Muhafiz Town Market,31.455448,74.217124,31.5,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,9,ET5652,Rajput Town,31.453429,74.212492,36.0,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,10,ET5653,EME Society,31.450511,74.208591,40.5,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,11,ET5654,Aabpara Market,31.447034,74.20504,45.0,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,12,ET5655,Green Fort 2,31.437901,74.195539,49.5,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,13,ET5656,Saleem Memorial Hospital,31.435641,74.192999,54.0,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,14,ET5657,P & D Society,31.430518,74.187354,58.5,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,15,ET5658,NESPAK Society,31.427085,74.183535,63.0,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,16,ET5659,Izmir Town,31.422996,74.179044,67.5,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,17,ET5660,Jubliee Town,31.408244,74.169824,72.0,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,18,ET5661,Mian Chowk,31.407326,74.183044,76.5,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,19,ET5662,Indus Hospital,31.403494,74.18393,81.0,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,20,ET5663,Shahkam Chowk,31.400575,74.171414,85.5,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,21,ET5664,Canal Garden,31.39652,74.16913,90.0,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,22,ET5665,Alwaiz Tower,31.390352,74.168749,94.5,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,23,ET5666,Bahria Town,31.384782,74.168431,99.0,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,24,ET5667,Bail Chowk,31.376038,74.165804,103.5,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,25,ET5668,Bahria Masjid,31.369666,74.183171,108.0,0,#0e7490
+S270,Speedo Jinnah Bus Terminal to Bahria Town,26,ET5669,Bahria Masjid,31.369666,74.183171,112.5,1,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,1,ET5669,Bahria Masjid,31.369666,74.183171,0.0,1,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,2,ET5670,Bail Chowk,31.375557,74.166283,4.5,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,3,ET5671,Bahria Town,31.384719,74.168287,9.0,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,4,ET5672,Alwaiz Tower,31.38994,74.168581,13.5,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,5,ET5673,Canal Garden,31.394995,74.168878,18.0,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,6,ET5674,Shahkam Chowk,31.400799,74.168455,22.5,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,7,ET5675,Indus hospital,31.403528,74.183675,27.0,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,8,ET5676,Mian Chowk,31.407072,74.18265,31.5,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,9,ET5677,Jubliee Town,31.408189,74.169685,36.0,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,10,ET5678,Izmir Town,31.421547,74.177196,40.5,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,11,ET5679,NESPAK Society,31.427308,74.183585,45.0,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,12,ET5680,P & D Society,31.43071,74.187366,49.5,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,13,ET5681,Saleem Memorial Hospital,31.435581,74.192766,54.0,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,14,ET5682,Green Fort 2,31.438312,74.195778,58.5,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,15,ET5683,Aabpara Market,31.446586,74.204362,63.0,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,16,ET5684,EME Society,31.451478,74.209641,67.5,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,17,ET5685,Rajput Town,31.453897,74.212917,72.0,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,18,ET5686,Muhafiz Town Market,31.45556,74.216854,76.5,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,19,ET5687,Basco Society,31.455755,74.220427,81.0,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,20,ET5688,Eden Canal Villa's,31.458993,74.228206,85.5,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,21,ET5689,Doctor Society,31.462078,74.231344,90.0,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,22,ET5690,Rabani Hospital,31.465982,74.235837,94.5,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,23,ET5692,Daewoo Terminal,31.470063,74.238394,99.0,0,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,24,ET4183,Thokar Niaz Baig,31.471465,74.241715,103.5,1,#0e7490
+S270R,Speedo Bahria Town to Jinnah Bus Terminal,25,ET1415,Jinnah Terminal,31.467204,74.225585,108.0,1,#0e7490
+S258,Speedo KSK to Railway Station,1,ET4091,Kala Shah Kaku,31.718919,74.26931,0.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,2,ET4837,Baoli Jamada,31.710869,74.27096,4.0,0,#4d7c0f
+S258,Speedo KSK to Railway Station,3,ET4838,Sham-k-Pind,31.706695,74.271841,8.0,0,#4d7c0f
+S258,Speedo KSK to Railway Station,4,ET4839,UET KSK Campus,31.700655,74.273155,12.0,0,#4d7c0f
+S258,Speedo KSK to Railway Station,5,ET4840,Labour Colony,31.689698,74.275484,16.0,0,#4d7c0f
+S258,Speedo KSK to Railway Station,6,ET4011,Rana Town,31.685383,74.276377,20.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,7,ET4096,Nazim Road,31.678098,74.277901,24.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,8,ET4013,Haider Road,31.672836,74.279013,28.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,9,ET4014,College Road,31.66735,74.280183,32.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,10,ET4015,Rachna Town,31.659162,74.281851,36.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,11,ET4016,Feroz Wala,31.652603,74.283335,40.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,12,ET4017,Imamia Colony,31.647401,74.284527,44.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,13,ET4018,Kala Khatai Road,31.64459,74.285152,48.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,14,ET4019,Barkat Town,31.642429,74.285497,52.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,15,ET4020,Machas Factory,31.637809,74.286324,56.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,16,ET4021,Kashmir Park,31.633128,74.287271,60.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,17,ET4022,Wandala Road,31.630076,74.287953,64.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,18,ET4023,Shahdra Railway Station,31.627539,74.28847,68.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,19,ET4025,Shahdra Lari Adda,31.61892,74.290235,72.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,20,ET4026,Shahdara Metro Station,31.615577,74.291228,76.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,21,ET4027,Niazi Interchange,31.604008,74.299597,80.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,22,ET4028,Niazi Chowk,31.601538,74.29953,84.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,23,ET4029,Metro,31.597478,74.299716,88.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,24,ET4030,Timber Market,31.595194,74.301645,92.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,25,ET4031,Azadi Chowk,31.5911534,74.3066753,96.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,26,ET4032,Texali Chowk,31.5863313,74.3072296,100.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,27,ET4033,Bhatti Chowk,31.5813405,74.3065642,104.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,28,ET4034,Bhatti Chowk-2,31.5826072,74.3059711,108.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,29,ET4035,texali Chowk 2,31.5855537,74.3062723,112.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,30,ET4036,Lari Adda Gol Chakar,31.5957143,74.314919,116.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,31,ET4037,Lari Adda,31.592788,74.316926,120.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,32,ET4038,Kashmiri Gate,31.587819,74.321152,124.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,33,ET4039,Sheranwala Gate,31.587297,74.32389,128.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,34,ET4040,Nawaz Sharif Hospital,31.585975,74.327363,132.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,35,ET4041,Railway Station-2,31.576296,74.335913,136.0,1,#4d7c0f
+S258,Speedo KSK to Railway Station,36,ET468,Railway Station,31.575274,74.33544,140.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,1,ET1060,Railway Station,31.575305,74.335559,0.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,2,ET4042,Railway Station-2,31.578481,74.334026,4.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,3,ET4043,Nawaz Sharif Hospital,31.5858157,74.327171,8.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,4,ET4044,Sheranwala Gate,31.587146,74.324276,12.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,5,ET4045,Kashmiri Gate,31.589524,74.317466,16.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,6,ET4046,Lari Adda,31.592508,74.316837,20.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,7,ET4052,Texali Chowk 2,31.5855227,74.3062372,24.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,8,ET4051,Bhatti Chowk-2,31.5826022,74.3060231,28.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,9,ET4050,Bhatti Chowk,31.582566,74.306748,32.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,10,ET4049,Texali Chowk,31.5863362,74.3073049,36.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,11,ET4048,Azadi Chowk,31.591493,74.306791,40.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,12,ET4054,Timber Market,31.5947459,74.30182,44.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,13,ET4055,Metro,31.597294,74.299698,48.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,14,ET4056,Niazi Chowk,31.601246,74.299257,52.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,15,ET4057,Niazi Interchange,31.604209,74.29917,56.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,16,ET4058,Shahdara Metro Station,31.615263,74.290633,60.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,17,ET4059,Shahdra Lari Adda,31.619525,74.289761,64.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,18,ET4061,Shahdra Railway Station,31.627299,74.288307,68.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,19,ET4062,Wandala Road,31.629667,74.287802,72.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,20,ET4063,Kashmir Park,31.633662,74.286958,76.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,21,ET4064,Machas Factory,31.637671,74.286108,80.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,22,ET4065,Barkat Town,31.641265,74.285373,84.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,23,ET4066,Kala Khatai Road,31.644471,74.284581,88.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,24,ET4067,Imamia Colony,31.647508,74.283906,92.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,25,ET4068,Feroz Wala,31.652171,74.283095,96.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,26,ET4069,Rachna Town,31.658594,74.281807,100.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,27,ET4070,College Road,31.667295,74.279928,104.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,28,ET4071,Haider Road,31.672601,74.278804,108.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,29,ET4072,Nazim Road,31.677738,74.27774,112.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,30,ET4073,Rana Town,31.684197,74.276386,116.0,1,#4d7c0f
+S258R,Speedo Railway Station to KSK,31,ET4845,Labour Colony,31.689224,74.275259,120.0,0,#4d7c0f
+S258R,Speedo Railway Station to KSK,32,ET4841,UET KSK Campus,31.700015,74.272896,124.0,0,#4d7c0f
+S258R,Speedo Railway Station to KSK,33,ET4842,Sham-k-Pind,31.705769,74.271815,128.0,0,#4d7c0f
+S258R,Speedo Railway Station to KSK,34,ET4843,Baoli Jamada,31.710223,74.270849,132.0,0,#4d7c0f
+S258R,Speedo Railway Station to KSK,35,ET4092,Kala Shah Kaku,31.718919,74.26931,136.0,1,#4d7c0f
+S246,Speedo Main Market Gulberg to Babu Sabu,1,ET1361,Main Market Gulberg,31.524405,74.346414,0.0,1,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,2,ET220,McDonalds 1,31.5273924,74.349909,2.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,3,ET4264,Siddique Trade Center,31.5306026,74.3523149,4.0,1,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,4,ET222,McDonalds 2,31.5271594,74.3510359,6.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,5,ET4266,Main Market-2,31.522577,74.347798,8.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,6,ET4267,Mini market,31.521003,74.34677,10.0,1,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,7,ET4268,Hafeez Center,31.5161,74.344,12.0,1,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,8,ET4269,Liberty Chowk,31.510884,74.34129,14.0,1,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,9,ET4270,Center Point,31.5064765,74.3367845,16.0,1,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,10,ET4166,Barkat Market,31.50102,74.3208302,18.0,1,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,11,ET4167,Campus Pull,31.5039451,74.3119961,20.0,1,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,12,ET4271,PU Campus,31.505642,74.309596,22.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,13,ET4272,Sheikh Zaid Hospital,31.506596,74.308197,24.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,14,ET4273,Bhekewal Morr 1,31.509226,74.303196,26.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,15,ET4274,Pilot School,31.510187,74.301164,28.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,16,ET4275,Farooq Hospital,31.512561,74.299166,30.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,17,ET4276,Gulshan-e-Iqbal,31.515878,74.295187,32.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,18,ET4277,Dubai Chowk,31.519337,74.291189,34.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,19,ET4278,Flat Stop,31.521602,74.290238,36.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,20,ET4279,Kali Kothi Stop,31.524522,74.287975,38.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,21,ET4280,Scheme Morr,31.525381,74.284284,40.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,22,ET4281,Grand Battery Stop,31.5284,74.2848,42.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,23,ET4282,Chowk Yateem Khana,31.532478,74.285945,44.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,24,ET4283,City Bus Stand,31.533744,74.282621,46.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,25,ET4284,Shezan Factory,31.534955,74.279284,48.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,26,ET4285,Niazi Adda,31.536838,74.273074,50.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,27,ET4286,Bilal Daewoo,31.537177,74.271583,52.0,0,#be123c
+S246,Speedo Main Market Gulberg to Babu Sabu,28,ET855,Babu sabu,31.53832,74.26664,54.0,1,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,1,ET856,Babu sabu,31.53851,74.26669,0.0,1,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,2,ET4287,Bilal Daewoo,31.53751,74.27082,2.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,3,ET4288,Niazi Adda,31.536996,74.272188,4.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,4,ET4289,Shezan Factory,31.535341,74.278593,6.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,5,ET4290,City Bus Stand,31.53385,74.282258,8.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,6,ET4291,Bund Road Station,31.532947,74.287833,10.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,7,ET4292,Grand Battery Stop,31.52816,74.28495,12.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,8,ET4293,Scheme Morr,31.525447,74.283901,14.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,9,ET4294,Kali Kothi Stop,31.52433,74.288257,16.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,10,ET4295,Flat Stop,31.521602,74.290001,18.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,11,ET4296,Dubai Chowk,31.51915,74.29164,20.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,12,ET4297,Gulshan-e-Iqbal,31.516047,74.295012,22.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,13,ET4298,Farooq Hospital,31.512738,74.298903,24.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,14,ET4299,Pilot School,31.510971,74.300711,26.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,15,ET4300,Bhekewal Morr 1,31.509471,74.302713,28.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,16,ET4301,Sheikh Zaid Hospital,31.50693,74.30791,30.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,17,ET4302,PU Campus,31.505642,74.309596,32.0,0,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,18,ET4193,Campus Pull,31.5039451,74.3119961,34.0,1,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,19,ET4194,Barkat Market,31.501048,74.320067,36.0,1,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,20,ET4303,Center Point,31.507499,74.337195,38.0,1,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,21,ET4304,Liberty Chowk,31.51091,74.340428,40.0,1,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,22,ET4305,Hafeez Center,31.51553,74.34327,42.0,1,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,23,ET4306,Mini market,31.520955,74.346432,44.0,1,#be123c
+S246R,Speedo Babu Sabu to Main Market Gulberg,24,ET219,Main Market Gulberg,31.52474,74.34609,46.0,1,#be123c
+S260,Speedo Mull Adda to Jinnah Bus Terminal,1,ET5801,Shareef Medical City,31.334723,74.199957,0.0,1,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,2,ET5791,Sui Gas Society,31.338527,74.205195,4.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,3,ET5792,Army Welfare Trust,31.354007,74.226216,8.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,4,ET5794,Beacon House Society,31.359178,74.23017,12.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,5,ET1529,Adda Plot Gol Chakkar,31.362614,74.232729,16.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,6,ET449,Adda Plot,31.36519,74.234884,20.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,7,ET5802,Faizaia Housing Society,31.369226,74.240974,24.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,8,ET5803,Lake City,31.369944,74.251496,28.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,9,ET5804,khayban-e-Amin,31.369634,74.256457,32.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,10,ET5805,Eden Abad,31.373698,74.256167,36.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,11,ET5806,Eden Villas,31.381371,74.253123,40.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,12,ET5807,DHA Rahber,31.387776,74.250527,44.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,13,ET5808,Pine Avenue,31.392124,74.248764,48.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,14,ET5809,University of Lahore,31.39493,74.239699,52.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,15,ET4723,Bhubhtian Chowk,31.394744,74.229919,56.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,16,ET4724,Bhubhtian Pind,31.401267,74.229988,60.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,17,ET4725,Mumtaz Bakhtawar Hospital,31.405407,74.229943,64.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,18,ET4726,Sher-Shah Road,31.410425,74.229728,68.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,19,ET4727,LDA Avenue Chowk,31.421359,74.229771,72.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,20,ET4728,University of South Asia,31.424987,74.230143,76.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,21,ET4729,P.U. Employees Society,31.431096,74.231457,80.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,22,ET4730,Ali-Raza Baad,31.434096,74.2324142,84.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,23,ET4731,Agrics Town,31.441444,74.231965,88.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,24,ET4732,Rahima Baad,31.445545,74.236683,92.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,25,ET4733,QazzalBash Chowk,31.44906,74.242144,96.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,26,ET4734,Katchi Kothi Stop,31.451681,74.245636,100.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,27,ET4735,Fatima Masjid,31.459101,74.244701,104.0,0,#1e40af
+S260,Speedo Mull Adda to Jinnah Bus Terminal,28,ET498,Ali Town Station North,31.46513,74.243878,108.0,1,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,1,ET499,Ali Town Station,31.464643,74.243717,0.0,1,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,2,ET1580,Fatima Masjid,31.459101,74.244701,4.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,3,ET4737,Katchi Kothi Stop,31.452095,74.245444,8.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,4,ET4738,QazzalBash Chowk,31.449023,74.241781,12.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,5,ET4739,Rahima Baad,31.445568,74.236421,16.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,6,ET4740,Agrics Town,31.441237,74.231795,20.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,7,ET4741,Ali-Raza Baad,31.434255,74.232036,24.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,8,ET4742,P.U. Employees Society,31.431538,74.231388,28.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,9,ET4743,University of South Asia,31.425017,74.229979,32.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,10,ET4744,LDA Avenue Chowk,31.4212852,74.2298493,36.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,11,ET4745,Sher-Shah Road,31.4110251,74.2299249,40.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,12,ET4746,Mumtaz Bakhtawar Hospital,31.405411,74.229772,44.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,13,ET4747,Bhubhtian Pind,31.401225,74.229839,48.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,14,ET4748,Bhubhtian Chowk,31.394828,74.22989,52.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,15,ET5810,University of Lahore,31.394952,74.240182,56.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,16,ET5811,Pine Avenue,31.392537,74.24888,60.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,17,ET5812,DHA Rahber,31.387894,74.250738,64.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,18,ET5813,Eden Villas,31.382759,74.252828,68.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,19,ET5814,Eden Abad,31.373201,74.256681,72.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,20,ET5815,khayban-e-Amin,31.369216,74.258337,76.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,21,ET5816,Lake City,31.36968,74.252965,80.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,22,ET5817,Fazaia Housing Society,31.369391,74.241799,84.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,23,ET4753,Adda Plot Gol Chakkar,31.3653178,74.2339816,88.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,24,ET1562,Adda Plot Gol Chakkar 2,31.364534,74.233366,92.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,25,ET5795,Beacon House Society,31.359087,74.230435,96.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,26,ET5796,TNT Ideal Society,31.35304,74.225516,100.0,0,#1e40af
+S260R,Speedo Jinnah Bus Terminal to Mull Adda,27,ET5801,Shareef Medical City,31.334723,74.199957,104.0,1,#1e40af
+S254,Speedo Paragon City to Railway Station,1,ET4087,Paragon City,31.522827,74.451369,0.0,1,#86198f
+S254,Speedo Paragon City to Railway Station,2,ET4666,Dograi,31.526698,74.445793,4.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,3,ET4667,Baoo Wala,31.530801,74.440429,8.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,4,ET4668,Mehfooz Shaheed Garrison,31.533941,74.436207,12.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,5,ET4669,Quaid Check post,31.538525,74.431519,16.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,6,ET4093,Askari 10,31.540871,74.418487,20.0,1,#86198f
+S254,Speedo Paragon City to Railway Station,7,ET4670,Ranger Headquarter,31.541997,74.409026,24.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,8,ET4671,Jawad Cheema Road,31.542081,74.403349,28.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,9,ET4672,Army Museum,31.531451,74.399979,32.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,10,ET4673,Ayub Stadium,31.529306,74.39229,36.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,11,ET4674,APS Sarfaraz Rafique Road,31.52463,74.383647,40.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,12,ET4307,PAF Market,31.51862,74.382475,44.0,1,#86198f
+S254,Speedo Paragon City to Railway Station,13,ET352,R.A Bazar,31.5060305,74.3852852,48.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,14,ET4097,Nadeem Chowk,31.5064665,74.378352,52.0,1,#86198f
+S254,Speedo Paragon City to Railway Station,15,ET4675,Serwar Road,31.506497,74.375001,56.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,16,ET4676,D-Mess Khursheed Alam Rd,31.507876,74.36807,60.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,17,ET4677,F-Mess Shami Road,31.514904,74.368336,64.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,18,ET4678,Munir Road,31.51856,74.368439,68.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,19,ET4679,Abid Majeed Road,31.520674,74.368513,72.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,20,ET4680,Alla-Ud-Din Road 2,31.525967,74.36867,76.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,21,ET4681,Fotress Stadium,31.529209,74.368752,80.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,22,ET4682,Navy Selection Center,31.534846,74.369049,84.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,23,ET4683,CMH,31.540756,74.36936,88.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,24,ET4684,Infantry Road Mian Mir,31.549506,74.362909,92.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,25,ET4685,Dharampura Bridge,31.552743,74.359121,96.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,26,ET4686,Euro Store,31.556337,74.354466,100.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,27,ET4687,Police Station Ghari Shahu,31.560107,74.349828,104.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,28,ET4688,Ghari Shahu Bazar,31.562635,74.346744,108.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,29,ET4689,Ghari Shahu Chowk,31.565462,74.3433,112.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,30,ET4690,Railway HeadQuarters,31.568379,74.340258,116.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,31,ET4691,Bohar Wala Chowk,31.57235,74.337891,120.0,0,#86198f
+S254,Speedo Paragon City to Railway Station,32,ET571,Railway Station-1 North,31.574131,74.33621,124.0,1,#86198f
+S254R,Speedo Railway Station to Paragon City,1,ET572,Railway Station-1 South,31.5743547,74.3358355,0.0,1,#86198f
+S254R,Speedo Railway Station to Paragon City,2,ET4692,Bohar Wala Chowk,31.57255,74.337948,4.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,3,ET4693,Railway HeadQuarters,31.568116,74.340609,8.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,4,ET4694,Ghari Shahu Chowk,31.565537,74.343468,12.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,5,ET4695,Ghari Shahu Bazar,31.56282,74.346718,16.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,6,ET4696,Police Station,31.560083,74.350078,20.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,7,ET4697,Euro Store,31.556456,74.354542,24.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,8,ET4698,Dharampura Bridge,31.552884,74.359181,28.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,9,ET4699,Infantry Road Mian Mir,31.549292,74.363331,32.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,10,ET4700,CMH,31.539324,74.369417,36.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,11,ET4701,Navy Selection Center,31.533469,74.369114,40.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,12,ET4702,Fotress Stadium,31.5293,74.368834,44.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,13,ET4703,Alla-Ud-Din Road 2,31.525738,74.368731,48.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,14,ET4704,Abid Majeed Road,31.521317,74.3686,52.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,15,ET4705,Munir Road,31.518503,74.368499,56.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,16,ET4706,F-Mess Shami Road,31.514683,74.368395,60.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,17,ET4707,D-Mess Khursheed Alam Road,31.506821,74.369718,64.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,18,ET4708,Serwar Road,31.506631,74.376493,68.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,19,ET4709,Nadeem Chowk,31.5065363,74.3793924,72.0,1,#86198f
+S254R,Speedo Railway Station to Paragon City,20,ET352,R.A Bazar,31.5060305,74.3852852,76.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,21,ET4342,PAF Market,31.519471,74.381337,80.0,1,#86198f
+S254R,Speedo Railway Station to Paragon City,22,ET4710,APS Sarfaraz Rafique Road,31.524294,74.382564,84.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,23,ET4711,Ayub Stadium,31.529773,74.391571,88.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,24,ET4712,Army Museum,31.532201,74.399437,92.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,25,ET4713,Jawad Cheema Road,31.541796,74.401518,96.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,26,ET4714,Ranger Headquarter,31.542231,74.41046,100.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,27,ET4095,Askari 10,31.540634,74.419081,104.0,1,#86198f
+S254R,Speedo Railway Station to Paragon City,28,ET4715,Quaid Check post,31.538266,74.432537,108.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,29,ET4716,Mehfooz Shaheed Garrison,31.53434,74.435703,112.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,30,ET4717,Baoo Wala,31.530839,74.440536,116.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,31,ET4718,Dograi,31.526725,74.445905,120.0,0,#86198f
+S254R,Speedo Railway Station to Paragon City,32,ET4088,Paragon City,31.522827,74.451369,124.0,1,#86198f
+S249,Speedo Purana Kahna to R.A Bazar,1,ET298,Purana Kahna,31.351773,74.373349,0.0,1,#047857
+S249,Speedo Purana Kahna to R.A Bazar,2,ET4420,Malik Pura,31.355999,74.371255,2.4,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,3,ET4421,5 Number Stop,31.36021,74.3691,4.7,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,4,ET4422,Railu Wali Masjid,31.364276,74.367015,7.1,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,5,ET4423,Kahna,31.370012,74.365831,9.5,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,6,ET4424,Darbar Barket Shah,31.375051,74.364844,11.8,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,7,ET4425,Ahlu Road,31.379226,74.364246,14.2,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,8,ET4426,Rehmat Park,31.383053,74.363685,16.6,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,9,ET4427,LDA Gol Chakar,31.389292,74.362681,18.9,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,10,ET4428,Gajjumatta,31.397008,74.361441,21.3,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,11,ET4429,Masjid Ibrahim,31.400803,74.361057,23.7,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,12,ET4430,Dullu Khurd,31.406391,74.360214,26.0,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,13,ET4431,Dulam,31.408943,74.359865,28.4,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,14,ET4432,Yohanabad,31.413486,74.359165,30.8,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,15,ET8788,Haji Di Khui (Forward),31.415792,74.358693,32.0,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,16,ET4433,Nishtar Colony,31.42075,74.358104,33.1,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,17,ET4434,Descon Headquarters,31.426394,74.357301,35.5,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,18,ET4435,Attari Saroba,31.432014,74.356453,37.9,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,19,ET4436,Venus Housing,31.4386347,74.3554727,40.2,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,20,ET4437,Kamahan,31.441311,74.355027,42.6,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,21,ET4438,Chungi Metro station,31.450337,74.353091,45.0,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,22,ET4109,Ghazi Chowk,31.456512,74.351226,47.3,1,#047857
+S249,Speedo Purana Kahna to R.A Bazar,23,ET4439,Shoukat Town,31.460385,74.357886,49.7,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,24,ET4440,Naka Stop,31.463447,74.367454,52.1,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,25,ET4441,Chota Ishara Stop,31.465853,74.375174,54.4,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,26,ET4442,Sector C (Y-Block),31.46787,74.38138,56.8,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,27,ET4443,LESCO,31.47029,74.38919,59.2,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,28,ET4444,Charar Pind,31.472349,74.392281,61.5,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,29,ET4445,DHA Nursery,31.473483,74.393671,63.9,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,30,ET4446,Defence Chowk,31.477557,74.399058,66.3,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,31,ET4447,PSO,31.48274,74.40586,68.6,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,32,ET4448,Bhatta Chowk,31.486754,74.41115,71.0,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,33,ET4449,Arifabad,31.491213,74.408639,73.4,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,34,ET4450,Nadirabad,31.494008,74.405947,75.7,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,35,ET4451,Ali View Garden,31.494744,74.403265,78.1,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,36,ET4452,Cantt. Bus Stop,31.497754,74.398562,80.5,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,37,ET4453,Fauji Foundation,31.498989,74.394909,82.8,0,#047857
+S249,Speedo Purana Kahna to R.A Bazar,38,ET4074,R A Bazar,31.506021,74.38468,85.2,1,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,1,ET4077,R A Bazar,31.506021,74.38468,0.0,1,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,2,ET4454,Fauji Foundation,31.499388,74.394078,2.4,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,3,ET4455,Cantt. Bus Stop,31.49782,74.3985,4.8,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,4,ET4456,Ali View Garden,31.494753,74.403197,7.2,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,5,ET4457,Nadirabad,31.494057,74.405594,9.6,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,6,ET4458,Arifabad,31.49111,74.40868,12.0,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,7,ET4459,Bhatta Chowk,31.486511,74.410864,14.4,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,8,ET4460,PSO,31.481871,74.404857,16.8,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,9,ET4461,Defence Chowk,31.477156,74.39862,19.2,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,10,ET4462,DHA Nursery,31.473885,74.394297,21.6,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,11,ET4463,Charar Pind,31.471845,74.391665,24.0,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,12,ET4464,LESCO,31.470115,74.388878,26.4,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,13,ET4465,Sector C (Y-Block),31.467114,74.379377,28.8,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,14,ET4466,Chota Ishara Stop,31.465481,74.3743,31.2,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,15,ET4467,Naka Stop,31.463421,74.367675,33.6,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,16,ET4468,Shoukat Town,31.4605,74.358327,36.0,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,17,ET4111,Ghazi Chowk,31.456512,74.351226,38.4,1,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,18,ET4469,Chungi Metro Station,31.449822,74.353557,40.8,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,19,ET4076,Chungi Amar Sidhu,31.450337,74.353091,43.2,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,20,ET4471,Kamahan,31.441068,74.35549,45.6,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,21,ET4472,Kamahan Road,31.43912,74.355702,48.0,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,22,ET4473,Awan Market,31.435523,74.356208,50.4,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,23,ET4474,Attari Saroba,31.43107,74.356912,52.8,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,24,ET4475,Descon Headquarters,31.426083,74.357613,55.2,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,25,ET4476,Nishtar Colony,31.421287,74.358337,57.6,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,26,ET8789,Haji Di Khui (Backward),31.416453,74.35908,58.8,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,27,ET4477,Yohanabad,31.413005,74.359587,60.0,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,28,ET4478,Dulam,31.409169,74.360116,62.4,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,29,ET4479,Dullu Khurd,31.405781,74.360654,64.8,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,30,ET4480,Gajjumatta,31.396868,74.362045,67.2,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,31,ET4481,Gajumatta Interchange,31.392101,74.362666,69.6,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,32,ET4482,Rehmat Park,31.382848,74.363947,72.0,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,33,ET4483,Ahlu Road,31.378817,74.364531,74.4,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,34,ET4484,Darbar Barket Shah,31.375441,74.365035,76.8,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,35,ET4485,T.H.Q Hospital,31.371453,74.365872,79.2,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,36,ET4486,Kahna,31.369668,74.366021,81.6,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,37,ET4487,Railu Wali Masjid,31.364706,74.367046,84.0,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,38,ET4488,5 Number Stop,31.361339,74.368769,86.4,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,39,ET4489,Malik Pura,31.355346,74.371865,88.8,0,#047857
+S249R,Speedo R.A Bazar to Purana Kahna,40,ET4081,Purana Kahna,31.352396,74.373475,91.2,1,#047857
+S247,Speedo R.A Bazar to Nasir Bagh,1,ET4074,R A Bazar,31.506021,74.38468,0.0,1,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,2,ET4307,PAF Market,31.51862,74.382475,2.1,1,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,3,ET4308,Telephone Exchange,31.521868,74.380621,4.2,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,4,ET4309,Girja Chowk,31.522995,74.379153,6.3,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,5,ET4310,Alla-ud-Din Road 1,31.525563,74.37928,8.4,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,6,ET4311,Afshan Chowk,31.527034,74.379334,10.5,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,7,ET4312,Rahat Bakery,31.529932,74.375455,12.6,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,8,ET4313,Fortress Stradium,31.530673,74.364772,14.7,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,9,ET4314,Mian Mir,31.537744,74.356504,16.8,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,10,ET4315,Gymkhana,31.540597,74.353337,18.9,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,11,ET4316,Canal Bridge,31.542562,74.351448,21.0,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,12,ET4317,Aitchison College,31.544737,74.348982,23.1,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,13,ET4318,Club Road,31.551474,74.34119,25.2,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,14,ET4319,PC Hotel,31.553559,74.337874,27.3,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,15,ET4320,Governor House,31.554606,74.334797,29.4,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,16,ET4202,Lahore Zoo,31.5579852,74.3271295,31.5,1,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,17,ET4203,Charing Cross,31.559106,74.324211,33.6,1,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,18,ET4321,Regal Chowk,31.562079,74.31885,35.7,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,19,ET4322,GPO,31.564401,74.315386,37.8,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,20,ET4323,Anarkali,31.567527,74.310805,39.9,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,21,ET4324,PU Old Campus,31.568814,74.308425,42.0,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,22,ET4325,Government College,31.571264,74.307284,44.1,0,#b45309
+S247,Speedo R.A Bazar to Nasir Bagh,23,ET269,Nasir Bagh,31.571753,74.305574,46.2,1,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,1,ET857,Nasir Bagh,31.571753,74.305574,0.0,1,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,2,ET4326,PU Old Campus,31.56884,74.308345,2.2,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,3,ET4327,Anarkali,31.568045,74.310308,4.5,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,4,ET4328,GPO,31.564944,74.314992,6.7,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,5,ET4329,Regal Chowk,31.562442,74.318412,9.0,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,6,ET4214,Charing Cross,31.55907,74.32399,11.2,1,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,7,ET4215,Lahore Zoo,31.558559,74.32657,13.4,1,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,8,ET4330,Governor House,31.554019,74.33712,15.7,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,9,ET4331,PC Hotel,31.553455,74.33836,17.9,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,10,ET4332,Club Road,31.550557,74.342489,20.2,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,11,ET4333,Aitchison College,31.545463,74.348542,22.4,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,12,ET4334,Canal Bridge,31.542892,74.351216,24.6,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,13,ET4335,Gymkhana,31.53912,74.35503,26.9,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,14,ET4336,Mian Mir,31.537686,74.356633,29.1,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,15,ET4337,Rahat Bakery,31.530036,74.375367,31.4,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,16,ET4338,Afshan Chowk,31.527631,74.379195,33.6,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,17,ET4339,Alla-ud-Din Road 1,31.525643,74.379145,35.8,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,18,ET4340,Girja Chowk,31.523485,74.379085,38.1,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,19,ET4341,Telephone Exchange,31.522066,74.380454,40.3,0,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,20,ET4342,PAF Market,31.519471,74.381337,42.6,1,#b45309
+S247R,Speedo Nasir Bagh to R.A Bazar,21,ET4077,R A Bazar,31.506021,74.38468,44.8,1,#b45309
+S240,Speedo R.A. Bazar to Chungi Amar Sidhu,1,ET4074,R A Bazar,31.506021,74.38468,0.0,1,#6d28d9
+S240,Speedo R.A. Bazar to Chungi Amar Sidhu,2,ET4097,Nadeem Chowk,31.5064665,74.378352,2.1,1,#6d28d9
+S240,Speedo R.A. Bazar to Chungi Amar Sidhu,3,ET4098,T-Stop,31.501553,74.378347,4.2,0,#6d28d9
+S240,Speedo R.A. Bazar to Chungi Amar Sidhu,4,ET4099,Defence Morr,31.494455,74.373872,6.3,0,#6d28d9
+S240,Speedo R.A. Bazar to Chungi Amar Sidhu,5,ET4100,Korray Stop,31.492226,74.371693,8.4,0,#6d28d9
+S240,Speedo R.A. Bazar to Chungi Amar Sidhu,6,ET4101,Shareef Market,31.490368,74.370029,10.5,0,#6d28d9
+S240,Speedo R.A. Bazar to Chungi Amar Sidhu,7,ET4102,College Stop,31.488457,74.368186,12.6,0,#6d28d9
+S240,Speedo R.A. Bazar to Chungi Amar Sidhu,8,ET4103,Walton,31.48585,74.365739,14.7,0,#6d28d9
+S240,Speedo R.A. Bazar to Chungi Amar Sidhu,9,ET4104,Bab e Pakistan,31.481994,74.362044,16.8,0,#6d28d9
+S240,Speedo R.A. Bazar to Chungi Amar Sidhu,10,ET4105,Workshop,31.478821,74.359051,18.9,0,#6d28d9
+S240,Speedo R.A. Bazar to Chungi Amar Sidhu,11,ET4106,Rabia Basri Stop,31.474919,74.355365,21.0,0,#6d28d9
+S240,Speedo R.A. Bazar to Chungi Amar Sidhu,12,ET4107,Packages,31.4711637,74.351807,23.1,0,#6d28d9
+S240,Speedo R.A. Bazar to Chungi Amar Sidhu,13,ET4108,Qainchi,31.466325,74.348835,25.2,0,#6d28d9
+S240,Speedo R.A. Bazar to Chungi Amar Sidhu,14,ET4109,Ghazi Chowk,31.456512,74.351226,27.3,1,#6d28d9
+S240,Speedo R.A. Bazar to Chungi Amar Sidhu,15,ET4075,Chungi Amar Sidhu,31.449822,74.353557,29.4,1,#6d28d9
+S240R,Speedo Chungi Amar Sidhu to R.A. Bazar,1,ET4470,Chungi Amer Sidhu,31.447943,74.354202,0.0,1,#6d28d9
+S240R,Speedo Chungi Amar Sidhu to R.A. Bazar,2,ET4111,Ghazi Chowk,31.456512,74.351226,2.1,1,#6d28d9
+S240R,Speedo Chungi Amar Sidhu to R.A. Bazar,3,ET4152,Qainchi stop,31.463541,74.348333,4.2,1,#6d28d9
+S240R,Speedo Chungi Amar Sidhu to R.A. Bazar,4,ET4110,Packages,31.470274,74.350629,6.3,0,#6d28d9
+S240R,Speedo Chungi Amar Sidhu to R.A. Bazar,5,ET4112,Workshop,31.478893,74.358627,8.4,0,#6d28d9
+S240R,Speedo Chungi Amar Sidhu to R.A. Bazar,6,ET4113,Bab e Pakistan,31.481984,74.36169,10.5,0,#6d28d9
+S240R,Speedo Chungi Amar Sidhu to R.A. Bazar,7,ET4114,Walton,31.485658,74.365225,12.6,0,#6d28d9
+S240R,Speedo Chungi Amar Sidhu to R.A. Bazar,8,ET4115,College Stop,31.488001,74.367416,14.7,0,#6d28d9
+S240R,Speedo Chungi Amar Sidhu to R.A. Bazar,9,ET4116,Shareef Market,31.490314,74.36962,16.8,0,#6d28d9
+S240R,Speedo Chungi Amar Sidhu to R.A. Bazar,10,ET4117,Korray Stop,31.493294,74.372418,18.9,0,#6d28d9
+S240R,Speedo Chungi Amar Sidhu to R.A. Bazar,11,ET4118,Defence Morr,31.494824,74.373932,21.0,0,#6d28d9
+S240R,Speedo Chungi Amar Sidhu to R.A. Bazar,12,ET4709,Nadeem Chowk,31.5065363,74.3793924,23.1,1,#6d28d9
+S240R,Speedo Chungi Amar Sidhu to R.A. Bazar,13,ET4077,R A Bazar,31.506021,74.38468,25.2,1,#6d28d9
+S244,Speedo Railway Station to Gulshan Ravi OL Station,1,ET571,Railway Station-1 North,31.574131,74.33621,0.0,1,#0891b2
+S244,Speedo Railway Station to Gulshan Ravi OL Station,2,ET4196,Haji Camp,31.5697841,74.3356996,1.9,0,#0891b2
+S244,Speedo Railway Station to Gulshan Ravi OL Station,3,ET4197,Police Line,31.5674724,74.3356905,3.9,0,#0891b2
+S244,Speedo Railway Station to Gulshan Ravi OL Station,4,ET4198,Shimla Pahari,31.564235,74.335428,5.8,0,#0891b2
+S244,Speedo Railway Station to Gulshan Ravi OL Station,5,ET4199,Shimla Pahari-2,31.5620897,74.3343419,7.7,0,#0891b2
+S244,Speedo Railway Station to Gulshan Ravi OL Station,6,ET4201,Aiwan-E-Iqbal,31.560749,74.329784,9.7,0,#0891b2
+S244,Speedo Railway Station to Gulshan Ravi OL Station,7,ET4202,Lahore Zoo,31.5579852,74.3271295,11.6,1,#0891b2
+S244,Speedo Railway Station to Gulshan Ravi OL Station,8,ET4203,Charing Cross,31.559106,74.324211,13.5,1,#0891b2
+S244,Speedo Railway Station to Gulshan Ravi OL Station,9,ET4204,Ganga Ram Hospital,31.555041,74.320951,15.4,0,#0891b2
+S244,Speedo Railway Station to Gulshan Ravi OL Station,10,ET4205,Waris Road,31.551675,74.318838,17.4,0,#0891b2
+S244,Speedo Railway Station to Gulshan Ravi OL Station,11,ET1383,Qartaba Chowk,31.549176,74.3149354,19.3,1,#0891b2
+S244,Speedo Railway Station to Gulshan Ravi OL Station,12,ET1384,Surayya Azeem Hospital,31.553096,74.305701,21.2,0,#0891b2
+S244,Speedo Railway Station to Gulshan Ravi OL Station,13,ET4206,Chauburji Station,31.553083,74.306089,23.2,0,#0891b2
+S244,Speedo Railway Station to Gulshan Ravi OL Station,14,ET4207,Poonch House,31.550689,74.299442,25.1,0,#0891b2
+S244,Speedo Railway Station to Gulshan Ravi OL Station,15,ET526,Gulshan Ravi Station,31.544948,74.296149,27.0,1,#0891b2
+S244R,Speedo Gulshan Ravi OL Station to Railway Station,1,ET4080,Gulshan Ravi Station,31.544948,74.295732,0.0,1,#0891b2
+S244R,Speedo Gulshan Ravi OL Station to Railway Station,2,ET4208,Poonch House,31.549863,74.29957,1.9,0,#0891b2
+S244R,Speedo Gulshan Ravi OL Station to Railway Station,3,ET4209,Chauburji Station,31.552581,74.303057,3.9,0,#0891b2
+S244R,Speedo Gulshan Ravi OL Station to Railway Station,4,ET4210,Surayya Azeem Hospital,31.5532447,74.305827,5.8,0,#0891b2
+S244R,Speedo Gulshan Ravi OL Station to Railway Station,5,ET4211,Qartaba Chowk,31.5500218,74.3150893,7.7,1,#0891b2
+S244R,Speedo Gulshan Ravi OL Station to Railway Station,6,ET4212,Waris Road,31.5512137,74.318805,9.7,0,#0891b2
+S244R,Speedo Gulshan Ravi OL Station to Railway Station,7,ET4213,Ganga Ram Hospital,31.5543701,74.320279,11.6,0,#0891b2
+S244R,Speedo Gulshan Ravi OL Station to Railway Station,8,ET4214,Charing Cross,31.55907,74.32399,13.5,1,#0891b2
+S244R,Speedo Gulshan Ravi OL Station to Railway Station,9,ET4215,Lahore Zoo,31.558559,74.32657,15.4,1,#0891b2
+S244R,Speedo Gulshan Ravi OL Station to Railway Station,10,ET4216,Aiwan-E-Iqbal,31.560416,74.329828,17.4,0,#0891b2
+S244R,Speedo Gulshan Ravi OL Station to Railway Station,11,ET4217,Shaheen Complex,31.56187,74.332791,19.3,0,#0891b2
+S244R,Speedo Gulshan Ravi OL Station to Railway Station,12,ET4218,Shimla Pahari-2,31.5636361,74.3352108,21.2,0,#0891b2
+S244R,Speedo Gulshan Ravi OL Station to Railway Station,13,ET4219,Police Line,31.567685,74.335524,23.2,0,#0891b2
+S244R,Speedo Gulshan Ravi OL Station to Railway Station,14,ET4220,Haji Camp,31.570486,74.3356,25.1,0,#0891b2
+S244R,Speedo Gulshan Ravi OL Station to Railway Station,15,ET572,Railway Station-1 South,31.5743547,74.3358355,27.0,1,#0891b2
+S239,Speedo Rana Town to Railway Station,1,ET4011,Rana Town,31.685383,74.276377,0.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,2,ET4096,Nazim Road,31.678098,74.277901,4.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,3,ET4013,Haider Road,31.672836,74.279013,8.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,4,ET4014,College Road,31.66735,74.280183,12.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,5,ET4015,Rachna Town,31.659162,74.281851,16.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,6,ET4016,Feroz Wala,31.652603,74.283335,20.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,7,ET4017,Imamia Colony,31.647401,74.284527,24.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,8,ET4018,Kala Khatai Road,31.64459,74.285152,28.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,9,ET4019,Barkat Town,31.642429,74.285497,32.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,10,ET4020,Machas Factory,31.637809,74.286324,36.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,11,ET4021,Kashmir Park,31.633128,74.287271,40.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,12,ET4022,Wandala Road,31.630076,74.287953,44.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,13,ET4023,Shahdra Railway Station,31.627539,74.28847,48.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,14,ET4024,Kot Shahab-ud-Din,31.6244532,74.2890803,52.0,0,#65a30d
+S239,Speedo Rana Town to Railway Station,15,ET4025,Shahdra Lari Adda,31.61892,74.290235,56.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,16,ET4026,Shahdara Metro Station,31.615577,74.291228,60.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,17,ET4027,Niazi Interchange,31.604008,74.299597,64.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,18,ET4028,Niazi Chowk,31.601538,74.29953,68.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,19,ET4029,Metro,31.597478,74.299716,72.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,20,ET4030,Timber Market,31.595194,74.301645,76.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,21,ET4031,Azadi Chowk,31.5911534,74.3066753,80.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,22,ET4032,Texali Chowk,31.5863313,74.3072296,84.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,23,ET4034,Bhatti Chowk-2,31.5826072,74.3059711,88.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,24,ET4035,texali Chowk 2,31.5855537,74.3062723,92.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,25,ET4036,Lari Adda Gol Chakar,31.5957143,74.314919,96.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,26,ET4037,Lari Adda,31.592788,74.316926,100.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,27,ET4038,Kashmiri Gate,31.587819,74.321152,104.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,28,ET4039,Sheranwala Gate,31.587297,74.32389,108.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,29,ET4040,Nawaz Sharif Hospital,31.585975,74.327363,112.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,30,ET4041,Railway Station-2,31.576296,74.335913,116.0,1,#65a30d
+S239,Speedo Rana Town to Railway Station,31,ET571,Railway Station-1 North,31.574131,74.33621,120.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,1,ET572,Railway Station-1 South,31.5743547,74.3358355,0.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,2,ET4042,Railway Station-2,31.578481,74.334026,3.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,3,ET4043,Nawaz Sharif Hospital,31.5858157,74.327171,7.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,4,ET4044,Sheranwala Gate,31.587146,74.324276,11.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,5,ET4045,Kashmiri Gate,31.589524,74.317466,15.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,6,ET4046,Lari Adda,31.592508,74.316837,18.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,7,ET4048,Azadi Chowk,31.591493,74.306791,21.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,8,ET4049,Texali Chowk,31.5863362,74.3073049,25.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,9,ET4051,Bhatti Chowk-2,31.5826022,74.3060231,29.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,10,ET4052,Texali Chowk 2,31.5855227,74.3062372,33.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,11,ET4053,Azadi Chowk 2,31.5903323,74.3056492,36.0,0,#65a30d
+S239R,Speedo Railway Station to Rana Town,12,ET4054,Timber Market,31.5947459,74.30182,40.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,13,ET4055,Metro,31.597294,74.299698,45.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,14,ET4056,Niazi Chowk,31.601246,74.299257,48.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,15,ET4057,Niazi Interchange,31.604209,74.29917,52.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,16,ET4058,Shahdara Metro Station,31.615263,74.290633,55.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,17,ET4059,Shahdra Lari Adda,31.619525,74.289761,59.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,18,ET4060,Kot Shahab-ud-Din,31.623854,74.289024,63.0,0,#65a30d
+S239R,Speedo Railway Station to Rana Town,19,ET4061,Shahdra Railway Station,31.627299,74.288307,66.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,20,ET4062,Wandala Road,31.629667,74.287802,69.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,21,ET4063,Kashmir Park,31.633662,74.286958,73.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,22,ET4064,Machas Factory,31.637671,74.286108,77.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,23,ET4065,Barkat Town,31.641265,74.285373,80.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,24,ET4066,Kala Khatai Road,31.644471,74.284581,84.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,25,ET4067,Imamia Colony,31.647508,74.283906,87.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,26,ET4068,Feroz Wala,31.652171,74.283095,91.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,27,ET4069,Rachna Town,31.658594,74.281807,94.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,28,ET4070,College Road,31.667295,74.279928,97.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,29,ET4071,Haider Road,31.672601,74.278804,101.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,30,ET4072,Nazim Road,31.677738,74.27774,104.0,1,#65a30d
+S239R,Speedo Railway Station to Rana Town,31,ET4073,Rana Town,31.684197,74.276386,108.0,1,#65a30d
+S272,Speedo Samanabad to Gulshan Ravi Double Sarka,1,ET5827,Samanabad (Forward RT-28),31.539421,74.304643,0.0,1,#db2777
+S272,Speedo Samanabad to Gulshan Ravi Double Sarka,2,ET5829,Samanabad Gol Chakkar (Forward),31.542416,74.300847,2.5,0,#db2777
+S272,Speedo Samanabad to Gulshan Ravi Double Sarka,3,ET5831,Gulshan Ravi Market (Forward),31.545902,74.29178,5.0,0,#db2777
+S272,Speedo Samanabad to Gulshan Ravi Double Sarka,4,ET5833,Ganda Nala (Forward),31.547152,74.29085,7.5,0,#db2777
+S272,Speedo Samanabad to Gulshan Ravi Double Sarka,5,ET5836,Shehnai Palace (Forward),31.549752,74.285773,10.0,0,#db2777
+S272,Speedo Samanabad to Gulshan Ravi Double Sarka,6,ET5838,Moon Market (Forward),31.549967,74.282723,12.5,0,#db2777
+S272,Speedo Samanabad to Gulshan Ravi Double Sarka,7,ET5840,Park Morr (Forward),31.550047,74.277755,15.0,0,#db2777
+S272,Speedo Samanabad to Gulshan Ravi Double Sarka,8,ET5842,Wasa Disposal Stop (Forward),31.550193,74.272813,17.5,0,#db2777
+S272,Speedo Samanabad to Gulshan Ravi Double Sarka,9,ET5844,Gulshan Ravi Double Sarka,31.55101,74.271143,20.0,1,#db2777
+S272R,Speedo Gulshan Ravi Double Sarka to Samanabad,1,ET5844,Gulshan Ravi Double Sarka,31.55101,74.271143,0.0,1,#db2777
+S272R,Speedo Gulshan Ravi Double Sarka to Samanabad,2,ET5843,Wasa Disposal Stop (Backward),31.550465,74.273086,2.5,0,#db2777
+S272R,Speedo Gulshan Ravi Double Sarka to Samanabad,3,ET5841,Park Morr (Backward),31.550276,74.277884,5.0,0,#db2777
+S272R,Speedo Gulshan Ravi Double Sarka to Samanabad,4,ET5839,Moon Market (Backward),31.550218,74.281823,7.5,0,#db2777
+S272R,Speedo Gulshan Ravi Double Sarka to Samanabad,5,ET5837,Shehnai Palace (Backward),31.55006,74.28582,10.0,0,#db2777
+S272R,Speedo Gulshan Ravi Double Sarka to Samanabad,6,ET5834,Ganda Nala (Backward),31.547564,74.291082,12.5,0,#db2777
+S272R,Speedo Gulshan Ravi Double Sarka to Samanabad,7,ET5832,Gulshan Ravi Market (Backward),31.545949,74.29209,15.0,0,#db2777
+S272R,Speedo Gulshan Ravi Double Sarka to Samanabad,8,ET5830,Samanabad Gol Chakkar (Backward),31.542412,74.300976,17.5,0,#db2777
+S272R,Speedo Gulshan Ravi Double Sarka to Samanabad,9,ET5828,Samanabad (Backward RT-28),31.539688,74.3054,20.0,1,#db2777
+S309,Speedo Shahdara to Gajjumata,1,ET110,Shahdara Metro Station Lmbs,31.6156135,74.2912224,0.0,1,#4338ca
+S309,Speedo Shahdara to Gajjumata,2,ET5,Niazi Chowk,31.60091,74.299247,5.0,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,3,ET8,Timber Market,31.59445,74.302198,7.4,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,4,ET118,Azadi Chowk,31.590645,74.306455,9.2,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,5,ET15,Bhatti Chowk,31.580652,74.306254,11.7,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,6,ET19,Kachehry,31.574589,74.306481,13.6,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,7,ET21,Civil Secretariat,31.568849,74.304411,15.4,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,8,ET24,M.A.O. College,31.561725,74.306683,17.7,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,9,ET29,Janazgah,31.553796,74.311643,20.1,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,10,ET34,Qartaba Chowk,31.548778,74.315099,21.9,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,11,ET38,Shama,31.539032,74.319157,24.0,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,12,ET43,Ichara,31.531516,74.321426,26.2,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,13,ET46,Canal,31.519472,74.326709,29.0,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,14,ET167,Qaddafi Stadium,31.511983,74.3288427,31.1,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,15,ET54,Kalma Chowk,31.5035253,74.3318882,34.1,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,16,ET56,Model Town,31.4974413,74.3344656,36.0,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,17,ET59,Naseerabad,31.487076,74.3387698,38.4,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,18,ET63,Ittefaq Hospital,31.4792154,74.3420685,41.0,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,19,ET66,Qainchi,31.4644182,74.348237,44.2,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,20,ET69,Ghazi Chowk,31.4570882,74.3512554,46.0,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,21,ET74,Chungi Amar Sidhu,31.4504261,74.3533814,47.9,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,22,ET78,Kamahan,31.4410342,74.355311,50.1,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,23,ET79,Atari Saroba,31.4310353,74.3567777,52.1,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,24,ET84,Nishtar Colony,31.4197256,74.3584392,54.1,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,25,ET87,Youhanabad,31.4128189,74.3594683,56.6,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,26,ET88,Dulu khurd,31.4054296,74.3605421,58.5,0,#4338ca
+S309,Speedo Shahdara to Gajjumata,27,ET92,Gajjumata,31.398315,74.3616026,60.0,1,#4338ca
+S309R,Speedo Gajjumata to Shahdara,1,ET5766,Gajjumata station Down lmbs,31.3985251,74.3615595,0.0,1,#4338ca
+S309R,Speedo Gajjumata to Shahdara,2,ET5765,Dulu Khurd Down Lmbs,31.4059409,74.3604467,1.9,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,3,ET5764,Youhanabad Station Down Lmbs,31.4129219,74.3594919,3.7,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,4,ET5767,Nishtar Colony Station Down lmbs,31.4197761,74.3583598,6.2,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,5,ET5763,Atari Saroba Station Down lmbs,31.431534,74.356668,8.6,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,6,ET5762,Kamahan Station Down Lmbs,31.4410953,74.3553438,10.7,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,7,ET5761,Chungi Amer Sidhu Station Down Lmbs,31.4505516,74.3533874,12.9,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,8,ET5760,Ghazi Chowk Station Down Lmbs,31.456664,74.351351,14.8,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,9,ET5759,Qainchi Station Down Lmbs,31.4641653,74.3483442,16.7,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,10,ET5758,Ittefaq hospital Station Down Lmbs,31.4796375,74.3418427,19.9,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,11,ET5757,Naseerabad Station Down Lmbs,31.4868241,74.3388064,22.2,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,12,ET5756,Model Town Station Down Lmbs,31.4978821,74.3342275,24.6,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,13,ET5755,Kalma Chowk Down Lmbs,31.5033699,74.3319502,27.2,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,14,ET5741,Qaddafi Stadium Down Lmbs,31.5127945,74.3288713,29.6,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,15,ET5754,Canal Station Down Lmbs,31.5194734,74.3265609,31.8,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,16,ET5753,Ichara Station Down Lmbs,31.53171,74.321156,34.5,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,17,ET5752,Shama Station Down Lmbs,31.53918,74.318882,36.5,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,18,ET5751,Qartaba Chowk Down Lmbs,31.548715,74.3151968,38.9,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,19,ET5750,Janazgah Station Down Lmbs,31.5538067,74.3115492,40.7,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,20,ET5749,M.A.O. College Down Lmbs,31.5618694,74.3064721,43.1,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,21,ET5748,Civil Secretariat Down Lmbs,31.5687551,74.3044023,45.4,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,22,ET5747,Kachehry Station Down Lmbs,31.574606,74.306477,47.2,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,23,ET5743,Bhatti Chowk Station Down Lmbs,31.580087,74.306245,49.2,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,24,ET5742,Azadi Chowk Down Lmbs,31.590592,74.3068,51.8,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,25,ET5746,Timber Market Station Down Lmbs,31.594343,74.302296,53.6,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,26,ET5745,Niazi Chowk Station down Lmbs,31.600946,74.299231,56.1,0,#4338ca
+S309R,Speedo Gajjumata to Shahdara,27,ET110,Shahdara Metro Station Lmbs,31.6156135,74.2912224,60.0,1,#4338ca
+S255,Speedo Shalamar OL Station to Khaira Pull,1,ET542,Shalamar Station South,31.583801,74.380018,0.0,1,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,2,ET4754,Shalamar Chowk,31.5834285,74.3819973,4.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,3,ET4755,Angoori Bagh Scheme,31.580359,74.3818146,8.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,4,ET4756,Ganda Nala,31.576634,74.381245,12.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,5,ET4757,Shalamar Hospital,31.573679,74.381114,16.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,6,ET4758,Ramgarh,31.569841,74.381022,20.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,7,ET4759,Shah Kamal Road,31.567356,74.380898,24.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,8,ET4760,Gunj Bazar,31.565029,74.380831,28.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,9,ET4761,Mughal Pura,31.562905,74.381589,32.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,10,ET4762,Jafri Pull,31.563612,74.385878,36.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,11,ET4763,Lal Pull,31.564756,74.39154,40.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,12,ET4764,Nawan Pull,31.566706,74.400692,44.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,13,ET4765,Fateh Garh Pull,31.567635,74.405753,48.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,14,ET4766,Canal Bank Society,31.569266,74.413616,52.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,15,ET4767,Taj Bagh,31.57052,74.419872,56.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,16,ET4768,Harbanspura Morr,31.571734,74.425984,60.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,17,ET4769,Harbanspura Bridge,31.573486,74.434056,64.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,18,ET4770,Harbanspura Police Station,31.574818,74.441139,68.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,19,ET8289,Nawabpura Bus Stop,31.575557,74.44497,69.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,20,ET4771,Press Club Society,31.576043,74.447542,73.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,21,ET4772,Rani Pind,31.57838,74.458438,77.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,22,ET4773,TulsPura,31.579538,74.464208,81.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,23,ET4774,Rizwan Garden,31.58128,74.472826,85.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,24,ET4775,Jallo Park,31.583216,74.482489,89.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,25,ET4776,Sozo Water Park,31.584305,74.4878,93.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,26,ET7941,Al Hafeez Garden Phase 2 (Forward),31.585294,74.492559,95.0,0,#ca8a04
+S255,Speedo Shalamar OL Station to Khaira Pull,27,ET1459,Khaira Pull,31.58733,74.497952,97.0,1,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,1,ET1460,Khaira Pull,31.585973,74.498877,0.0,1,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,2,ET4777,Sozo Water Park,31.583638,74.487968,4.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,3,ET4778,Jallo Park,31.582562,74.481856,8.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,4,ET4779,Rizwan Garden,31.580806,74.473097,12.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,5,ET4780,Tulspura,31.579157,74.464868,16.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,6,ET4781,Rani Pind,31.577902,74.45859,20.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,7,ET4782,Press Club Society,31.57576,74.448026,24.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,8,ET4783,Harbanspura Police Station,31.574529,74.442106,28.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,9,ET4784,Harbanspura Bridge,31.572772,74.434123,32.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,10,ET4785,Harbanspura Morr,31.571304,74.426071,36.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,11,ET4786,Taj Bagh,31.569701,74.41835,40.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,12,ET4787,Aziz Pulli,31.568222,74.410995,44.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,13,ET4788,Fateh Garh Pull,31.567225,74.406013,48.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,14,ET4789,Nawan Pull,31.565998,74.400367,52.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,15,ET4790,Lal Pull,31.564279,74.391539,56.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,16,ET4791,Jafri Pull,31.56316,74.38574,60.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,17,ET4792,Mughal Pura,31.562216,74.381732,64.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,18,ET4794,Shah Kamal Road,31.566913,74.380701,68.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,19,ET4795,Ramgarh,31.570133,74.380871,72.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,20,ET4796,Shalamar Hospital,31.573672,74.380985,76.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,21,ET4797,Ganda Nala,31.576126,74.381068,80.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,22,ET4798,Angoori Bagh Scheme,31.580737,74.381231,84.0,0,#ca8a04
+S255R,Speedo Khaira Pull to Shalamar OL Station,23,ET542,Shalamar Station South,31.583801,74.380018,88.0,1,#ca8a04
+S245,Speedo Wahdat Road Station to Qartaba Chowk,1,ET507,Wahdat Road Station South,31.4952088,74.2639844,0.0,1,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,2,ET4221,Multan Chungi,31.496207,74.264866,1.9,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,3,ET4222,Elephant Link road,31.497604,74.269918,3.9,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,4,ET4223,Mustafa Town,31.49911,74.274093,5.8,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,5,ET4224,Karim Block Market,31.501702,74.28117,7.7,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,6,ET4225,Sikander Block,31.503491,74.286306,9.7,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,7,ET4226,Raza Block,31.50471,74.289946,11.6,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,8,ET4227,PU Examination Hall,31.505563,74.292067,13.5,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,9,ET4228,Science College,31.507364,74.296126,15.4,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,10,ET4229,Bhekewal Morr 2,31.510534,74.302454,17.4,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,11,ET4230,Wahdat Colony,31.511889,74.305414,19.3,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,12,ET4231,School Stop,31.5131987,74.3078794,21.2,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,13,ET4232,Bank Stop,31.514664,74.311031,23.2,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,14,ET4233,Naqsha Stop,31.5167215,74.3153185,25.1,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,15,ET4234,Karma Abad,31.518182,74.318378,27.0,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,16,ET4235,Aab Para Market,31.520151,74.321128,28.9,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,17,ET4236,Canal,31.520524,74.323334,30.9,1,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,18,ET4237,Rehman Pura,31.5239801,74.3236793,32.8,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,19,ET4238,Shah Jamal,31.52401,74.32402,34.7,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,20,ET4239,Ichara,31.5317,74.3213,36.7,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,21,ET4240,Shama,31.5391,74.3191,38.6,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,22,ET4241,LOS,31.542411,74.31762,40.5,0,#059669
+S245,Speedo Wahdat Road Station to Qartaba Chowk,23,ET1383,Qartaba Chowk,31.549176,74.3149354,42.5,1,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,1,ET1383,Qartaba Chowk,31.549176,74.3149354,0.0,1,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,2,ET4242,LOS,31.54306,74.317585,1.8,1,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,3,ET4243,Shama,31.539127,74.319187,3.6,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,4,ET4244,Ichara,31.532646,74.321104,5.4,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,5,ET4245,Shah Jamal,31.53265,74.3211,7.2,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,6,ET4246,Rehman Pura,31.524702,74.323824,8.9,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,7,ET4247,Canal,31.520579,74.324552,10.7,1,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,8,ET4248,Aab Para Market,31.52012,74.321679,12.5,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,9,ET4249,Karma Abad,31.518439,74.318747,14.3,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,10,ET4250,Naqsha Stop,31.5165542,74.3151219,16.1,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,11,ET4251,Bank Stop,31.514648,74.311314,17.9,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,12,ET4252,School Stop,31.513079,74.308061,19.7,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,13,ET4253,Wahdat Colony,31.512019,74.305931,21.5,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,14,ET4254,Bhekewal Morr 2,31.50966,74.300911,23.3,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,15,ET4255,Science College,31.507741,74.296992,25.1,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,16,ET4256,PU Examination Hall,31.505612,74.292464,26.8,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,17,ET4257,Raza Block,31.504688,74.290197,28.6,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,18,ET4258,Sikander Block,31.5032448,74.2861963,30.4,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,19,ET4259,Karim Block Market,31.501721,74.281755,32.2,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,20,ET4260,Musatafa Town,31.499184,74.274646,34.0,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,21,ET4261,Elephant Link Road,31.497478,74.269763,35.8,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,22,ET4262,Multan Chungi,31.4962359,74.2654201,37.6,0,#059669
+S245R,Speedo Qartaba Chowk to Wahdat Road Station,23,ET1406,Wahdat Road Station,31.4952577,74.2638685,39.4,1,#059669
