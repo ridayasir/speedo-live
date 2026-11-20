@@ -196,3 +196,38 @@ export interface Meta {
   stale_after_seconds: number;
   map_center: [number, number];
 }
+
+export interface ComplaintCategory {
+  id: string;
+  label: string;
+}
+
+export interface Complaint {
+  ref_code: string;
+  bus_number: string;
+  route_code: string | null;
+  route_name: string | null;
+  route_color: string | null;
+  category: string;
+  category_label: string;
+  description: string;
+  location: string | null;
+  incident_at: string;
+  status: "new" | "in_review" | "resolved" | "rejected";
+  status_label: string;
+  reply: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AdminComplaint extends Complaint {
+  id: number;
+  bus_id: number | null;
+  driver_id: number | null;
+  driver_name: string | null;
+  driver_code: string | null;
+  contact_name: string | null;
+  contact_phone: string | null;
+  filed_by: { id: number; name: string; email: string | null } | null;
+  admin_note: string | null;
+}

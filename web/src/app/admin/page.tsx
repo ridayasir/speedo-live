@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { AlertTriangle, BarChart3, Bus, CalendarClock, LayoutDashboard, LogOut, MapPin, Radar, Route, Settings, Users } from "lucide-react";
+import { AlertTriangle, BarChart3, Bus, CalendarClock, Flag, LayoutDashboard, LogOut, MapPin, Radar, Route, Settings, Users } from "lucide-react";
 import AuthForm from "@/components/AuthForm";
 import { Logo } from "@/components/Shell";
 import { Card, Spinner } from "@/components/ui";
@@ -17,6 +17,7 @@ import { DriversAdmin } from "@/components/admin/Drivers";
 import { FleetAdmin } from "@/components/admin/Fleet";
 import { SchedulesAdmin } from "@/components/admin/Schedules";
 import { AlertsAdmin } from "@/components/admin/Alerts";
+import { ComplaintsAdmin } from "@/components/admin/Complaints";
 import { ReportsAdmin } from "@/components/admin/Reports";
 import { SettingsAdmin } from "@/components/admin/Settings";
 
@@ -29,6 +30,7 @@ const TABS = [
   { id: "fleet", label: "Live Fleet", icon: Radar, C: FleetAdmin },
   { id: "schedules", label: "Schedules", icon: CalendarClock, C: SchedulesAdmin },
   { id: "alerts", label: "Service Alerts", icon: AlertTriangle, C: AlertsAdmin },
+  { id: "complaints", label: "Driver Reports", icon: Flag, C: ComplaintsAdmin },
   { id: "reports", label: "Reports", icon: BarChart3, C: ReportsAdmin },
   { id: "settings", label: "Settings", icon: Settings, C: SettingsAdmin },
 ];

@@ -13,7 +13,7 @@ from . import firebase
 from .config import get_settings
 from .db import SessionLocal
 from .limits import limiter
-from .routers import admin, auth, driver, me, public, ws
+from .routers import admin, auth, complaints, driver, me, public, ws
 from .services import gps_provider, monitor, simulator
 from .services.realtime import hub
 from .store import store
@@ -105,7 +105,7 @@ def health():
             "storage": firebase.files.enabled, "redis": redis_ok, "data_source": settings.data_source}
 
 
-for r in (auth.router, public.router, me.router, driver.router, admin.router, ws.router):
+for r in (auth.router, public.router, me.router, driver.router, admin.router, complaints.router, ws.router):
     app.include_router(r)
 
 # Optional: serve the exported web app (web/out) from the same container.

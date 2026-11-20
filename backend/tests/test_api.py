@@ -462,3 +462,39 @@ def test_simulated_buses_store_no_gps_history(db):
     simulator.tick(db)
     simulator.tick(db, dt=40)
     assert len(FIRESTORE.data.get("gps_locations", {})) == before
+
+
+def test_change_made_during_another_commit_is_saved(db):
+    """A field set while a commit is writing (e.g. the simulator thread) must still reach Firestore."""
+    import threading
+
+    from app.models import ServiceAlert
+    from app.store import store
+
+    a = db.all(ServiceAlert)[0]
+    bus = db.first(Bus, bus_number="DEMO-106")
+    started, release = threading.Event(), threading.Event()
+    orig = store.backend.write
+
+    def slow_write(sets, deletes):
+        started.set()
+        release.wait(5)
+        return orig(sets, deletes)
+
+    store.backend.write = slow_write
+    try:
+        bus.status = "maintenance"
+        t = threading.Thread(target=db.commit)
+        t.start()
+        started.wait(5)
+        changer = threading.Thread(target=lambda: setattr(a, "title", "Changed during a commit"))
+        changer.start()  # blocks on the store lock until the first commit is done
+        release.set()
+        t.join(5)
+        changer.join(5)
+    finally:
+        store.backend.write = orig
+    db.commit()
+    assert FIRESTORE.data["service_alerts"][str(a.id)]["title"] == "Changed during a commit"
+    bus.status = "active"
+    db.commit()

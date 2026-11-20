@@ -405,3 +405,17 @@ class AuditLog(Doc):
     FIELDS = {"user_id": None, "action": "", "entity": "", "entity_id": None, "details": dict, "created_at": None}
     CACHED = False
     TIMESTAMPS = False
+
+
+class Complaint(Doc):
+    """A passenger's complaint about a bus or its driver, filed with the bus number.
+
+    driver_id is the driver on that bus when the complaint was filed (from the active trip, else the
+    assigned driver). Passengers never see the driver's identity; admins do.
+    """
+
+    __collection__ = "complaints"
+    FIELDS = {"ref_code": "", "bus_id": None, "bus_number": "", "route_id": None, "driver_id": None, "category": "other",
+              "description": "", "location": None, "incident_at": None, "user_id": None, "contact_name": None,
+              "contact_phone": None, "status": "new", "admin_note": None, "handled_by": None, **TS}
+    CACHED = False

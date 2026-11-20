@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { History, LocateFixed, MapPin, Navigation, Radio, Star } from "lucide-react";
+import { Flag, History, LocateFixed, MapPin, Navigation, Radio, Star } from "lucide-react";
 import MapView from "@/components/MapView";
 import { Button, Card, DemoBadge, Empty, ErrorBox, SectionTitle, Spinner, effectiveStatus } from "@/components/ui";
 import { GlobalSearch, NavLinkCard, RouteChip } from "@/components/widgets";
@@ -77,10 +77,11 @@ export default function Home() {
       </section>
 
       <div className="mx-auto max-w-7xl px-4 pt-12 pb-8 space-y-6">
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <NavLinkCard href="/routes/" icon={Navigation} title="Plan a journey" text="Find the right Speedo route" />
           <NavLinkCard href="/live/" icon={Radio} title="Track buses live" text="See buses moving on the map" />
           <NavLinkCard href="/timetable/" icon={History} title="Timetables" text="First and last bus, stop times" />
+          <NavLinkCard href="/report/" icon={Flag} title="Report a driver" text="Rash driving, rude behaviour, skipped stops" />
         </div>
 
         {alerts.data && alerts.data.length > 0 && (

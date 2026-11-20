@@ -279,7 +279,9 @@ class Store:
 
     # --- unit of work
     def mark(self, obj: Doc) -> None:
-        self.dirty.add(obj)
+        # under the lock, so a change made while another thread is committing is never dropped
+        with self.lock:
+            self.dirty.add(obj)
 
     def add(self, obj: Doc) -> None:
         self._need()
@@ -346,17 +348,20 @@ class Store:
                         object.__setattr__(obj, "updated_at", now)
                     writes.append(obj)
             deletes = [o for o in self.deleted if o._persisted is not None]
+            payloads = [(o, o.to_dict()) for o in writes]
+            processed = set(self.dirty)
             try:
                 self.backend.write(
-                    [(type(o).__collection__, str(o.id), o.to_dict()) for o in writes],
+                    [(type(o).__collection__, str(o.id), d) for o, d in payloads],
                     [(type(o).__collection__, str(o.id)) for o in deletes],
                 )
             except Exception:
                 log.exception("Firestore write failed; changes rolled back")
                 self.rollback()
                 raise
-            for obj in writes:
-                object.__setattr__(obj, "_persisted", obj.to_dict())
+            for obj, written in payloads:
+                # remember exactly what was written: a field set meanwhile still differs and is saved next time
+                object.__setattr__(obj, "_persisted", written)
                 if obj.VOLATILE:
                     self._last_write[(type(obj).__collection__, obj.id)] = mono
                 model = type(obj)
@@ -369,7 +374,9 @@ class Store:
                 if type(obj).CACHED:
                     self.cache[type(obj)].pop(obj.id, None)
                 object.__setattr__(obj, "_persisted", None)
-            self.dirty, self.new, self.deleted = held, [], []
+            # keep anything marked during this commit (same thread) besides the throttled live updates
+            self.dirty = held | {o for o in self.dirty if o not in processed}
+            self.new, self.deleted = [], []
 
     def rollback(self) -> None:
         with self.lock:

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bus, Clock, Heart, Home, Map, Route as RouteIcon, User } from "lucide-react";
+import { Bus, Clock, Flag, Heart, Home, Map, Route as RouteIcon, User } from "lucide-react";
 
 import clsx from "./clsx";
 import { useAuth } from "@/lib/hooks";
@@ -13,6 +13,7 @@ const NAV = [
   { href: "/routes/", label: "Routes", short: "Explore", icon: RouteIcon },
   { href: "/timetable/", label: "Timetable", icon: Clock, desktopOnly: true },
   { href: "/favorites/", label: "Favorites", icon: Heart },
+  { href: "/report/", label: "Report a driver", icon: Flag, desktopOnly: true },
   { href: "/profile/", label: "Profile", icon: User },
 ];
 
@@ -66,6 +67,9 @@ export default function Shell({ children }: { children: React.ReactNode }) {
                 Admin
               </Link>
             )}
+            <Link href="/report/" className="md:hidden rounded-xl p-2 text-slate-600 hover:bg-slate-50" aria-label="Report a driver">
+              <Flag className="h-5 w-5" />
+            </Link>
             <Link href="/timetable/" className="md:hidden rounded-xl p-2 text-slate-600 hover:bg-slate-50" aria-label="Timetable">
               <Clock className="h-5 w-5" />
             </Link>

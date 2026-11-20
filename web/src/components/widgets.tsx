@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Bus, Clock, LocateFixed, MapPin, Navigation, Radio, Search } from "lucide-react";
+import { Bus, Clock, Flag, LocateFixed, MapPin, Navigation, Radio, Search } from "lucide-react";
 import { api } from "@/lib/api";
 import { ago, clock, km, useApi } from "@/lib/hooks";
 import type { Arrivals, BusState, RouteSummary, Stop } from "@/lib/types";
@@ -233,6 +233,10 @@ export function BusDetailPanel({ bus, onClose }: { bus: BusState; onClose?: () =
           No GPS update for over a minute. The marker shows the last known position; the bus may have moved.
         </p>
       )}
+      <Link href={`/report/?bus=${encodeURIComponent(bus.bus_number)}`}
+        className="mt-3 inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-brand-700 hover:bg-brand-50">
+        <Flag className="h-3.5 w-3.5" /> Report this bus or its driver
+      </Link>
       {bus.delay_minutes != null && bus.delay_minutes >= 5 && live && (
         <p className="mt-3 rounded-xl bg-amber-50 p-2 text-xs text-amber-700">Running about {Math.round(bus.delay_minutes)} min behind schedule.</p>
       )}

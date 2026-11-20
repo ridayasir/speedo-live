@@ -339,3 +339,57 @@ def alert_out(a: ServiceAlert) -> dict:
         "message": a.message, "starts_at": iso(a.starts_at), "ends_at": iso(a.ends_at), "is_active": a.is_active,
         "created_at": iso(a.created_at),
     }
+
+
+# ----------------------------------------------------------------------------- complaints
+COMPLAINT_CATEGORIES = {
+    "rash_driving": "Rash / dangerous driving", "rude_behaviour": "Rude behaviour", "harassment": "Harassment",
+    "overcharging": "Overcharging / fare issue", "skipped_stop": "Didn't stop at the stop",
+    "phone_smoking": "Phone use or smoking while driving", "late": "Very late / long wait",
+    "bus_condition": "Bus condition / cleanliness", "other": "Other",
+}
+COMPLAINT_STATUSES = {"new": "Received", "in_review": "Under review", "resolved": "Resolved", "rejected": "Closed"}
+
+
+class ComplaintIn(BaseModel):
+    bus_number: str = Field(min_length=1, max_length=32, description="Number painted on the bus, e.g. SP-101")
+    category: str = Field(description="One of GET /api/complaints/categories")
+    description: str = Field(min_length=10, max_length=2000)
+    location: str | None = Field(default=None, max_length=160, description="Stop or place where it happened")
+    incident_at: datetime | None = Field(default=None, description="When it happened (default: now)")
+    contact_name: str | None = Field(default=None, max_length=120)
+    contact_phone: str | None = Field(default=None, pattern=PHONE_PATTERN)
+
+    @field_validator("category")
+    @classmethod
+    def _category(cls, v: str) -> str:
+        if v not in COMPLAINT_CATEGORIES:
+            raise ValueError("Choose a complaint category")
+        return v
+
+    @field_validator("incident_at")
+    @classmethod
+    def _when(cls, v: datetime | None):
+        if v is None:
+            return v
+        from datetime import timedelta, timezone
+
+        v = v if v.tzinfo else v.replace(tzinfo=timezone.utc)
+        now = datetime.now(timezone.utc)
+        if v > now + timedelta(minutes=10):
+            raise ValueError("The incident time cannot be in the future")
+        if v < now - timedelta(days=90):
+            raise ValueError("Complaints can be filed up to 90 days after the incident")
+        return v
+
+
+class ComplaintPatch(BaseModel):
+    status: str | None = None
+    admin_note: str | None = Field(default=None, max_length=2000, description="Reply shown to the passenger")
+
+    @field_validator("status")
+    @classmethod
+    def _status(cls, v: str | None):
+        if v is not None and v not in COMPLAINT_STATUSES:
+            raise ValueError("Unknown status")
+        return v
