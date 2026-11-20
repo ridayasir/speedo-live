@@ -240,7 +240,7 @@ class Bus(Doc):
     ENUMS = {"status": BusStatus}
     UNIQUE = (("bus_number",), ("registration_number",), ("gps_device_id",))
     VOLATILE = frozenset({"last_lat", "last_lng", "last_speed_mps", "last_heading", "last_accuracy_m", "last_gps_at"})
-    WRITE_EVERY = 300
+    WRITE_EVERY = 900  # 15 min: ~50 simulated buses stay inside the free 20k writes/day
 
     @property
     def route(self) -> Route | None:
@@ -269,7 +269,7 @@ class Trip(Doc):
     ENUMS = {"status": TripStatus, "source": DataSource}
     CACHE_FILTERS = (("status", "==", "active"),)
     VOLATILE = frozenset({"progress_m", "last_update_at", "gps_points", "max_delay_minutes"})
-    WRITE_EVERY = 300
+    WRITE_EVERY = 900  # 15 min: ~50 simulated buses stay inside the free 20k writes/day
 
     def __init__(self, **kw):
         super().__init__(**kw)
