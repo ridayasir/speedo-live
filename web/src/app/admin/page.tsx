@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AlertTriangle, BarChart3, Bus, CalendarClock, Flag, LayoutDashboard, LogOut, MapPin, Radar, Route, Settings, Users } from "lucide-react";
 import AuthForm from "@/components/AuthForm";
+import LoginHint from "@/components/LoginHint";
 import { Logo } from "@/components/Shell";
 import { Card, Spinner } from "@/components/ui";
 import clsx from "@/components/clsx";
@@ -53,7 +54,7 @@ function AdminInner() {
             {user && user.role !== "admin" && (
               <p className="mb-3 rounded-lg bg-red-50 p-2 text-sm text-red-700">You are signed in as a {user.role}. Sign in with an admin account.</p>
             )}
-            <AuthForm allowRegister={false} />
+            <AuthForm allowRegister={false} hint={<LoginHint />} />
           </Card>
           <p className="mt-4 text-center text-sm"><Link href="/" className="text-brand-600">← Back to passenger app</Link></p>
         </div>
