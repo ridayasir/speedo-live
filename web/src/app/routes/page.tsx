@@ -87,7 +87,8 @@ function RoutesInner() {
       hl.push(leg.board.id, leg.alight.id);
     }
   } else if (!result) {
-    (routes.data || []).forEach((r) => mapRoutes.push({ id: r.id, color: r.color, path: r.path, dim: true }));
+    // network view: every route in its own colour
+    (routes.data || []).forEach((r) => mapRoutes.push({ id: r.id, color: r.color, path: r.path, weight: 4 }));
   }
   const points = [
     ...(from ? [{ lat: from.lat, lng: from.lng, label: from.label, kind: "origin" as const }] : []),

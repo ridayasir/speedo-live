@@ -2,9 +2,10 @@
 
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CircleMarker, MapContainer, Marker, Polyline, Popup, TileLayer, Tooltip, useMap, useMapEvents } from "react-leaflet";
-import type { BusState, Stop } from "@/lib/types";
+import { api } from "@/lib/api";
+import type { BusState, RouteSummary, Stop } from "@/lib/types";
 import { effectiveStatus } from "./ui";
 
 export interface MapRoute {
@@ -13,6 +14,7 @@ export interface MapRoute {
   path: [number, number][];
   code?: string;
   dim?: boolean;
+  weight?: number;
 }
 
 export interface MapProps {
@@ -33,18 +35,32 @@ export interface MapProps {
 
 const LAHORE: [number, number] = [31.5204, 74.3587];
 
+// Buses take their route's colour (as on the map lines); only lost-signal and out-of-service buses are grey.
 const STATUS_COLOR: Record<string, string> = {
-  active: "#b91c1c",
-  delayed: "#d97706",
   stale: "#94a3b8",
   offline: "#94a3b8",
-  idle: "#0284c7",
   out_of_service: "#475569",
 };
 
-function busIcon(b: BusState, selected: boolean) {
+// route id -> colour, loaded once and shared by every map
+let routeColorCache: Record<number, string> | null = null;
+let routeColorLoad: Promise<Record<number, string>> | null = null;
+function useRouteColors(): Record<number, string> {
+  const [colors, setColors] = useState<Record<number, string>>(routeColorCache || {});
+  useEffect(() => {
+    if (routeColorCache) return;
+    routeColorLoad ??= api<RouteSummary[]>("/api/routes?include_inactive=true")
+      .then((rs) => (routeColorCache = Object.fromEntries(rs.map((r) => [r.id, r.color]))))
+      .catch(() => ({}));
+    routeColorLoad.then(setColors);
+  }, []);
+  return colors;
+}
+
+function busIcon(b: BusState, selected: boolean, routeColor?: string) {
   const st = effectiveStatus(b);
-  const color = STATUS_COLOR[st] || "#b91c1c";
+  const color = STATUS_COLOR[st] || routeColor || "#b91c1c";
+  const ring = selected ? "3px solid #111827" : st === "delayed" ? "3px solid #f59e0b" : "2px solid white";
   const rot = b.heading ?? 0;
   const faded = st === "stale" || st === "offline";
   return L.divIcon({
@@ -55,7 +71,7 @@ function busIcon(b: BusState, selected: boolean) {
       <div style="position:relative;width:44px;height:44px;opacity:${faded ? 0.6 : 1}">
         ${!faded && b.heading != null ? `<div style="position:absolute;inset:0;transform:rotate(${rot}deg)"><div style="position:absolute;left:18px;top:-2px;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:8px solid ${color}"></div></div>` : ""}
         <div style="position:absolute;left:8px;top:8px;width:28px;height:28px;border-radius:9px;background:${color};
-          border:${selected ? "3px solid #f59e0b" : "2px solid white"};box-shadow:0 2px 6px rgba(0,0,0,.3);
+          border:${ring};box-shadow:0 2px 6px rgba(0,0,0,.3);
           display:flex;align-items:center;justify-content:center">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></svg>
         </div>
@@ -97,6 +113,8 @@ function ClickHandler({ onMapClick }: { onMapClick?: (lat: number, lng: number) 
 export default function LeafletMap(props: MapProps) {
   const { buses = [], routes = [], stops = [], highlightStopIds = [], selectedBusId, onBusClick, onStopClick, onMapClick, points = [] } = props;
   const hl = useMemo(() => new Set(highlightStopIds), [highlightStopIds]);
+  const loaded = useRouteColors();
+  const colorOf = useMemo<Record<number, string>>(() => ({ ...loaded, ...Object.fromEntries(routes.map((r) => [r.id, r.color])) }), [loaded, routes]);
   return (
     <MapContainer
       center={props.center || LAHORE}
@@ -115,7 +133,7 @@ export default function LeafletMap(props: MapProps) {
         <Polyline
           key={`r-${r.id}`}
           positions={r.path}
-          pathOptions={{ color: r.color, weight: r.dim ? 3 : 6, opacity: r.dim ? 0.35 : 0.85 }}
+          pathOptions={{ color: r.color, weight: r.weight ?? (r.dim ? 3 : 6), opacity: r.dim ? 0.35 : 0.85 }}
         />
       ))}
       {stops.map((s) => (
@@ -140,7 +158,7 @@ export default function LeafletMap(props: MapProps) {
           <Marker
             key={`b-${b.bus_id}`}
             position={[b.lat as number, b.lng as number]}
-            icon={busIcon(b, b.bus_id === selectedBusId)}
+            icon={busIcon(b, b.bus_id === selectedBusId, b.route_id != null ? colorOf[b.route_id] : undefined)}
             eventHandlers={{ click: () => onBusClick?.(b) }}
             zIndexOffset={b.bus_id === selectedBusId ? 1000 : 0}
           >

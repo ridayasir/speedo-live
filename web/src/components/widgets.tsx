@@ -151,8 +151,8 @@ export function GlobalSearch() {
 /* ------------------------------------------------------------------ route chip */
 export function RouteChip({ code, color, className }: { code: string; color: string; className?: string }) {
   return (
-    <span className={clsx("inline-flex items-center rounded-lg px-2 py-0.5 text-xs font-bold text-white", className)} style={{ background: color }}>
-      {code}
+    <span className={clsx("inline-flex min-w-0 max-w-full items-center rounded-lg px-2 py-0.5 text-xs font-bold text-white", className)} style={{ background: color }} title={code}>
+      <span className="truncate">{code}</span>
     </span>
   );
 }
@@ -168,13 +168,13 @@ export function BusRow({ b, routeCode, color, onClick, selected }: { b: BusState
         selected ? "border-accent-400 bg-amber-50" : "border-slate-100 bg-white hover:bg-slate-50",
       )}
     >
-      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-700 text-white">
+      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-700 text-white" style={color ? { backgroundColor: color } : undefined}>
         <Bus className="h-4 w-4" />
       </span>
       <span className="flex-1 min-w-0">
         <span className="flex flex-wrap items-center gap-1.5">
           <span className="font-semibold text-slate-800 whitespace-nowrap">{b.bus_number}</span>
-          {routeCode && <RouteChip code={routeCode} color={color || "#b91c1c"} className="whitespace-nowrap" />}
+          {routeCode && <RouteChip code={routeCode} color={color || "#b91c1c"} className="max-w-[10rem]" />}
         </span>
         <span className="block truncate text-xs text-slate-500">
           {b.next_stop ? `Next: ${b.next_stop.name} · ${km(b.next_stop.distance_m)}` : "No active trip"}

@@ -7,7 +7,7 @@ import MapView from "@/components/MapView";
 import { Button, Card, DemoBadge, Empty, ErrorBox, SectionTitle, Spinner, effectiveStatus } from "@/components/ui";
 import { GlobalSearch, NavLinkCard, RouteChip } from "@/components/widgets";
 import { km, loadRecent, useApi, useAuth, useGeolocation, useLiveBuses, type RecentSearch } from "@/lib/hooks";
-import type { Alert, RouteSummary, Stop } from "@/lib/types";
+import type { Alert, RouteDetail, RouteSummary, Stop } from "@/lib/types";
 
 export default function Home() {
   const { user } = useAuth();
@@ -15,6 +15,8 @@ export default function Home() {
   const { buses, conn } = useLiveBuses();
   const popular = useApi<RouteSummary[]>("/api/routes/popular?limit=6");
   const alerts = useApi<Alert[]>("/api/alerts");
+  const network = useApi<RouteDetail[]>("/api/routes?with_path=true");
+  const networkLines = useMemo(() => (network.data || []).map((r) => ({ id: r.id, color: r.color, path: r.path, weight: 4 })), [network.data]);
   const favs = useApi<{ stops: Stop[]; routes: RouteSummary[] }>(user ? "/api/me/favorites" : null, [user?.id]);
   const nearby = useApi<Stop[]>(geo.pos ? `/api/stops/nearby?lat=${geo.pos.lat}&lng=${geo.pos.lng}&radius_m=2000&limit=5` : null);
   const [recent, setRecent] = useState<RecentSearch[]>([]);
@@ -56,7 +58,7 @@ export default function Home() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
             <div className="absolute bottom-0 p-5 text-white">
-              <h2 className="text-lg font-bold">15 feeder routes</h2>
+              <h2 className="text-lg font-bold">{network.data ? `${network.data.length} Speedo routes` : "Speedo routes"}</h2>
               <p className="text-sm text-white/85">See every route and stop &rarr;</p>
             </div>
           </Link>
@@ -65,7 +67,7 @@ export default function Home() {
 
       <section className="relative">
         <div className="h-[42vh] min-h-[280px] md:h-[52vh] w-full">
-          <MapView buses={buses} points={geo.pos ? [{ ...geo.pos, label: "You", kind: "me" }] : []} fitKey={geo.pos ? "me" : undefined} />
+          <MapView buses={buses} routes={networkLines} points={geo.pos ? [{ ...geo.pos, label: "You", kind: "me" }] : []} fitKey={geo.pos ? "me" : undefined} />
         </div>
         <div className="absolute inset-x-0 -bottom-6 z-[1000]">
           <div className="mx-auto max-w-3xl px-4">
