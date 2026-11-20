@@ -57,6 +57,8 @@ class Settings(BaseSettings):
     rate_limit_auth: str = "10/minute"
 
     run_background_tasks: bool = True
+    # serverless hosting (Vercel): no background loops; requests advance the simulator and monitors instead
+    serverless: bool = False
     web_dist: str | None = None  # path to the exported web app to serve at "/"
 
     @field_validator("redis_url", "firebase_credentials_file", "firebase_credentials_json", "firebase_web_api_key",

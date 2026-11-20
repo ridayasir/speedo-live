@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "cd web && npm ci --no-audit --no-fund",
+  "buildCommand": "cd web && NEXT_PUBLIC_API_URL= NEXT_TELEMETRY_DISABLED=1 npx next build",
+  "outputDirectory": "web/out",
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "backend/app/**",
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "/api/index?__p=/api/:path*" },
+    { "source": "/health", "destination": "/api/index?__p=/health" }
+  ]
+}

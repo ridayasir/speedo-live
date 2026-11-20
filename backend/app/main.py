@@ -14,7 +14,7 @@ from .config import get_settings
 from .db import SessionLocal
 from .limits import limiter
 from .routers import admin, auth, complaints, driver, me, public, ws
-from .services import gps_provider, monitor, simulator
+from .services import gps_provider, monitor, on_request, simulator
 from .services.realtime import hub
 from .store import store
 
@@ -42,7 +42,7 @@ async def lifespan(app: FastAPI):
     await asyncio.to_thread(firebase.init)  # connects Firestore/Auth/Storage/FCM and loads the data mirror
     await hub.start()
     tasks = []
-    if s.run_background_tasks:
+    if s.run_background_tasks and not s.serverless:
         if s.data_source == "demo":
             tasks.append(asyncio.create_task(_loop("simulator", simulator.tick, s.simulator_tick_seconds)))
         if s.data_source == "provider":
@@ -82,6 +82,17 @@ app.add_middleware(SlowAPIMiddleware)
 origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials="*" not in origins,
                    allow_methods=["*"], allow_headers=["*"])
+
+
+if settings.serverless:
+    @app.middleware("http")
+    async def serverless_background(request: Request, call_next):
+        """Serverless: connect on first use and let API calls drive the simulator and monitors."""
+        if not store.ready:
+            await asyncio.to_thread(firebase.init)
+        if request.url.path.startswith("/api/") and settings.run_background_tasks:
+            await asyncio.to_thread(on_request.catch_up)
+        return await call_next(request)
 
 
 @app.exception_handler(ValueError)

@@ -30,6 +30,11 @@ _state: dict[int, SimBus] = {}
 _rng = random.Random(42)
 
 
+def reset() -> None:
+    """Forget per-bus simulation state: the next tick resumes every bus from its saved position."""
+    _state.clear()
+
+
 def _start_trip(db: Session, bus: Bus, start_m: float = 0.0) -> Trip:
     trip = Trip(bus_id=bus.id, route_id=bus.route_id, status=TripStatus.active, source=DataSource.demo,
                 started_at=utcnow(), progress_m=start_m)
@@ -39,7 +44,9 @@ def _start_trip(db: Session, bus: Bus, start_m: float = 0.0) -> Trip:
     return trip
 
 
-def tick(db: Session, dt: float | None = None) -> int:
+def tick(db: Session, dt: float | None = None, at=None) -> int:
+    """Move every simulated bus by dt seconds. `at` is the time of the fix (default now): catching up after a
+    gap replays several steps, each with its own timestamp so GPS de-duplication keeps them."""
     s = get_settings()
     if not s.is_demo:
         return 0
@@ -87,7 +94,7 @@ def tick(db: Session, dt: float | None = None) -> int:
                 speed = 0.0
         lat, lng, heading = point_at_distance(geom.path, geom.cum, d)
         trip.progress_m = d  # simulator owns progress exactly
-        res = ingest_points(db, trip, [GpsPoint(lat, lng, utcnow(), accuracy_m=8.0, speed_mps=speed, heading=heading)])
+        res = ingest_points(db, trip, [GpsPoint(lat, lng, at or utcnow(), accuracy_m=8.0, speed_mps=speed, heading=heading)])
         moved += res.accepted
         if d >= geom.length_m - 1 and st.dwell_left <= 0:
             trip.status = TripStatus.completed

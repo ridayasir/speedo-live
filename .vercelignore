@@ -1,0 +1,14 @@
+# Never upload secrets or local data to Vercel
+**/.env
+**/.env.local
+**/*service-account*.json
+**/*-firebase-adminsdk-*.json
+**/google-services.json
+data/
+mobile/
+backend/.venv/
+backend/tests/
+**/node_modules/
+**/.next/
+web/out/
+**/__pycache__/
