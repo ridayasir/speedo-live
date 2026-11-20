@@ -51,6 +51,35 @@ export default function Home() {
           <NavLinkCard href="/timetable/" icon={History} title="Timetables" text="First and last bus, stop times" />
         </div>
 
+        <section className="grid gap-3 md:grid-cols-3" aria-label="Speedo buses in Lahore">
+          <div className="relative overflow-hidden rounded-xl2 shadow-card md:col-span-2">
+            <img
+              src="/images/speedo-fleet-minar-e-pakistan.webp"
+              alt="A row of red Speedo buses near Minar-e-Pakistan, Lahore"
+              className="h-56 w-full object-cover md:h-72"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+            <div className="absolute bottom-0 p-5 text-white">
+              <h2 className="text-xl font-bold md:text-2xl">Your Bus, Your Route, Your Time.</h2>
+              <p className="text-sm text-white/85">Lahore&apos;s red Speedo buses, live on your phone.</p>
+            </div>
+          </div>
+          <Link href="/routes/" className="group relative block overflow-hidden rounded-xl2 shadow-card">
+            <img
+              src="/images/speedo-buses-depot.jpg"
+              alt="Red Speedo feeder buses F199, F178 and F190 parked side by side"
+              className="h-56 w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] md:h-72"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+            <div className="absolute bottom-0 p-5 text-white">
+              <h2 className="text-lg font-bold">15 feeder routes</h2>
+              <p className="text-sm text-white/85">See every route and stop &rarr;</p>
+            </div>
+          </Link>
+        </section>
+
         {alerts.data && alerts.data.length > 0 && (
           <div className="space-y-2">
             {alerts.data.slice(0, 3).map((a) => (
