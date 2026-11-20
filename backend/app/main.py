@@ -39,7 +39,8 @@ async def _loop(name: str, fn, every: float):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     s = get_settings()
-    await asyncio.to_thread(firebase.init)  # connects Firestore/Auth/Storage/FCM and loads the data mirror
+    if not s.serverless:  # serverless connects on the first request instead (see serverless_background)
+        await asyncio.to_thread(firebase.init)  # connects Firestore/Auth/Storage/FCM and loads the data mirror
     await hub.start()
     tasks = []
     if s.run_background_tasks and not s.serverless:
@@ -89,7 +90,13 @@ if settings.serverless:
     async def serverless_background(request: Request, call_next):
         """Serverless: connect on first use and let API calls drive the simulator and monitors."""
         if not store.ready:
-            await asyncio.to_thread(firebase.init)
+            try:
+                await asyncio.to_thread(firebase.init)
+            except Exception as exc:  # explain the problem instead of crashing the function
+                log.exception("Firebase setup failed")
+                return JSONResponse(status_code=503, content={
+                    "detail": f"Server setup problem: {type(exc).__name__}: {exc}"[:500],
+                    "hint": "Check FIREBASE_PROJECT_ID, FIREBASE_WEB_API_KEY and FIREBASE_CREDENTIALS_JSON in the hosting settings."})
         if request.url.path.startswith("/api/") and settings.run_background_tasks:
             await asyncio.to_thread(on_request.catch_up)
         return await call_next(request)

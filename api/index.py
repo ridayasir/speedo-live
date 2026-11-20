@@ -18,10 +18,27 @@ os.environ.setdefault("SERVERLESS", "true")
 os.environ.setdefault("ENVIRONMENT", "production")
 os.environ.setdefault("REDIS_URL", "")
 
-from app.main import app as speedo  # noqa: E402
+import traceback  # noqa: E402
+
+try:
+    from app.main import app as speedo  # noqa: E402
+    STARTUP_ERROR = None
+except Exception:  # report why the app could not load instead of a bare FUNCTION_INVOCATION_FAILED
+    speedo = None
+    STARTUP_ERROR = traceback.format_exc()[-1500:]
+
+
+async def _startup_error(scope, receive, send):
+    if scope["type"] != "http":
+        return
+    body = ("Speedo Live API could not start: " + STARTUP_ERROR).encode()
+    await send({"type": "http.response.start", "status": 500, "headers": [(b"content-type", b"text/plain; charset=utf-8")]})
+    await send({"type": "http.response.body", "body": body})
 
 
 async def app(scope, receive, send):
+    if speedo is None:
+        return await _startup_error(scope, receive, send)
     if scope["type"] == "http":
         query = parse_qsl(scope.get("query_string", b"").decode(), keep_blank_values=True)
         original = next((v for k, v in query if k == "__p"), None)
