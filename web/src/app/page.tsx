@@ -1,13 +1,40 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Flag, History, LocateFixed, MapPin, Navigation, Radio, Star } from "lucide-react";
 import MapView from "@/components/MapView";
 import { Button, Card, Empty, ErrorBox, SectionTitle, Spinner, effectiveStatus } from "@/components/ui";
-import { GlobalSearch, NavLinkCard, RouteChip } from "@/components/widgets";
+import { GlobalSearch, NavLinkCard, PlaceInput, RouteChip, type Place } from "@/components/widgets";
 import { km, loadRecent, useApi, useAuth, useGeolocation, useLiveBuses, type RecentSearch } from "@/lib/hooks";
 import type { Alert, RouteDetail, RouteSummary, Stop } from "@/lib/types";
+
+function WhereTo() {
+  const router = useRouter();
+  const [dest, setDest] = useState<Place | null>(null);
+  const go = (p: Place | null = dest) => {
+    if (p) router.push(`/routes/?from=me&to=${encodeURIComponent(JSON.stringify(p))}`);
+  };
+  return (
+    <Card className="p-4 md:p-5">
+      <h2 className="text-lg font-bold text-brand-900 md:text-xl">Where do you want to go?</h2>
+      <p className="mb-3 text-sm text-slate-500">
+        Type a stop or any place in Lahore. We find the Speedo stop nearest to you and the bus that takes you there.
+      </p>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="flex-1">
+          <PlaceInput value={dest} onChange={setDest} onSubmit={go} allowPlaces icon="destination"
+            placeholder="e.g. Liberty Chowk, Emporium Mall, Jinnah Hospital" />
+        </div>
+        <Button onClick={() => go()} disabled={!dest} className="sm:w-44">
+          <Navigation className="h-4 w-4" /> Find my bus
+        </Button>
+      </div>
+      <p className="mt-2 text-xs text-slate-400">Uses your phone&apos;s location to find the nearest stop. Press Enter to search places.</p>
+    </Card>
+  );
+}
 
 export default function Home() {
   const { user } = useAuth();
@@ -63,6 +90,10 @@ export default function Home() {
             </div>
           </Link>
         </section>
+      </div>
+
+      <div className="mx-auto max-w-7xl px-4 pb-4">
+        <WhereTo />
       </div>
 
       <section className="relative">
@@ -156,7 +187,7 @@ export default function Home() {
           </Card>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-2 [&>*]:min-w-0">
           <Card className="p-5">
             <SectionTitle action={<Link href="/routes/" className="text-sm text-brand-600">All routes</Link>}>Popular routes</SectionTitle>
             {popular.loading && <Spinner />}
@@ -165,9 +196,9 @@ export default function Home() {
               {popular.data?.map((r) => (
                 <li key={r.id}>
                   <Link href={`/route/?id=${r.id}`} className="flex items-center gap-3 rounded-xl border border-slate-100 px-3 py-2.5 hover:bg-slate-50">
-                    <RouteChip code={r.code} color={r.color} />
-                    <span className="flex-1 text-sm text-slate-700">{r.name}</span>
-                    <span className="text-xs text-slate-400">{r.stop_count} stops</span>
+                    <RouteChip code={r.code} color={r.color} className="max-w-[10rem]" />
+                    <span className="min-w-0 flex-1 truncate text-sm text-slate-700">{r.name}</span>
+                    <span className="shrink-0 text-xs text-slate-400">{r.stop_count} stops</span>
                   </Link>
                 </li>
               ))}

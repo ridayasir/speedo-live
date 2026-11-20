@@ -181,6 +181,7 @@ class RouteIn(BaseModel):
     fare_pkr: float | None = Field(default=None, ge=0)
     path: list[list[float]] | None = Field(default=None, description="[[lat, lng], ...] road geometry")
     stops: list[RouteStopIn] = Field(default_factory=list, description="Ordered stops; first is the start, last the end")
+    bidirectional: bool = Field(default=False, description="Buses run the stop list in both directions (A <-> B)")
     is_demo: bool = False
     source_reference: str | None = None
 
@@ -203,6 +204,7 @@ class RoutePatch(BaseModel):
     fare_pkr: float | None = None
     path: list[list[float]] | None = None
     stops: list[RouteStopIn] | None = None
+    bidirectional: bool | None = None
     source_reference: str | None = None
 
 
@@ -278,7 +280,7 @@ def route_out(r: Route, detail: bool = False) -> dict:
         "end_stop": stop_out(r.end_stop) if r.end_stop else None,
         "length_m": round(r.length_m or 0), "stop_count": len(r.stops), "fare_pkr": r.fare_pkr,
         "avg_speed_kmh": round(r.avg_speed_kmh, 1) if r.avg_speed_kmh else None,
-        "is_demo": r.is_demo, "source_reference": r.source_reference,
+        "is_demo": r.is_demo, "source_reference": r.source_reference, "bidirectional": r.bidirectional,
     }
     if detail:
         d["path"] = r.path

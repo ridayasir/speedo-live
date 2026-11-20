@@ -146,6 +146,8 @@ export interface Alert {
 
 export interface PlanLegRide {
   type: "ride";
+  direction?: "forward" | "return";
+  towards?: string;
   route_id: number;
   route_code: string;
   route_name: string;

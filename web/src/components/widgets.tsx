@@ -17,8 +17,17 @@ export interface Place {
 }
 
 /* ------------------------------------------------------------------ place / stop search */
+interface PlaceHit {
+  label: string;
+  detail?: string;
+  lat: number;
+  lng: number;
+  kind: "stop" | "place";
+  stop_id?: number;
+}
+
 export function PlaceInput({
-  value, onChange, placeholder, onLocate, locating, icon = "origin", onPickMap, picking,
+  value, onChange, placeholder, onLocate, locating, icon = "origin", onPickMap, picking, allowPlaces, onSubmit,
 }: {
   value: Place | null;
   onChange: (p: Place | null) => void;
@@ -28,13 +37,39 @@ export function PlaceInput({
   icon?: "origin" | "destination";
   onPickMap?: () => void;
   picking?: boolean;
+  /** also search any place in Lahore (markets, hospitals...) when the user presses Search / Enter */
+  allowPlaces?: boolean;
+  onSubmit?: (p: Place) => void;
 }) {
   const [q, setQ] = useState(value?.label || "");
   const [results, setResults] = useState<Stop[]>([]);
+  const [places, setPlaces] = useState<PlaceHit[] | null>(null);
+  const [placeBusy, setPlaceBusy] = useState(false);
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);
   useEffect(() => setQ(value?.label || ""), [value]);
+  const choose = (p: Place) => {
+    onChange(p);
+    setOpen(false);
+    setPlaces(null);
+    onSubmit?.(p);
+  };
+  // place lookups go to OpenStreetMap, so they run only on an explicit Search / Enter, never per keystroke
+  const searchPlaces = async () => {
+    const term = q.trim();
+    if (!allowPlaces || term.length < 2) return;
+    setOpen(true);
+    setPlaceBusy(true);
+    try {
+      setPlaces(await api<PlaceHit[]>(`/api/places?q=${encodeURIComponent(term)}`));
+    } catch {
+      setPlaces([]);
+    } finally {
+      setPlaceBusy(false);
+    }
+  };
   useEffect(() => {
+    setPlaces(null);
     if (!open || q.trim().length < 2 || q === value?.label) {
       setResults([]);
       return;
@@ -63,6 +98,12 @@ export function PlaceInput({
             if (!e.target.value) onChange(null);
           }}
           onFocus={() => setOpen(true)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && allowPlaces) {
+              e.preventDefault();
+              searchPlaces();
+            }
+          }}
           aria-label={placeholder}
         />
         {onLocate && (
@@ -76,23 +117,49 @@ export function PlaceInput({
           </button>
         )}
       </div>
-      {open && results.length > 0 && (
-        <ul className="absolute z-[1500] mt-1 w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg">
-          {results.map((s) => (
+      {open && (places !== null || placeBusy || results.length > 0 || (allowPlaces && q.trim().length >= 2 && q !== value?.label)) && (
+        <ul className="absolute z-[1500] mt-1 max-h-80 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-lg">
+          {places === null && results.map((s) => (
             <li key={s.id}>
               <button
                 type="button"
                 className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-brand-50"
-                onClick={() => {
-                  onChange({ label: s.name, lat: s.lat, lng: s.lng, stop_id: s.id });
-                  setOpen(false);
-                }}
+                onClick={() => choose({ label: s.name, lat: s.lat, lng: s.lng, stop_id: s.id })}
               >
-                <MapPin className="h-4 w-4 text-brand-500" />
+                <Bus className="h-4 w-4 text-brand-500" />
                 <span className="flex-1">{s.name}</span>
+                <span className="text-[10px] font-semibold uppercase text-slate-400">stop</span>
               </button>
             </li>
           ))}
+          {places !== null && places.map((p, i) => (
+            <li key={`${p.kind}-${p.stop_id ?? i}`}>
+              <button
+                type="button"
+                className="flex w-full items-start gap-2 px-3 py-2 text-left text-sm hover:bg-brand-50"
+                onClick={() => choose({ label: p.label, lat: p.lat, lng: p.lng, stop_id: p.stop_id })}
+              >
+                {p.kind === "stop" ? <Bus className="mt-0.5 h-4 w-4 text-brand-500" /> : <MapPin className="mt-0.5 h-4 w-4 text-accent-500" />}
+                <span className="flex-1 min-w-0">
+                  <span className="block truncate">{p.label}</span>
+                  {p.detail && <span className="block truncate text-[11px] text-slate-400">{p.detail}</span>}
+                </span>
+                <span className="text-[10px] font-semibold uppercase text-slate-400">{p.kind}</span>
+              </button>
+            </li>
+          ))}
+          {places !== null && places.length === 0 && (
+            <li className="px-3 py-2 text-sm text-slate-500">Nothing found. Try another name, or pick the place on the map.</li>
+          )}
+          {allowPlaces && places === null && q.trim().length >= 2 && q !== value?.label && (
+            <li className="border-t border-slate-100">
+              <button type="button" onClick={searchPlaces} disabled={placeBusy}
+                className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm font-medium text-brand-700 hover:bg-brand-50">
+                <Search className="h-4 w-4" /> {placeBusy ? "Searching…" : `Search all places for “${q.trim()}”`}
+              </button>
+            </li>
+          )}
+          {placeBusy && places === null && <li className="px-3 py-2 text-xs text-slate-400">Searching places in Lahore…</li>}
         </ul>
       )}
     </div>
@@ -328,4 +395,30 @@ export function NavLinkCard({ href, icon: Icon, title, text }: { href: string; i
       </span>
     </Link>
   );
+}
+
+/* ------------------------------------------------------------------ journey guide helpers */
+export function walkingDirectionsUrl(from: { lat: number; lng: number }, to: { lat: number; lng: number }) {
+  return `https://www.google.com/maps/dir/?api=1&origin=${from.lat},${from.lng}&destination=${to.lat},${to.lng}&travelmode=walking`;
+}
+
+/** The next bus of one route at one stop: live ETA when a bus is tracked, otherwise the timetable. */
+export function NextBus({ stopId, routeId }: { stopId: number; routeId: number }) {
+  const { data } = useApi<Arrivals>(`/api/stops/${stopId}/arrivals?route_id=${routeId}`);
+  if (!data) return null;
+  const live = data.live[0];
+  const sched = data.scheduled[0];
+  if (live)
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
+        <Radio className="h-3 w-3" /> Next bus {live.bus_number} in {live.minutes} min
+      </span>
+    );
+  if (sched)
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600">
+        <Clock className="h-3 w-3" /> Next scheduled bus {clock(sched.eta)} (in {sched.minutes} min)
+      </span>
+    );
+  return <span className="text-[11px] text-slate-500">No more buses today on this route</span>;
 }

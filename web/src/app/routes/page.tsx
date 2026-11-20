@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowDownUp, Bus, Footprints, Repeat } from "lucide-react";
+import { ArrowDownUp, Bus, ExternalLink, Footprints, LocateFixed, Repeat } from "lucide-react";
 import MapView, { type MapRoute } from "@/components/MapView";
 import { Button, Card, Empty, ErrorBox, Input, SectionTitle, Spinner } from "@/components/ui";
-import { PlaceInput, RouteChip, type Place } from "@/components/widgets";
+import { NextBus, PlaceInput, RouteChip, walkingDirectionsUrl, type Place } from "@/components/widgets";
 import { api } from "@/lib/api";
 import { km, saveRecent, useApi, useAuth, useGeolocation } from "@/lib/hooks";
 import type { PlanLegRide, PlanOption, PlanResult, RouteDetail, RouteSummary, Stop } from "@/lib/types";
@@ -26,7 +26,10 @@ function RoutesInner() {
   const router = useRouter();
   const { user } = useAuth();
   const geo = useGeolocation();
-  const [from, setFrom] = useState<Place | null>(parsePlace(params.get("from")));
+  // ?from=me: start from the passenger's current location (asked for on arrival)
+  const fromMe = params.get("from") === "me";
+  const [from, setFrom] = useState<Place | null>(fromMe ? null : parsePlace(params.get("from")));
+  const [autoRun, setAutoRun] = useState(fromMe);
   const [to, setTo] = useState<Place | null>(parsePlace(params.get("to")));
   const [picking, setPicking] = useState<"from" | "to" | null>(null);
   const [result, setResult] = useState<PlanResult | null>(null);
@@ -37,7 +40,18 @@ function RoutesInner() {
   const routes = useApi<RouteDetail[]>("/api/routes?with_path=true");
 
   useEffect(() => {
-    if (geo.pos && !from) setFrom({ label: "My location", lat: geo.pos.lat, lng: geo.pos.lng });
+    if (fromMe) geo.locate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!geo.pos) return;
+    const me = { label: "My location", lat: geo.pos.lat, lng: geo.pos.lng };
+    if (!from || autoRun) setFrom(me);
+    if (autoRun && to) {
+      setAutoRun(false);
+      search(me, to);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geo.pos]);
 
@@ -65,7 +79,7 @@ function RoutesInner() {
   };
 
   useEffect(() => {
-    if (from && to && params.get("from")) search(from, to);
+    if (from && to && params.get("from") && !fromMe) search(from, to);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -83,7 +97,8 @@ function RoutesInner() {
       // draw only the ridden part of the route
       const seg = r ? sliceRoute(r, leg.board.id, leg.alight.id) : leg.stops.map((s) => [s.lat, s.lng] as [number, number]);
       mapRoutes.push({ id: leg.route_id, color: leg.color, path: seg });
-      stopsOnMap.push(...leg.stops.filter((s) => ids.has(s.id)));
+      // a transfer stop ends one ride and starts the next: show it once
+      stopsOnMap.push(...leg.stops.filter((s) => ids.has(s.id) && !stopsOnMap.some((m) => m.id === s.id)));
       hl.push(leg.board.id, leg.alight.id);
     }
   } else if (!result) {
@@ -119,17 +134,18 @@ function RoutesInner() {
       <aside className="lg:w-[420px] lg:overflow-y-auto scrollbar-thin bg-surface p-4 space-y-4 order-2 lg:order-1">
         <Card className="p-4 space-y-3">
           <h1 className="text-lg font-bold text-brand-900">Plan your journey</h1>
-          <PlaceInput value={from} onChange={setFrom} placeholder="Starting point (stop name)" icon="origin" onLocate={geo.locate} locating={geo.busy}
+          <PlaceInput value={from} onChange={setFrom} placeholder="Starting point (stop or any place)" allowPlaces icon="origin" onLocate={geo.locate} locating={geo.busy}
             onPickMap={() => setPicking(picking === "from" ? null : "from")} picking={picking === "from"} />
           <div className="flex justify-center -my-1">
             <button className="rounded-full border border-slate-200 bg-white p-1.5 text-slate-500 hover:bg-slate-50" aria-label="Swap" onClick={() => { setFrom(to); setTo(from); }}>
               <ArrowDownUp className="h-4 w-4" />
             </button>
           </div>
-          <PlaceInput value={to} onChange={setTo} placeholder="Destination (stop name)" icon="destination"
+          <PlaceInput value={to} onChange={setTo} placeholder="Destination (stop or any place)" allowPlaces icon="destination"
             onPickMap={() => setPicking(picking === "to" ? null : "to")} picking={picking === "to"} />
           {picking && <p className="text-xs text-accent-600">Tap the map to set the {picking === "from" ? "starting point" : "destination"}.</p>}
-          {geo.error && <p className="text-xs text-red-600">{geo.error}</p>}
+          {geo.busy && autoRun && <p className="flex items-center gap-1 text-xs text-brand-700"><LocateFixed className="h-3.5 w-3.5 animate-pulse" /> Finding your location…</p>}
+          {geo.error && <p className="text-xs text-red-600">{geo.error}. Type your starting point instead.</p>}
           <Button className="w-full" onClick={() => search()} loading={busy}>Find routes</Button>
           {error && <ErrorBox error={error} />}
         </Card>
@@ -139,12 +155,29 @@ function RoutesInner() {
             <SectionTitle action={<button className="text-sm text-brand-600" onClick={() => setResult(null)}>Clear</button>}>
               {result.options.length ? `${result.options.length} option${result.options.length > 1 ? "s" : ""}` : "No routes found"}
             </SectionTitle>
-            {result.nearest_boarding_stop && (
-              <p className="mb-3 text-xs text-slate-500">
-                Nearest boarding stop: <b>{result.nearest_boarding_stop.name}</b> ({km(result.nearest_boarding_stop.walk_m)} walk).
-                Destination stop: <b>{result.nearest_destination_stop?.name}</b>.
-              </p>
-            )}
+            {option && (() => {
+              const ride = option.legs.find((l): l is PlanLegRide => l.type === "ride");
+              const walk = option.legs[0]?.type === "walk" ? option.legs[0] : null;
+              if (!ride) return null;
+              return (
+                <div className="mb-3 rounded-xl border border-brand-100 bg-brand-50/60 p-3">
+                  <div className="text-xs font-semibold uppercase tracking-wide text-brand-700">Your stop for this trip</div>
+                  <div className="mt-0.5 text-base font-bold text-brand-900">{ride.board.name}</div>
+                  <div className="text-xs text-slate-600">
+                    {walk ? `${km(walk.distance_m)} away · about ${Math.max(1, Math.round(walk.minutes))} min walk` : "You are at the stop"}
+                  </div>
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <NextBus stopId={ride.board.id} routeId={ride.route_id} />
+                    {walk && (
+                      <a href={walkingDirectionsUrl(walk.from, ride.board)} target="_blank" rel="noreferrer"
+                        className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[11px] font-semibold text-brand-700 shadow-sm hover:bg-brand-50">
+                        <Footprints className="h-3 w-3" /> Walking directions <ExternalLink className="h-3 w-3" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
             {result.options.length === 0 && (
               <Empty>No Speedo route connects these places within walking distance. Try a nearby major stop.</Empty>
             )}
@@ -174,17 +207,25 @@ function RoutesInner() {
                     <ol className="mt-3 space-y-2 border-l-2 border-slate-200 pl-3">
                       {o.legs.map((l, k) =>
                         l.type === "walk" ? (
-                          <li key={k} className="flex items-center gap-2 text-sm text-slate-600">
-                            <Footprints className="h-4 w-4 text-slate-400" /> Walk {km(l.distance_m)} (~{Math.round(l.minutes)} min) to {l.to.name}
+                          <li key={k} className="text-sm text-slate-600">
+                            <div className="flex items-center gap-2">
+                              <Footprints className="h-4 w-4 text-slate-400" /> Walk {km(l.distance_m)} (~{Math.max(1, Math.round(l.minutes))} min) to {l.to.name}
+                            </div>
+                            <a href={walkingDirectionsUrl(l.from, l.to)} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}
+                              className="ml-6 inline-flex items-center gap-1 text-xs text-brand-600 hover:underline">
+                              Walking directions <ExternalLink className="h-3 w-3" />
+                            </a>
                           </li>
                         ) : (
                           <li key={k} className="text-sm">
                             <div className="flex items-center gap-2 font-medium text-slate-800">
                               <Bus className="h-4 w-4 text-brand-600" /> Board {l.route_code} at {l.board.name}
                             </div>
+                            {l.towards && <div className="ml-6 text-xs font-medium text-brand-700">Bus going towards {l.towards}</div>}
                             <div className="ml-6 text-xs text-slate-500">
                               {l.stop_count} stop{l.stop_count === 1 ? "" : "s"} · {km(l.distance_m)} · ~{Math.round(l.minutes)} min · get off at <b>{l.alight.name}</b>
                             </div>
+                            <div className="ml-6 mt-1"><NextBus stopId={l.board.id} routeId={l.route_id} /></div>
                             <details className="ml-6 mt-1 text-xs text-slate-500">
                               <summary className="cursor-pointer text-brand-600">All stops</summary>
                               <ol className="mt-1 list-decimal pl-4">

@@ -118,9 +118,10 @@ def main() -> None:
         if srep.errors:
             raise SystemExit("schedule errors: " + "; ".join(srep.errors[:10]))
         by_code = {r.code: r for r in db.all(Route)}
-        for r in NET["routes"]:  # learned average speed from the 12 Nov app
+        for r in NET["routes"]:  # learned average speed from the 12 Nov app; every route runs both ways (A <-> B)
             if r.get("avg_speed_kmh"):
                 by_code[r["code"]].avg_speed_kmh = r["avg_speed_kmh"]
+            by_code[r["code"]].bidirectional = True
         db.commit()
         print({k: v for k, v in rep.__dict__.items() if k != "errors"}, "| timetables:", srep.schedules)
 

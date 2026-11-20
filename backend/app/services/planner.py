@@ -45,6 +45,11 @@ class RouteIndex:
     by_stop: dict[int, RouteStop]
     ordered: list[RouteStop]
     headway: float
+    reverse: bool = False
+
+    @property
+    def towards(self) -> str:
+        return self.ordered[-1].stop.name if self.ordered and self.ordered[-1].stop else ""
 
     def ride_minutes(self, a: RouteStop, b: RouteStop) -> float:
         dt = b.offset_minutes - a.offset_minutes
@@ -54,13 +59,28 @@ class RouteIndex:
         return (b.distance_from_start_m - a.distance_from_start_m) / (speed * 1000 / 60)
 
 
+@dataclass
+class _BackStop:
+    """A stop seen from the return direction of a two-way route (sequence, distance and minutes counted from the far end)."""
+    stop: BusStop
+    stop_id: int
+    sequence: int
+    distance_from_start_m: float
+    offset_minutes: float
+
+
 def _index(db: Session) -> list[RouteIndex]:
     routes = [r for r in db.all(Route) if r.status == RouteStatus.active]
     out = []
     for r in routes:
         ordered = sorted(r.stops, key=lambda x: x.sequence)
-        headways = [s.frequency_minutes for s in r.schedules] or [15]
-        out.append(RouteIndex(r, {rs.stop_id: rs for rs in ordered}, ordered, float(min(headways))))
+        headway = float(min([s.frequency_minutes for s in r.schedules] or [15]))
+        out.append(RouteIndex(r, {rs.stop_id: rs for rs in ordered}, ordered, headway))
+        if r.bidirectional and len(ordered) > 1:  # buses also run the list backwards (A <-> B)
+            length, last_off = ordered[-1].distance_from_start_m, ordered[-1].offset_minutes
+            back = [_BackStop(rs.stop, rs.stop_id, i + 1, length - rs.distance_from_start_m, last_off - rs.offset_minutes)
+                    for i, rs in enumerate(reversed(ordered))]
+            out.append(RouteIndex(r, {bs.stop_id: bs for bs in back}, back, headway, reverse=True))
     return out
 
 
@@ -76,6 +96,8 @@ def _ride_leg(ri: RouteIndex, a: RouteStop, b: RouteStop) -> dict:
         "route_code": ri.route.code,
         "route_name": ri.route.name,
         "color": ri.route.color,
+        "direction": "return" if ri.reverse else "forward",
+        "towards": ri.towards,
         "board": _stop_json(a.stop),
         "alight": _stop_json(b.stop),
         "stops": [_stop_json(rs.stop) for rs in between],
@@ -125,7 +147,7 @@ def plan(db: Session, origin: Place, dest: Place, max_options: int = 5) -> dict:
                     continue
                 legs = [_walk_leg(o_pt, _stop_json(o_stop), o_walk), _ride_leg(ri, a, b),
                         _walk_leg(_stop_json(d_stop), d_pt, d_walk)]
-                add((ri.route.id,), legs, ri.headway / 2)
+                add(((ri.route.id, ri.reverse),), legs, ri.headway / 2)
 
     # one transfer at a shared stop
     for ra in idx:
@@ -148,7 +170,10 @@ def plan(db: Session, origin: Place, dest: Place, max_options: int = 5) -> dict:
                             continue
                         legs = [_walk_leg(o_pt, _stop_json(o_stop), o_walk), _ride_leg(ra, a, x),
                                 _ride_leg(rb, xb, d), _walk_leg(_stop_json(d_stop), d_pt, d_walk)]
-                        add((ra.route.id, rb.route.id), legs, ra.headway / 2 + rb.headway / 2)
+                        add(((ra.route.id, ra.reverse), (rb.route.id, rb.reverse)), legs, ra.headway / 2 + rb.headway / 2)
+
+    if not options:  # two transfers (three buses): only searched when nothing simpler exists
+        _two_transfers(idx, o_cands, d_cands, o_pt, d_pt, add)
 
     ranked = sorted(options.values(), key=lambda o: (o["total_minutes"], o["transfers"]))
     # drop transfer options that are not better than the best direct one
@@ -165,3 +190,62 @@ def plan(db: Session, origin: Place, dest: Place, max_options: int = 5) -> dict:
         "options": ranked[:max_options],
         "straight_line_m": round(haversine_m(origin.lat, origin.lng, dest.lat, dest.lng)),
     }
+
+
+def _two_transfers(idx: list[RouteIndex], o_cands, d_cands, o_pt: dict, d_pt: dict, add, keep: int = 60) -> None:
+    """Journeys with three buses. The last bus is precomputed per stop ("best way to finish from here"), so the
+    search only walks the first two routes: routes x stops x routes x stops, fine for a city network."""
+    import heapq
+    import itertools
+
+    tail: dict[int, list[tuple[float, RouteIndex, object, tuple]]] = {}
+    for rc in idx:
+        for d_stop, d_walk in d_cands:
+            d = rc.by_stop.get(d_stop.id)
+            if not d:
+                continue
+            for y in rc.ordered:
+                if y.sequence >= d.sequence:
+                    break
+                cost = rc.headway / 2 + rc.ride_minutes(y, d) + _walk_min(d_walk)
+                tail.setdefault(y.stop_id, []).append((cost, rc, y, (d_stop, d_walk, d)))
+    for lst in tail.values():
+        lst.sort(key=lambda t: t[0])
+        del lst[6:]
+    if not tail:
+        return
+    best: list = []
+    tie = itertools.count()
+    for ra in idx:
+        for o_stop, o_walk in o_cands:
+            a = ra.by_stop.get(o_stop.id)
+            if not a:
+                continue
+            for x in ra.ordered:
+                if x.sequence <= a.sequence:
+                    continue
+                t1 = _walk_min(o_walk) + ra.headway / 2 + ra.ride_minutes(a, x)
+                for rb in idx:
+                    if rb.route.id == ra.route.id:
+                        continue
+                    xb = rb.by_stop.get(x.stop_id)
+                    if not xb:
+                        continue
+                    for y in rb.ordered:
+                        if y.sequence <= xb.sequence or y.stop_id not in tail:
+                            continue
+                        t2 = t1 + rb.headway / 2 + rb.ride_minutes(xb, y)
+                        for cost, rc, yc, dinfo in tail[y.stop_id]:
+                            if rc.route.id in (ra.route.id, rb.route.id):
+                                continue
+                            item = (-(t2 + cost), next(tie), (ra, a, o_stop, o_walk, x, rb, xb, y, rc, yc, dinfo))
+                            if len(best) < keep:
+                                heapq.heappush(best, item)
+                            elif item[0] > best[0][0]:
+                                heapq.heapreplace(best, item)
+                            break  # tail lists are sorted: the first usable one is the best for this stop
+    for _, _, (ra, a, o_stop, o_walk, x, rb, xb, y, rc, yc, (d_stop, d_walk, d)) in best:
+        legs = [_walk_leg(o_pt, _stop_json(o_stop), o_walk), _ride_leg(ra, a, x), _ride_leg(rb, xb, y),
+                _ride_leg(rc, yc, d), _walk_leg(_stop_json(d_stop), d_pt, d_walk)]
+        add(((ra.route.id, ra.reverse), (rb.route.id, rb.reverse), (rc.route.id, rc.reverse)), legs,
+            ra.headway / 2 + rb.headway / 2 + rc.headway / 2)

@@ -169,7 +169,7 @@ class Route(Doc):
     __collection__ = "routes"
     FIELDS = {"code": "", "name": "", "color": "#1d4ed8", "status": RouteStatus.active, "start_stop_id": None,
               "end_stop_id": None, "path": list, "length_m": 0.0, "avg_speed_kmh": None, "fare_pkr": None,
-              "is_demo": False, "source_reference": None, **TS}
+              "is_demo": False, "source_reference": None, "bidirectional": False, **TS}
     ENUMS = {"status": RouteStatus}
     UNIQUE = (("code",),)
 

@@ -2,7 +2,7 @@
 from collections import Counter
 from datetime import datetime, timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
 from ..config import get_settings
 from ..db import get_db
@@ -19,6 +19,8 @@ from ..models import (
     route_stops,
 )
 from ..schemas import PlanIn, alert_out, route_out, schedule_out, stop_out
+from ..limits import limiter
+from ..services.places import search as place_search
 from ..services.planner import Place, nearby_stops, plan
 from ..services.tracking import PKT, arrivals_for_stop, bus_state, schedule_departures, utcnow
 from ..store import Session
@@ -243,6 +245,23 @@ def _active_alerts(db: Session, route_id: int | None = None, stop_id: int | None
 @router.get("/alerts")
 def alerts(route_id: int | None = None, stop_id: int | None = None, db: Session = Depends(get_db)):
     return [alert_out(a) for a in _active_alerts(db, route_id, stop_id)]
+
+
+@router.get("/places")
+@limiter.limit("20/minute")
+def places(request: Request, q: str = Query(min_length=2, max_length=100), db: Session = Depends(get_db)):
+    """Find a destination by name: Speedo stops first, then any place in Lahore (OpenStreetMap).
+
+    Call this when the passenger presses Search (not on every keystroke): place lookups are rate limited.
+    """
+    stops = [s for s in db.all(BusStop) if ilike(q, s.name, s.code)]
+    stops.sort(key=lambda s: (not s.name.lower().startswith(q.strip().lower()), s.name))
+    out = [{"label": s.name, "lat": s.lat, "lng": s.lng, "kind": "stop", "stop_id": s.id} for s in stops[:4]]
+    s = get_settings()
+    for p in place_search(q):
+        if s.area_min_lat <= p["lat"] <= s.area_max_lat and s.area_min_lng <= p["lng"] <= s.area_max_lng:
+            out.append(p)
+    return out
 
 
 @router.get("/search")
