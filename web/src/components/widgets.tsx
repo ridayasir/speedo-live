@@ -32,7 +32,16 @@ export async function findPlace(text: string): Promise<Place | null> {
 
 export type VoiceJourney = { from: string | null; to: string };
 
-interface PlaceHit {
+/** All matches for a name (stops first, then places), for "which one did you mean?". */
+export async function placeHits(text: string): Promise<PlaceHit[]> {
+  try {
+    return await api<PlaceHit[]>(`/api/places?q=${encodeURIComponent(text)}`);
+  } catch {
+    return [];
+  }
+}
+
+export interface PlaceHit {
   label: string;
   detail?: string;
   lat: number;
@@ -59,7 +68,7 @@ export function PlaceInput({
   /** show a mic button so passengers can say the stop / place name instead of typing it */
   voiceSearch?: boolean;
   /** a spoken sentence naming where the passenger is and where they go ("Main X mein hoon, mujhe Y jana hai") */
-  onVoiceJourney?: (j: VoiceJourney, lang: VoiceLang) => void;
+  onVoiceJourney?: (j: VoiceJourney, lang: VoiceLang, transcript: string) => void;
 }) {
   const [q, setQ] = useState(value?.label || "");
   const [results, setResults] = useState<Stop[]>([]);
@@ -95,7 +104,7 @@ export function PlaceInput({
     const journey = onVoiceJourney ? parseJourney(raw) : null;
     if (journey && onVoiceJourney) {
       setOpen(false);
-      return onVoiceJourney(journey, lang);
+      return onVoiceJourney(journey, lang, raw);
     }
     setQ(text);
     setOpen(true);

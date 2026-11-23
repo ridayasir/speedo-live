@@ -159,6 +159,7 @@ export interface PlanLegRide {
   distance_m: number;
   minutes: number;
   is_demo: boolean;
+  fare_pkr?: number | null;
 }
 
 export interface PlanLegWalk {
@@ -167,6 +168,8 @@ export interface PlanLegWalk {
   to: { lat: number; lng: number; name?: string };
   distance_m: number;
   minutes: number;
+  /** walking is measured in a straight line, not along streets */
+  estimate_basis?: "straight_line";
 }
 
 export type PlanLeg = PlanLegRide | PlanLegWalk;
@@ -178,7 +181,14 @@ export interface PlanOption {
   transfers: number;
   walk_m: number;
   is_demo: boolean;
+  /** minutes come from the route timetable, never from live GPS */
+  timing_basis?: "timetable_estimate";
+  /** null = fare not in the dataset (unknown, not free) */
+  fare_pkr?: number | null;
+  recommended?: boolean;
 }
+
+export type PlanPreference = "fastest" | "fewer_transfers" | "less_walking";
 
 export interface PlanResult {
   origin: { lat: number; lng: number; name: string };
@@ -187,6 +197,10 @@ export interface PlanResult {
   nearest_destination_stop: (Stop & { walk_m: number }) | null;
   options: PlanOption[];
   straight_line_m: number;
+  status?: "ok" | "no_route";
+  prefer?: PlanPreference;
+  search_limits?: { max_walk_m: number; max_transfers: number };
+  warnings?: { code: string; message: string; distance_m?: number }[];
 }
 
 export interface Meta {

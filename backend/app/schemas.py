@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from datetime import datetime, time
+from typing import Literal
 
 from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 
@@ -95,6 +96,7 @@ class PlanIn(BaseModel):
     to_stop_id: int | None = None
     from_label: str | None = None
     to_label: str | None = None
+    prefer: Literal["fastest", "fewer_transfers", "less_walking"] = "fastest"
 
     @model_validator(mode="after")
     def need_ends(self):

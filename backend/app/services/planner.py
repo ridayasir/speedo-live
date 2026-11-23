@@ -1,4 +1,12 @@
-"""Journey planning across routes, with at most one transfer."""
+"""Journey planning across routes: direct trips, one transfer, and two transfers when nothing simpler exists.
+
+Honesty rules for what the planner returns:
+- walking distances are straight-line estimates (no street routing): every walk leg says estimate_basis="straight_line";
+- ride and wait minutes come from the route timetable (stop offsets, headway/2 wait), never from live data:
+  timing_basis="timetable_estimate";
+- fare is null unless every route in the trip has a fare in the dataset;
+- "no_route" means no connection within the search limits (walking radius, transfers), not "no bus in the city".
+"""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -9,6 +17,13 @@ from ..store import Session
 from .geo import haversine_m
 
 TRANSFER_PENALTY_MIN = 5.0
+MAX_TRANSFERS = 2
+PREFERENCES = ("fastest", "fewer_transfers", "less_walking")
+_RANK = {
+    "fastest": lambda o: (o["total_minutes"], o["transfers"], o["walk_m"]),
+    "fewer_transfers": lambda o: (o["transfers"], o["total_minutes"], o["walk_m"]),
+    "less_walking": lambda o: (o["walk_m"], o["transfers"], o["total_minutes"]),
+}
 
 
 @dataclass
@@ -105,14 +120,19 @@ def _ride_leg(ri: RouteIndex, a: RouteStop, b: RouteStop) -> dict:
         "distance_m": round(b.distance_from_start_m - a.distance_from_start_m),
         "minutes": round(ri.ride_minutes(a, b), 1),
         "is_demo": ri.route.is_demo,
+        "fare_pkr": ri.route.fare_pkr,
     }
 
 
 def _walk_leg(frm: dict, to: dict, meters: float) -> dict:
-    return {"type": "walk", "from": frm, "to": to, "distance_m": round(meters), "minutes": round(_walk_min(meters), 1)}
+    return {"type": "walk", "from": frm, "to": to, "distance_m": round(meters), "minutes": round(_walk_min(meters), 1),
+            "estimate_basis": "straight_line"}
 
 
-def plan(db: Session, origin: Place, dest: Place, max_options: int = 5) -> dict:
+def plan(db: Session, origin: Place, dest: Place, max_options: int = 3, prefer: str = "fastest") -> dict:
+    """One recommended trip plus up to two alternatives, ranked by `prefer` (see PREFERENCES)."""
+    if prefer not in _RANK:
+        prefer = "fastest"
     o_cands = _candidates(db, origin)
     d_cands = _candidates(db, dest)
     idx = _index(db)
@@ -126,7 +146,10 @@ def plan(db: Session, origin: Place, dest: Place, max_options: int = 5) -> dict:
         total += TRANSFER_PENALTY_MIN * transfers
         cur = options.get(key)
         if cur is None or total < cur["total_minutes"]:
+            fares = [l.get("fare_pkr") for l in legs if l["type"] == "ride"]
             options[key] = {
+                "timing_basis": "timetable_estimate",
+                "fare_pkr": sum(fares) if fares and all(f is not None for f in fares) else None,
                 "legs": [l for l in legs if l["type"] != "walk" or l["distance_m"] > 0],
                 "total_minutes": round(total),
                 "wait_minutes": round(wait),
@@ -175,11 +198,22 @@ def plan(db: Session, origin: Place, dest: Place, max_options: int = 5) -> dict:
     if not options:  # two transfers (three buses): only searched when nothing simpler exists
         _two_transfers(idx, o_cands, d_cands, o_pt, d_pt, add)
 
-    ranked = sorted(options.values(), key=lambda o: (o["total_minutes"], o["transfers"]))
-    # drop transfer options that are not better than the best direct one
-    best_direct = next((o["total_minutes"] for o in ranked if o["transfers"] == 0), None)
-    if best_direct is not None:
-        ranked = [o for o in ranked if o["transfers"] == 0 or o["total_minutes"] < best_direct]
+    ranked = sorted(options.values(), key=_RANK[prefer])
+    if prefer == "fastest":
+        # drop transfer options that are not faster than the best direct one
+        best_direct = next((o["total_minutes"] for o in ranked if o["transfers"] == 0), None)
+        if best_direct is not None:
+            ranked = [o for o in ranked if o["transfers"] == 0 or o["total_minutes"] < best_direct]
+    ranked = [dict(o, recommended=(i == 0)) for i, o in enumerate(ranked[:max_options])]
+    s = get_settings()
+    warnings = []
+    for side, cands in (("origin", o_cands), ("destination", d_cands)):
+        if not cands:
+            warnings.append({"code": f"{side}_no_stop", "message": f"No Speedo stop found near the {side}."})
+        elif cands[0][1] > s.max_walk_m:
+            warnings.append({"code": f"{side}_far_from_stops", "distance_m": round(cands[0][1]),
+                             "message": f"The nearest Speedo stop is {cands[0][1] / 1000:.1f} km from the {side} "
+                                        f"(straight line)."})
     nearest_boarding = _stop_json(o_cands[0][0]) | {"walk_m": round(o_cands[0][1])} if o_cands else None
     nearest_alight = _stop_json(d_cands[0][0]) | {"walk_m": round(d_cands[0][1])} if d_cands else None
     return {
@@ -187,7 +221,11 @@ def plan(db: Session, origin: Place, dest: Place, max_options: int = 5) -> dict:
         "destination": d_pt,
         "nearest_boarding_stop": nearest_boarding,
         "nearest_destination_stop": nearest_alight,
-        "options": ranked[:max_options],
+        "status": "ok" if ranked else "no_route",
+        "prefer": prefer,
+        "search_limits": {"max_walk_m": round(s.max_walk_m), "max_transfers": MAX_TRANSFERS},
+        "warnings": warnings,
+        "options": ranked,
         "straight_line_m": round(haversine_m(origin.lat, origin.lng, dest.lat, dest.lng)),
     }
 

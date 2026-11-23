@@ -3,14 +3,16 @@
 import Link from "next/link";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowDownUp, Bus, ExternalLink, Footprints, LocateFixed, Repeat, Volume2 } from "lucide-react";
+import { ArrowDownUp, Bus, ExternalLink, Footprints, Info, LocateFixed, Repeat } from "lucide-react";
 import MapView, { type MapRoute } from "@/components/MapView";
 import { Button, Card, Empty, ErrorBox, Input, SectionTitle, Spinner } from "@/components/ui";
-import { NextBus, PlaceInput, RouteChip, findPlace, walkingDirectionsUrl, type Place, type VoiceJourney } from "@/components/widgets";
-import { loadVoiceLang, speak, type VoiceLang } from "@/lib/voice";
+import { NextBus, PlaceInput, RouteChip, walkingDirectionsUrl, type Place } from "@/components/widgets";
+import { VoiceTripPanel, useVoiceTrip } from "@/components/VoiceTrip";
+import VoiceGuide, { type SpokenTrip } from "@/components/VoiceGuide";
+import { speak, type VoiceLang } from "@/lib/voice";
 import { api } from "@/lib/api";
-import { km, saveRecent, useApi, useAuth, useGeolocation } from "@/lib/hooks";
-import type { PlanLegRide, PlanOption, PlanResult, RouteDetail, RouteSummary, Stop } from "@/lib/types";
+import { km, saveRecent, useApi, useAuth, useGeolocation, useMeta } from "@/lib/hooks";
+import type { PlanLegRide, PlanOption, PlanPreference, PlanResult, RouteDetail, RouteSummary, Stop } from "@/lib/types";
 
 function parsePlace(v: string | null): Place | null {
   if (!v) return null;
@@ -24,26 +26,57 @@ function parsePlace(v: string | null): Place | null {
 
 const spokenName = (n: string) => n.replace(/^\s*\d+[.)]?\s*/, "");
 
-/** The answer to "which stop do I go to?" as one short sentence, in English and in Urdu. */
-function journeyText(o: PlanOption | undefined): { en: string; ur: string } {
-  if (!o) return {
-    en: "Sorry, no Speedo bus connects these places. Try a nearby main stop.",
-    ur: "معاف کیجیے، ان جگہوں کے درمیان کوئی اسپیڈو بس نہیں چلتی۔ قریب کا کوئی بڑا اسٹاپ آزمائیں۔",
-  };
+const PREFS: { id: PlanPreference; label: string }[] = [
+  { id: "fastest", label: "Fastest (estimate)" },
+  { id: "fewer_transfers", label: "Fewer changes" },
+  { id: "less_walking", label: "Less walking" },
+];
+
+/**
+ * What the voice says, built only from the planned trip (no times of buses: those are not verified).
+ * Summary: which stop, which bus, where to change, where to get off. Details: every leg with walking estimates.
+ */
+function journeySpeech(o: PlanOption | undefined, result: PlanResult | null): SpokenTrip {
+  if (!o) {
+    const kms = ((result?.search_limits?.max_walk_m ?? 1500) / 1000).toFixed(1);
+    const msg = {
+      en: `Sorry, we found no Speedo connection within ${kms} kilometres walking of these places. Try a nearby main stop.`,
+      ur: `معاف کیجیے، ان جگہوں سے ${kms} کلومیٹر پیدل کے اندر کوئی اسپیڈو بس نہیں ملی۔ قریب کا کوئی بڑا اسٹاپ آزمائیں۔`,
+    };
+    return { summary: msg, details: msg };
+  }
   const rides = o.legs.filter((l): l is PlanLegRide => l.type === "ride");
-  const walk = o.legs[0]?.type === "walk" ? o.legs[0] : null;
-  const mins = walk ? Math.max(1, Math.round(walk.minutes)) : 0;
+  const first = rides[0], last = rides[rides.length - 1];
+  const towards = (r: PlanLegRide) =>
+    r.towards ? { en: ` towards ${spokenName(r.towards)}`, ur: `، جو ${spokenName(r.towards)} کی طرف جاتی ہے` } : { en: "", ur: "" };
+  const changes = rides.slice(1).map((r) => spokenName(r.board.name));
+  const summary = {
+    en: `Go to ${spokenName(first.board.name)} stop and take the ${first.route_code} bus${towards(first).en}.` +
+      (changes.length ? ` Change buses at ${changes.join(", then at ")}.` : "") +
+      ` Get off at ${spokenName(last.alight.name)}.`,
+    ur: `${spokenName(first.board.name)} اسٹاپ پر جائیں اور ${first.route_code} بس لیں${towards(first).ur}۔` +
+      (changes.length ? ` ${changes.join("، پھر ")} پر بس بدلیں۔` : "") +
+      ` ${spokenName(last.alight.name)} پر اتر جائیں۔`,
+  };
   const en: string[] = [], ur: string[] = [];
-  rides.forEach((r, i) => {
-    const board = spokenName(r.board.name), alight = spokenName(r.alight.name);
-    if (i === 0) {
-      en.push(`Go to ${board} stop${walk ? `, about ${mins} minute${mins === 1 ? "" : "s"} walk` : ""}.`);
-      ur.push(`${board} اسٹاپ پر جائیں${walk ? `، تقریباً ${mins} منٹ پیدل` : ""}۔`);
+  o.legs.forEach((l, i) => {
+    if (l.type === "walk") {
+      const m = Math.max(1, Math.round(l.minutes)), d = km(l.distance_m);
+      const target = spokenName(l.to.name || "the stop");
+      if (i === 0) {
+        en.push(`Walk to ${target} stop, about ${d} in a straight line, roughly ${m} minutes.`);
+        ur.push(`${target} اسٹاپ تک پیدل جائیں، سیدھی لکیر میں تقریباً ${d}، اندازاً ${m} منٹ۔`);
+      } else {
+        en.push(`Then walk about ${d} to ${target}, roughly ${m} minutes.`);
+        ur.push(`پھر تقریباً ${d} پیدل چل کر ${target} پہنچیں، اندازاً ${m} منٹ۔`);
+      }
+    } else {
+      const k = rides.indexOf(l);
+      en.push(`${k === 0 ? "At" : "At the same stop,"} ${spokenName(l.board.name)}, take the ${l.route_code} bus${towards(l).en}. Ride ${l.stop_count} stop${l.stop_count === 1 ? "" : "s"} and get off at ${spokenName(l.alight.name)}.`);
+      ur.push(`${spokenName(l.board.name)} سے ${l.route_code} بس لیں${towards(l).ur}۔ ${l.stop_count} اسٹاپ کے بعد ${spokenName(l.alight.name)} پر اتر جائیں۔`);
     }
-    en.push(`${i === 0 ? "Take" : "Then change to"} the ${r.route_code} bus${r.towards ? ` going towards ${spokenName(r.towards)}` : ""}, and get off at ${alight}.`);
-    ur.push(`${i === 0 ? "وہاں سے" : "پھر"} ${r.route_code} بس لیں${r.towards ? `، جو ${spokenName(r.towards)} کی طرف جاتی ہے` : ""}، اور ${alight} پر اتر جائیں۔`);
   });
-  return { en: en.join(" "), ur: ur.join(" ") };
+  return { summary, details: { en: en.join(" "), ur: ur.join(" ") } };
 }
 
 function RoutesInner() {
@@ -85,7 +118,9 @@ function RoutesInner() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geo.pos]);
 
-  const search = async (f = from, t = to) => {
+  const [prefer, setPrefer] = useState<PlanPreference>("fastest");
+  const meta = useMeta();
+  const search = async (f = from, t = to, pref: PlanPreference = prefer) => {
     if (!f || !t) return setError("Choose a starting point and a destination.");
     setBusy(true);
     setError(null);
@@ -94,7 +129,7 @@ function RoutesInner() {
         method: "POST",
         json: {
           from_lat: f.lat, from_lng: f.lng, from_stop_id: f.stop_id, from_label: f.label,
-          to_lat: t.lat, to_lng: t.lng, to_stop_id: t.stop_id, to_label: t.label,
+          to_lat: t.lat, to_lng: t.lng, to_stop_id: t.stop_id, to_label: t.label, prefer: pref,
         },
       });
       setResult(r);
@@ -102,7 +137,7 @@ function RoutesInner() {
       const sayLang = sayRef.current;
       if (sayLang) {
         sayRef.current = null;
-        const answer = journeyText(r.options[0]);
+        const answer = journeySpeech(r.options[0], r).summary;
         speak(answer.en, answer.ur, sayLang);
       }
       saveRecent({ from: f, to: t, at: Date.now() });
@@ -114,26 +149,23 @@ function RoutesInner() {
     }
   };
 
-  // a spoken sentence with both places, said into either box
-  const voiceJourney = async (j: VoiceJourney, lang: VoiceLang) => {
+  // a spoken sentence with both places, said into either box (ambiguous names are asked about first)
+  const trip = useVoiceTrip((f, t, lang) => {
     setError(null);
-    const [f, t] = await Promise.all([j.from ? findPlace(j.from) : Promise.resolve(null), findPlace(j.to)]);
-    const missing = !t ? j.to : j.from && !f ? j.from : null;
-    if (missing) {
-      setError(`We could not find “${missing}”. Please say it again or type it.`);
-      speak(`Sorry, we could not find ${missing}. Please try again.`, `معاف کیجیے، ${missing} نہیں ملا۔ دوبارہ بولیں۔`, lang);
-      return;
-    }
     setTo(t);
     sayRef.current = lang;
     if (f) {
       setFrom(f);
       search(f, t);
+    } else if (geo.pos) {
+      const me = { label: "My location", lat: geo.pos.lat, lng: geo.pos.lng };
+      setFrom(me);
+      search(me, t);
     } else {
       setAutoRun(true);
       geo.locate();
     }
-  };
+  });
 
   useEffect(() => {
     if (from && to && params.get("from") && !fromMe) search(from, to);
@@ -192,15 +224,25 @@ function RoutesInner() {
         <Card className="p-4 space-y-3">
           <h1 className="text-lg font-bold text-brand-900">Plan your journey</h1>
           <PlaceInput value={from} onChange={setFrom} placeholder="Starting point (stop or any place)" allowPlaces icon="origin" onLocate={geo.locate} locating={geo.busy}
-            onVoiceJourney={voiceJourney}
+            onVoiceJourney={trip.start}
             onPickMap={() => setPicking(picking === "from" ? null : "from")} picking={picking === "from"} />
           <div className="flex justify-center -my-1">
             <button className="rounded-full border border-slate-200 bg-white p-1.5 text-slate-500 hover:bg-slate-50" aria-label="Swap" onClick={() => { setFrom(to); setTo(from); }}>
               <ArrowDownUp className="h-4 w-4" />
             </button>
           </div>
-          <PlaceInput value={to} onChange={setTo} placeholder="Destination (stop or any place)" allowPlaces icon="destination" onVoiceJourney={voiceJourney}
+          <PlaceInput value={to} onChange={setTo} placeholder="Destination (stop or any place)" allowPlaces icon="destination" onVoiceJourney={trip.start}
             onPickMap={() => setPicking(picking === "to" ? null : "to")} picking={picking === "to"} />
+          <VoiceTripPanel trip={trip} />
+          <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Route preference">
+            {PREFS.map((p) => (
+              <button key={p.id} type="button" role="radio" aria-checked={prefer === p.id}
+                onClick={() => { setPrefer(p.id); if (from && to) search(from, to, p.id); }}
+                className={`rounded-full border px-2.5 py-1 text-xs font-medium ${prefer === p.id ? "border-brand-600 bg-brand-600 text-white" : "border-slate-200 bg-white text-slate-700 hover:border-brand-400"}`}>
+                {prefer === p.id ? "✓ " : ""}{p.label}
+              </button>
+            ))}
+          </div>
           {picking && <p className="text-xs text-accent-600">Tap the map to set the {picking === "from" ? "starting point" : "destination"}.</p>}
           {geo.busy && autoRun && <p className="flex items-center gap-1 text-xs text-brand-700"><LocateFixed className="h-3.5 w-3.5 animate-pulse" /> Finding your location…</p>}
           {geo.error && <p className="text-xs text-red-600">{geo.error}. Type your starting point instead.</p>}
@@ -211,7 +253,7 @@ function RoutesInner() {
         {result && (
           <Card className="p-4">
             <SectionTitle action={<button className="text-sm text-brand-600" onClick={() => setResult(null)}>Clear</button>}>
-              {result.options.length ? `${result.options.length} option${result.options.length > 1 ? "s" : ""}` : "No routes found"}
+              {result.options.length ? (result.options.length > 1 ? `Best trip + ${result.options.length - 1} other${result.options.length > 2 ? "s" : ""}` : "Best trip") : "No connection found"}
             </SectionTitle>
             {option && (() => {
               const ride = option.legs.find((l): l is PlanLegRide => l.type === "ride");
@@ -222,14 +264,9 @@ function RoutesInner() {
                   <div className="text-xs font-semibold uppercase tracking-wide text-brand-700">Your stop for this trip</div>
                   <div className="mt-0.5 text-base font-bold text-brand-900">{ride.board.name}</div>
                   <div className="text-xs text-slate-600">
-                    {walk ? `${km(walk.distance_m)} away · about ${Math.max(1, Math.round(walk.minutes))} min walk` : "You are at the stop"}
+                    {walk ? `${km(walk.distance_m)} away in a straight line · about ${Math.max(1, Math.round(walk.minutes))} min walk (estimate)` : "You are at the stop"}
                   </div>
                   <div className="mt-2 flex flex-wrap items-center gap-2">
-                    <button type="button" onClick={() => { const t = journeyText(option); speak(t.en, t.ur, loadVoiceLang()); }}
-                      className="inline-flex items-center gap-1 rounded-full bg-brand-600 px-2.5 py-0.5 text-[11px] font-semibold text-white hover:bg-brand-700"
-                      aria-label="Read the directions aloud">
-                      <Volume2 className="h-3 w-3" /> Listen
-                    </button>
                     <NextBus stopId={ride.board.id} routeId={ride.route_id} />
                     {walk && (
                       <a href={walkingDirectionsUrl(walk.from, ride.board)} target="_blank" rel="noreferrer"
@@ -238,11 +275,27 @@ function RoutesInner() {
                       </a>
                     )}
                   </div>
+                  <div className="mt-2"><VoiceGuide trip={journeySpeech(option, result)} /></div>
                 </div>
               );
             })()}
+            {result.warnings?.map((w) => (
+              <p key={w.code} className="mb-2 flex items-start gap-1.5 rounded-lg bg-amber-50 px-2.5 py-1.5 text-xs text-amber-800">
+                <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" /> {w.message}
+              </p>
+            ))}
+            {result.options.length > 0 && (
+              <p className="mb-2 text-[11px] text-slate-500">
+                Trip times are estimates from the route timetable. Walking is measured in a straight line.
+                {meta?.demo_mode ? ` ${meta.notice}` : ""}
+              </p>
+            )}
             {result.options.length === 0 && (
-              <Empty>No Speedo route connects these places within walking distance. Try a nearby major stop.</Empty>
+              <Empty>
+                No Speedo connection found within {km(result.search_limits?.max_walk_m ?? 1500)} walking of these places and
+                up to {result.search_limits?.max_transfers ?? 2} changes. There may still be a way: try a nearby main stop,
+                or a different starting point.
+              </Empty>
             )}
             <div className="space-y-2">
               {result.options.map((o, i) => (
@@ -259,11 +312,18 @@ function RoutesInner() {
                       {o.legs.filter((l) => l.type === "ride").map((l, k) =>
                         l.type === "ride" ? <RouteChip key={k} code={l.route_code} color={l.color} /> : null,
                       )}
-                      {o.transfers > 0 && <span className="flex items-center gap-1 text-xs text-slate-500"><Repeat className="h-3 w-3" /> {o.transfers} transfer</span>}
+                      {o.recommended && <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase text-emerald-700">Recommended</span>}
+                      {o.transfers > 0 ? (
+                        <span className="flex items-center gap-1 text-xs text-slate-500"><Repeat className="h-3 w-3" /> {o.transfers} change{o.transfers > 1 ? "s" : ""}</span>
+                      ) : (
+                        <span className="text-xs text-slate-500">No change</span>
+                      )}
+                      <span className="text-xs text-slate-500">· {km(o.walk_m)} walk</span>
                     </div>
                     <div className="text-right">
                       <div className="text-lg font-bold text-brand-800">~{o.total_minutes} min</div>
-                      <div className="text-[11px] text-slate-400">estimate incl. wait</div>
+                      <div className="text-[11px] text-slate-400">timetable estimate incl. wait</div>
+                      <div className="text-[11px] text-slate-400">Fare: {o.fare_pkr != null ? `Rs ${o.fare_pkr}` : "not available"}</div>
                     </div>
                   </div>
                   {i === chosen && (
@@ -272,7 +332,7 @@ function RoutesInner() {
                         l.type === "walk" ? (
                           <li key={k} className="text-sm text-slate-600">
                             <div className="flex items-center gap-2">
-                              <Footprints className="h-4 w-4 text-slate-400" /> Walk {km(l.distance_m)} (~{Math.max(1, Math.round(l.minutes))} min) to {l.to.name}
+                              <Footprints className="h-4 w-4 text-slate-400" /> Walk {km(l.distance_m)} straight-line (~{Math.max(1, Math.round(l.minutes))} min, estimate) to {l.to.name}
                             </div>
                             <a href={walkingDirectionsUrl(l.from, l.to)} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}
                               className="ml-6 inline-flex items-center gap-1 text-xs text-brand-600 hover:underline">

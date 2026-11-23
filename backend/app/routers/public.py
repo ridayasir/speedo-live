@@ -197,7 +197,7 @@ def plan_journey(body: PlanIn, db: Session = Depends(get_db)):
 
     o = place(body.from_lat, body.from_lng, body.from_stop_id, body.from_label)
     d = place(body.to_lat, body.to_lng, body.to_stop_id, body.to_label)
-    return plan(db, o, d)
+    return plan(db, o, d, prefer=body.prefer)
 
 
 # ----------------------------------------------------------------------------- timetable

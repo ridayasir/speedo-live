@@ -180,22 +180,77 @@ export function useVoiceSearch(onResult: (text: string, lang: VoiceLang, raw: st
   return { supported, listening, heard, error, lang, setLang, start, stop, clearError: () => setError(null) };
 }
 
-/**
- * Read a short message aloud (for passengers who find reading hard). Uses the Urdu text when the passenger spoke
- * Urdu and the phone has an Urdu voice, otherwise the English text. Silently does nothing if unsupported.
- */
-export function speak(english: string, urdu: string, lang: VoiceLang) {
+const RATE_KEY = "speedo.voiceRate";
+export const RATES = [
+  { value: 0.75, label: "Slow" },
+  { value: 0.95, label: "Normal" },
+  { value: 1.2, label: "Fast" },
+];
+
+export function loadRate(): number {
   try {
-    const s = window.speechSynthesis;
-    if (!s) return;
+    const r = Number(localStorage.getItem(RATE_KEY));
+    return RATES.some((x) => x.value === r) ? r : 0.95;
+  } catch {
+    return 0.95;
+  }
+}
+
+export function saveRate(r: number) {
+  try {
+    localStorage.setItem(RATE_KEY, String(r));
+  } catch {
+    /* not remembered */
+  }
+}
+
+function synth(): SpeechSynthesis | null {
+  return typeof window !== "undefined" && "speechSynthesis" in window ? window.speechSynthesis : null;
+}
+
+/** Whether this phone/browser has an Urdu text-to-speech voice (many do not; we then read English). */
+export function hasUrduVoice(): boolean {
+  return !!synth()?.getVoices().some((v) => v.lang.toLowerCase().startsWith("ur"));
+}
+
+/**
+ * Read a short message aloud (for passengers who find reading hard). Uses the Urdu text when the passenger chose
+ * Urdu and the phone has an Urdu voice, otherwise the English text. Returns the language actually used, or null
+ * when speech output is not available.
+ */
+export function speak(english: string, urdu: string, lang: VoiceLang): VoiceLang | null {
+  try {
+    const s = synth();
+    if (!s) return null;
     s.cancel();
     const urVoice = lang === "ur-PK" ? s.getVoices().find((v) => v.lang.toLowerCase().startsWith("ur")) : undefined;
     const u = new SpeechSynthesisUtterance(urVoice ? urdu : english);
     if (urVoice) u.voice = urVoice;
     u.lang = urVoice ? urVoice.lang : "en-IN";
-    u.rate = 0.95;
+    u.rate = loadRate();
     s.speak(u);
+    return urVoice ? "ur-PK" : "en-IN";
   } catch {
-    /* no speech output available */
+    return null;
   }
+}
+
+export const pauseSpeech = () => synth()?.pause();
+export const resumeSpeech = () => synth()?.resume();
+export const stopSpeech = () => synth()?.cancel();
+
+/** Live "is it talking / paused" state for the voice controls. */
+export function useSpeechState() {
+  const [state, setState] = useState({ speaking: false, paused: false, supported: false });
+  useEffect(() => {
+    const s = synth();
+    if (!s) return;
+    const t = setInterval(() => {
+      setState((old) =>
+        old.speaking === s.speaking && old.paused === s.paused && old.supported ? old : { speaking: s.speaking, paused: s.paused, supported: true },
+      );
+    }, 300);
+    return () => clearInterval(t);
+  }, []);
+  return state;
 }
