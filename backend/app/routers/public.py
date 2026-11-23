@@ -37,8 +37,8 @@ def ilike(q: str, *values: str | None) -> bool:
 
 def find_stops(q: str, stops: list) -> list:
     """Stops whose name/code contains q; if none, a loose sound-alike match (Urdu script, other spellings)."""
-    hits = [s for s in stops if ilike(q, s.name, s.code, s.name_ur)]
-    return hits or [s for s in stops if loose_match(q, s.name, s.name_ur)]
+    hits = [s for s in stops if ilike(q, s.name, s.code, s.name_ur, *(s.aliases or []))]
+    return hits or [s for s in stops if loose_match(q, s.name, s.name_ur, *(s.aliases or []))]
 
 
 @router.get("/meta")

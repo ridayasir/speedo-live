@@ -17,3 +17,15 @@ def test_other_roman_spellings_match():
 def test_unrelated_names_do_not_match():
     assert not loose_match("Model Town", "Liberty Chowk")
     assert not loose_match("a", "Shama")
+
+
+def test_stop_found_by_alias(client, db):
+    """Other official spellings of a stop (aliases) are searched too: typed, and sound-alike."""
+    from app.models import BusStop
+
+    db.add(BusStop(code="T-ALIAS", name="Chungi Testpur", lat=31.45, lng=74.35, aliases=["Chungi Amer Testpur"]))
+    db.commit()
+    names = [s["name"] for s in client.get("/api/stops", params={"q": "Amer Testpur"}).json()]
+    assert names == ["Chungi Testpur"]
+    hit = client.get("/api/stops", params={"q": "Chungi Amir Testpoor"}).json()  # spoken spelling
+    assert [s["name"] for s in hit] == ["Chungi Testpur"] and hit[0]["aliases"] == ["Chungi Amer Testpur"]

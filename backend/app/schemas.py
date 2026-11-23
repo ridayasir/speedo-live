@@ -272,7 +272,7 @@ def user_out(u: User) -> dict:
 
 def stop_out(s: BusStop) -> dict:
     return {"id": s.id, "code": s.code, "name": s.name, "name_ur": s.name_ur, "lat": s.lat, "lng": s.lng,
-            "is_demo": s.is_demo, "source_reference": s.source_reference}
+            "is_demo": s.is_demo, "source_reference": s.source_reference, "aliases": list(s.aliases or [])}
 
 
 def route_out(r: Route, detail: bool = False) -> dict:

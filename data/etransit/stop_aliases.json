@@ -1,0 +1,115 @@
+{
+ "source": "PMA e-Transit route planner, line 42 LFR- Speedo (https://etransit.punjab.gov.pk/public/route-planner?city=110&line=42)",
+ "stops": {
+  "ET4430": {
+   "name": "Dullu Khurd",
+   "aliases": [
+    "Dulu Khurd"
+   ]
+  },
+  "ET4435": {
+   "name": "Attari Saroba",
+   "aliases": [
+    "Atari Saroba"
+   ]
+  },
+  "ET4438": {
+   "name": "Chungi Metro station",
+   "aliases": [
+    "Chungi Amar Sidhu",
+    "Chungi Amer Sidhu"
+   ]
+  },
+  "ET19": {
+   "name": "6. Kachehry",
+   "aliases": [
+    "Katchery"
+   ]
+  },
+  "ET74": {
+   "name": "21. Chungi Amar Sidhu",
+   "aliases": [
+    "Chungi Amer Sidhu",
+    "Chungi Metro"
+   ]
+  },
+  "ET79": {
+   "name": "23. Atari Saroba",
+   "aliases": [
+    "Attari Saroba"
+   ]
+  },
+  "ET87": {
+   "name": "25. Youhanabad",
+   "aliases": [
+    "Yohanabad"
+   ]
+  },
+  "ET88": {
+   "name": "26. Dulu khurd",
+   "aliases": [
+    "Dullu Khurd"
+   ]
+  },
+  "ET4223": {
+   "name": "Mustafa Town",
+   "aliases": [
+    "Musatafa Town"
+   ]
+  },
+  "ET4387": {
+   "name": "Katchery",
+   "aliases": [
+    "Kachehry"
+   ]
+  },
+  "ET4142": {
+   "name": "Nursery Bus Stop",
+   "aliases": [
+    "Nursary Bus"
+   ]
+  },
+  "ET4149": {
+   "name": "Phattak mandi Stop",
+   "aliases": [
+    "Phatak Mandi"
+   ]
+  },
+  "ET4075": {
+   "name": "Chungi Amar Sidhu",
+   "aliases": [
+    "Chungi Metro"
+   ]
+  },
+  "ET4358": {
+   "name": "Phatak Mandi",
+   "aliases": [
+    "Phattak mandi"
+   ]
+  },
+  "ET94": {
+   "name": "Gajjumata",
+   "aliases": [
+    "Gajjumatta"
+   ]
+  },
+  "ET4564": {
+   "name": "Nawaz Shareef Interchange",
+   "aliases": [
+    "Nawaz Sharif Interchange"
+   ]
+  },
+  "ET4565": {
+   "name": "Nawaz Shareef Interchange 2",
+   "aliases": [
+    "Nawaz Sharif Interchange"
+   ]
+  },
+  "ET4428": {
+   "name": "Gajjumatta",
+   "aliases": [
+    "Gajjumata"
+   ]
+  }
+ }
+}

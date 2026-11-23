@@ -110,8 +110,9 @@ class Driver(Doc):
 # ----------------------------------------------------------------------------- network
 class BusStop(Doc):
     __collection__ = "bus_stops"
+    # aliases: other spellings of the stop name (from the official data), used by search
     FIELDS = {"code": "", "name": "", "name_ur": None, "lat": 0.0, "lng": 0.0, "is_demo": False,
-              "source_reference": None, **TS}
+              "source_reference": None, "aliases": list, **TS}
     UNIQUE = (("code",),)
 
     def on_delete(self, db: Session) -> None:
