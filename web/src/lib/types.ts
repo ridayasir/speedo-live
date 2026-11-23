@@ -164,12 +164,14 @@ export interface PlanLegRide {
 
 export interface PlanLegWalk {
   type: "walk";
-  from: { lat: number; lng: number; name?: string };
-  to: { lat: number; lng: number; name?: string };
+  from: { lat: number; lng: number; name?: string; id?: number };
+  to: { lat: number; lng: number; name?: string; id?: number };
   distance_m: number;
   minutes: number;
   /** walking is measured in a straight line, not along streets */
   estimate_basis?: "straight_line";
+  /** walking between two stops to change buses */
+  transfer?: boolean;
 }
 
 export type PlanLeg = PlanLegRide | PlanLegWalk;

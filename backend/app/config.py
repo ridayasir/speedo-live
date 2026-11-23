@@ -46,6 +46,7 @@ class Settings(BaseSettings):
     default_bus_speed_kmh: float = 20.0
     walk_speed_kmh: float = 4.5
     max_walk_m: float = 1500.0
+    max_transfer_walk_m: float = 300.0  # walking between two nearby stops to change buses
 
     # Service area bounding box (Lahore district, generous margin)
     area_min_lat: float = 31.20

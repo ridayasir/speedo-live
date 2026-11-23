@@ -8,7 +8,7 @@ const LeafletMap = dynamic(() => import("./LeafletMap"), {
   loading: () => <div className="h-full w-full animate-pulse bg-slate-200" aria-label="Loading map" />,
 });
 
-export type { MapProps, MapRoute } from "./LeafletMap";
+export type { MapProps, MapRoute, TripStop } from "./LeafletMap";
 
 export default function MapView(props: MapProps) {
   return <LeafletMap {...props} />;

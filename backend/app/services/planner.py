@@ -6,9 +6,14 @@ Honesty rules for what the planner returns:
   timing_basis="timetable_estimate";
 - fare is null unless every route in the trip has a fare in the dataset;
 - "no_route" means no connection within the search limits (walking radius, transfers), not "no bus in the city".
+
+Transfers: at the same stop, or (for one-change trips) by walking to another stop within max_transfer_walk_m.
+A ride leg's "stops" list includes the boarding and the alighting stop.
 """
 from __future__ import annotations
 
+import hashlib
+import math
 from dataclasses import dataclass
 
 from ..config import get_settings
@@ -38,6 +43,35 @@ def nearby_stops(db: Session, lat: float, lng: float, radius_m: float, limit: in
     """Stops within radius_m (great-circle distance), nearest first. Stops are held in memory."""
     found = [(s, haversine_m(lat, lng, s.lat, s.lng)) for s in db.all(BusStop)]
     return sorted((x for x in found if x[1] <= radius_m), key=lambda x: x[1])[:limit]
+
+
+_near_cache: dict[tuple, dict[int, list[tuple[int, float]]]] = {}
+
+
+def _neighbours(db: Session, radius_m: float) -> dict[int, list[tuple[int, float]]]:
+    """stop id -> [(other stop id, metres)] within radius_m, itself included at 0 m. Grid-bucketed, cached."""
+    stops = db.all(BusStop)
+    key = (len(stops), sum(s.id for s in stops), round(sum(s.lat + s.lng for s in stops), 4), radius_m)
+    if key in _near_cache:
+        return _near_cache[key]
+    cell = radius_m / 111000  # degrees of latitude per cell
+    grid: dict[tuple[int, int], list[BusStop]] = {}
+    for s in stops:
+        grid.setdefault((math.floor(s.lat / cell), math.floor(s.lng / cell)), []).append(s)
+    out: dict[int, list[tuple[int, float]]] = {}
+    for s in stops:
+        gx, gy = math.floor(s.lat / cell), math.floor(s.lng / cell)
+        near = []
+        for dx in (-1, 0, 1):
+            for dy in (-2, -1, 0, 1, 2):  # a degree of longitude is shorter than a degree of latitude
+                for o in grid.get((gx + dx, gy + dy), []):
+                    d = 0.0 if o.id == s.id else haversine_m(s.lat, s.lng, o.lat, o.lng)
+                    if d <= radius_m:
+                        near.append((o.id, d))
+        out[s.id] = sorted(near, key=lambda x: x[1])
+    _near_cache.clear()
+    _near_cache[key] = out
+    return out
 
 
 def _walk_min(m: float) -> float:
@@ -124,9 +158,12 @@ def _ride_leg(ri: RouteIndex, a: RouteStop, b: RouteStop) -> dict:
     }
 
 
-def _walk_leg(frm: dict, to: dict, meters: float) -> dict:
-    return {"type": "walk", "from": frm, "to": to, "distance_m": round(meters), "minutes": round(_walk_min(meters), 1),
-            "estimate_basis": "straight_line"}
+def _walk_leg(frm: dict, to: dict, meters: float, transfer: bool = False) -> dict:
+    leg = {"type": "walk", "from": frm, "to": to, "distance_m": round(meters), "minutes": round(_walk_min(meters), 1),
+           "estimate_basis": "straight_line"}
+    if transfer:
+        leg["transfer"] = True  # walking between two stops to change buses
+    return leg
 
 
 def plan(db: Session, origin: Place, dest: Place, max_options: int = 3, prefer: str = "fastest") -> dict:
@@ -147,7 +184,10 @@ def plan(db: Session, origin: Place, dest: Place, max_options: int = 3, prefer: 
         cur = options.get(key)
         if cur is None or total < cur["total_minutes"]:
             fares = [l.get("fare_pkr") for l in legs if l["type"] == "ride"]
+            stops_key = "|".join(f'{l["board"]["id"]}-{l["route_id"]}-{l["direction"]}-{l["alight"]["id"]}'
+                                 for l in legs if l["type"] == "ride")
             options[key] = {
+                "itinerary_id": hashlib.sha1(stops_key.encode()).hexdigest()[:12],
                 "timing_basis": "timetable_estimate",
                 "fare_pkr": sum(fares) if fares and all(f is not None for f in fares) else None,
                 "legs": [l for l in legs if l["type"] != "walk" or l["distance_m"] > 0],
@@ -172,7 +212,8 @@ def plan(db: Session, origin: Place, dest: Place, max_options: int = 3, prefer: 
                         _walk_leg(_stop_json(d_stop), d_pt, d_walk)]
                 add(((ri.route.id, ri.reverse),), legs, ri.headway / 2)
 
-    # one transfer at a shared stop
+    # one transfer: at the same stop, or by walking to a nearby stop
+    near = _neighbours(db, get_settings().max_transfer_walk_m)
     for ra in idx:
         for o_stop, o_walk in o_cands:
             a = ra.by_stop.get(o_stop.id)
@@ -188,12 +229,16 @@ def plan(db: Session, origin: Place, dest: Place, max_options: int = 3, prefer: 
                     for x in ra.ordered:
                         if x.sequence <= a.sequence:
                             continue
-                        xb = rb.by_stop.get(x.stop_id)
-                        if not xb or xb.sequence >= d.sequence:
-                            continue
-                        legs = [_walk_leg(o_pt, _stop_json(o_stop), o_walk), _ride_leg(ra, a, x),
-                                _ride_leg(rb, xb, d), _walk_leg(_stop_json(d_stop), d_pt, d_walk)]
-                        add(((ra.route.id, ra.reverse), (rb.route.id, rb.reverse)), legs, ra.headway / 2 + rb.headway / 2)
+                        for y_id, gap in near.get(x.stop_id, [(x.stop_id, 0.0)]):
+                            xb = rb.by_stop.get(y_id)
+                            if not xb or xb.sequence >= d.sequence:
+                                continue
+                            change = [] if y_id == x.stop_id else [
+                                _walk_leg(_stop_json(x.stop), _stop_json(xb.stop), gap, transfer=True)]
+                            legs = [_walk_leg(o_pt, _stop_json(o_stop), o_walk), _ride_leg(ra, a, x), *change,
+                                    _ride_leg(rb, xb, d), _walk_leg(_stop_json(d_stop), d_pt, d_walk)]
+                            add(((ra.route.id, ra.reverse), (rb.route.id, rb.reverse)), legs,
+                                ra.headway / 2 + rb.headway / 2)
 
     if not options:  # two transfers (three buses): only searched when nothing simpler exists
         _two_transfers(idx, o_cands, d_cands, o_pt, d_pt, add)
@@ -223,7 +268,9 @@ def plan(db: Session, origin: Place, dest: Place, max_options: int = 3, prefer: 
         "nearest_destination_stop": nearest_alight,
         "status": "ok" if ranked else "no_route",
         "prefer": prefer,
-        "search_limits": {"max_walk_m": round(s.max_walk_m), "max_transfers": MAX_TRANSFERS},
+        "search_limits": {"max_walk_m": round(s.max_walk_m), "max_transfers": MAX_TRANSFERS,
+                          "max_transfer_walk_m": round(s.max_transfer_walk_m)},
+        "dataset": _dataset_info(idx),
         "warnings": warnings,
         "options": ranked,
         "straight_line_m": round(haversine_m(origin.lat, origin.lng, dest.lat, dest.lng)),
@@ -287,3 +334,13 @@ def _two_transfers(idx: list[RouteIndex], o_cands, d_cands, o_pt: dict, d_pt: di
                 _ride_leg(rc, yc, d), _walk_leg(_stop_json(d_stop), d_pt, d_walk)]
         add(((ra.route.id, ra.reverse), (rb.route.id, rb.reverse), (rc.route.id, rc.reverse)), legs,
             ra.headway / 2 + rb.headway / 2 + rc.headway / 2)
+
+
+def _dataset_info(idx: list[RouteIndex]) -> dict:
+    """Where the route data comes from and when it last changed (spec section 2)."""
+    routes = {ri.route.id: ri.route for ri in idx}.values()
+    sources = sorted({r.source_reference for r in routes if r.source_reference})
+    stamps = [r.updated_at for r in routes if getattr(r, "updated_at", None)]
+    newest = max(stamps) if stamps else None
+    return {"sources": sources[:3], "source_count": len(sources), "route_count": len(routes),
+            "updated_at": newest.isoformat() if hasattr(newest, "isoformat") else newest}

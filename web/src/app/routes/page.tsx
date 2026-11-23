@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowDownUp, Bus, ExternalLink, Footprints, Info, LocateFixed, Repeat } from "lucide-react";
-import MapView, { type MapRoute } from "@/components/MapView";
+import MapView, { type MapRoute, type TripStop } from "@/components/MapView";
 import { Button, Card, Empty, ErrorBox, Input, SectionTitle, Spinner } from "@/components/ui";
 import { NextBus, PlaceInput, RouteChip, walkingDirectionsUrl, type Place } from "@/components/widgets";
 import { VoiceTripPanel, useVoiceTrip } from "@/components/VoiceTrip";
@@ -49,7 +49,9 @@ function journeySpeech(o: PlanOption | undefined, result: PlanResult | null): Sp
   const first = rides[0], last = rides[rides.length - 1];
   const towards = (r: PlanLegRide) =>
     r.towards ? { en: ` towards ${spokenName(r.towards)}`, ur: `، جو ${spokenName(r.towards)} کی طرف جاتی ہے` } : { en: "", ur: "" };
-  const changes = rides.slice(1).map((r) => spokenName(r.board.name));
+  // where each change happens; a walking change names both stops
+  const changes = rides.slice(1).map((r, k) =>
+    rides[k].alight.id === r.board.id ? spokenName(r.board.name) : `${spokenName(rides[k].alight.name)} (walk to ${spokenName(r.board.name)})`);
   const summary = {
     en: `Go to ${spokenName(first.board.name)} stop and take the ${first.route_code} bus${towards(first).en}.` +
       (changes.length ? ` Change buses at ${changes.join(", then at ")}.` : "") +
@@ -63,7 +65,10 @@ function journeySpeech(o: PlanOption | undefined, result: PlanResult | null): Sp
     if (l.type === "walk") {
       const m = Math.max(1, Math.round(l.minutes)), d = km(l.distance_m);
       const target = spokenName(l.to.name || "the stop");
-      if (i === 0) {
+      if (l.transfer) {
+        en.push(`To change buses, walk about ${d} to ${target} stop, roughly ${m} minute${m === 1 ? "" : "s"}.`);
+        ur.push(`بس بدلنے کے لیے تقریباً ${d} پیدل چل کر ${target} اسٹاپ جائیں، اندازاً ${m} منٹ۔`);
+      } else if (i === 0) {
         en.push(`Walk to ${target} stop, about ${d} in a straight line, roughly ${m} minutes.`);
         ur.push(`${target} اسٹاپ تک پیدل جائیں، سیدھی لکیر میں تقریباً ${d}، اندازاً ${m} منٹ۔`);
       } else {
@@ -72,7 +77,8 @@ function journeySpeech(o: PlanOption | undefined, result: PlanResult | null): Sp
       }
     } else {
       const k = rides.indexOf(l);
-      en.push(`${k === 0 ? "At" : "At the same stop,"} ${spokenName(l.board.name)}, take the ${l.route_code} bus${towards(l).en}. Ride ${l.stop_count} stop${l.stop_count === 1 ? "" : "s"} and get off at ${spokenName(l.alight.name)}.`);
+      const sameStop = k > 0 && rides[k - 1].alight.id === l.board.id;
+      en.push(`${sameStop ? "At the same stop," : "At"} ${spokenName(l.board.name)}, take the ${l.route_code} bus${towards(l).en}. Ride ${l.stop_count} stop${l.stop_count === 1 ? "" : "s"} and get off at ${spokenName(l.alight.name)}.`);
       ur.push(`${spokenName(l.board.name)} سے ${l.route_code} بس لیں${towards(l).ur}۔ ${l.stop_count} اسٹاپ کے بعد ${spokenName(l.alight.name)} پر اتر جائیں۔`);
     }
   });
@@ -173,19 +179,51 @@ function RoutesInner() {
   }, []);
 
   const option: PlanOption | undefined = result?.options[chosen];
+  // list <-> map: tapping a stop in the list focuses the map; tapping a trip marker highlights the list item
+  const [selStop, setSelStop] = useState<number | null>(null);
+  const [focus, setFocus] = useState<{ lat: number; lng: number; key: string } | null>(null);
+  const [openLegs, setOpenLegs] = useState<Set<number>>(new Set());
+  useEffect(() => {
+    setSelStop(null);
+    setOpenLegs(new Set());
+  }, [chosen, result]);
+  const focusStop = (st: { id: number; lat: number; lng: number }) => {
+    setSelStop(st.id);
+    setFocus({ lat: st.lat, lng: st.lng, key: `${st.id}-${Date.now()}` });
+  };
+  const fromMap = (st: { id: number }) => {
+    if (!option) return;
+    setSelStop(st.id);
+    const k = option.legs.findIndex((l) => l.type === "ride" && l.stops.some((x) => x.id === st.id));
+    if (k >= 0) setOpenLegs((o) => new Set(o).add(k));
+    setTimeout(() => document.getElementById(`tl-${st.id}`)?.scrollIntoView({ block: "nearest", behavior: "smooth" }), 50);
+  };
   const routeById = useMemo(() => Object.fromEntries((routes.data || []).map((r) => [r.id, r])), [routes.data]);
 
   const mapRoutes: MapRoute[] = [];
   const stopsOnMap: Stop[] = [];
   const hl: number[] = [];
+  const walks: [number, number][][] = [];
+  const tripStops: TripStop[] = [];
   if (option) {
+    const rideLegs = option.legs.filter((l): l is PlanLegRide => l.type === "ride");
+    rideLegs.forEach((leg, k) => {
+      const add = (st: Stop, role: TripStop["role"]) => {
+        if (!tripStops.some((t) => t.id === st.id)) tripStops.push({ id: st.id, lat: st.lat, lng: st.lng, name: st.name, role });
+      };
+      add(leg.board, k === 0 ? "board" : "transfer");
+      add(leg.alight, k === rideLegs.length - 1 ? "alight" : "transfer");
+    });
     for (const leg of option.legs) {
-      if (leg.type !== "ride") continue;
+      if (leg.type === "walk") {
+        walks.push([[leg.from.lat, leg.from.lng], [leg.to.lat, leg.to.lng]]);
+        continue;
+      }
       const r = routeById[leg.route_id];
       const ids = new Set(leg.stops.map((s) => s.id));
       // draw only the ridden part of the route
       const seg = r ? sliceRoute(r, leg.board.id, leg.alight.id) : leg.stops.map((s) => [s.lat, s.lng] as [number, number]);
-      mapRoutes.push({ id: leg.route_id, color: leg.color, path: seg });
+      mapRoutes.push({ id: leg.route_id, color: leg.color, path: seg, label: `${leg.route_code}${leg.towards ? ` → ${leg.towards}` : ""}` });
       // a transfer stop ends one ride and starts the next: show it once
       stopsOnMap.push(...leg.stops.filter((s) => ids.has(s.id) && !stopsOnMap.some((m) => m.id === s.id)));
       hl.push(leg.board.id, leg.alight.id);
@@ -332,7 +370,12 @@ function RoutesInner() {
                         l.type === "walk" ? (
                           <li key={k} className="text-sm text-slate-600">
                             <div className="flex items-center gap-2">
-                              <Footprints className="h-4 w-4 text-slate-400" /> Walk {km(l.distance_m)} straight-line (~{Math.max(1, Math.round(l.minutes))} min, estimate) to {l.to.name}
+                              <Footprints className="h-4 w-4 text-slate-400" />
+                              {l.transfer ? (
+                                <span><b className="text-violet-700">Change bus:</b> walk {km(l.distance_m)} straight-line (~{Math.max(1, Math.round(l.minutes))} min, estimate) to {l.to.name}</span>
+                              ) : (
+                                <span>Walk {km(l.distance_m)} straight-line (~{Math.max(1, Math.round(l.minutes))} min, estimate) to {l.to.name}</span>
+                              )}
                             </div>
                             <a href={walkingDirectionsUrl(l.from, l.to)} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}
                               className="ml-6 inline-flex items-center gap-1 text-xs text-brand-600 hover:underline">
@@ -341,20 +384,48 @@ function RoutesInner() {
                           </li>
                         ) : (
                           <li key={k} className="text-sm">
-                            <div className="flex items-center gap-2 font-medium text-slate-800">
-                              <Bus className="h-4 w-4 text-brand-600" /> Board {l.route_code} at {l.board.name}
-                            </div>
+                            <button type="button" id={i === chosen ? `tl-${l.board.id}` : undefined}
+                              onClick={(e) => { e.stopPropagation(); focusStop(l.board); }}
+                              className={`flex w-full items-center gap-2 rounded-lg text-left font-medium text-slate-800 ${selStop === l.board.id ? "bg-amber-100 ring-2 ring-amber-400" : "hover:bg-slate-50"}`}>
+                              <Bus className="h-4 w-4 shrink-0 text-brand-600" />
+                              <span><span className={`mr-1 inline-flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold text-white ${k === o.legs.findIndex((x) => x.type === "ride") ? "bg-green-700" : "bg-violet-600"}`}>{k === o.legs.findIndex((x) => x.type === "ride") ? "B" : "T"}</span>
+                                Board {l.route_code} at {l.board.name}</span>
+                            </button>
                             {l.towards && <div className="ml-6 text-xs font-medium text-brand-700">Bus going towards {l.towards}</div>}
                             <div className="ml-6 text-xs text-slate-500">
-                              {l.stop_count} stop{l.stop_count === 1 ? "" : "s"} · {km(l.distance_m)} · ~{Math.round(l.minutes)} min · get off at <b>{l.alight.name}</b>
+                              {l.stop_count} stop{l.stop_count === 1 ? "" : "s"} · {km(l.distance_m)} · ~{Math.round(l.minutes)} min (timetable) · get off at{" "}
+                              <button type="button" id={i === chosen ? `tl-${l.alight.id}` : undefined}
+                                onClick={(e) => { e.stopPropagation(); focusStop(l.alight); }}
+                                className={`rounded px-0.5 font-bold text-slate-800 ${selStop === l.alight.id ? "bg-amber-100 ring-2 ring-amber-400" : "hover:bg-slate-100"}`}>
+                                {l.alight.name}
+                              </button>
                             </div>
                             <div className="ml-6 mt-1"><NextBus stopId={l.board.id} routeId={l.route_id} /></div>
-                            <details className="ml-6 mt-1 text-xs text-slate-500">
-                              <summary className="cursor-pointer text-brand-600">All stops</summary>
-                              <ol className="mt-1 list-decimal pl-4">
-                                {l.stops.map((s) => <li key={s.id}>{s.name}</li>)}
-                              </ol>
-                            </details>
+                            <div className="ml-6 mt-1 text-xs text-slate-500">
+                              <button type="button" className="text-brand-600 hover:underline" aria-expanded={openLegs.has(k)}
+                                onClick={(e) => { e.stopPropagation(); setOpenLegs((s0) => { const n = new Set(s0); if (n.has(k)) n.delete(k); else n.add(k); return n; }); }}>
+                                {openLegs.has(k) ? "Hide stops" : `All ${l.stops.length} stops (incl. where you get on and off)`}
+                              </button>
+                              {openLegs.has(k) && (
+                                <ol className="mt-1 space-y-0.5">
+                                  {l.stops.map((st, n) => {
+                                    const end = n === 0 || n === l.stops.length - 1;
+                                    return (
+                                      <li key={st.id}>
+                                        <button type="button" id={i === chosen && !end ? `tl-${st.id}` : undefined}
+                                          onClick={(e) => { e.stopPropagation(); focusStop(st); }}
+                                          className={`flex w-full items-center gap-2 rounded px-1 py-0.5 text-left ${selStop === st.id ? "bg-amber-100 font-semibold text-slate-900" : "hover:bg-slate-50"} ${end ? "font-semibold text-slate-800" : ""}`}>
+                                          <span className="w-5 shrink-0 text-right text-slate-400">{n + 1}.</span>
+                                          <span className="min-w-0 flex-1 truncate">{st.name}</span>
+                                          {n === 0 && <span className="text-[10px] uppercase text-green-700">get on</span>}
+                                          {n === l.stops.length - 1 && <span className="text-[10px] uppercase text-orange-700">get off</span>}
+                                        </button>
+                                      </li>
+                                    );
+                                  })}
+                                </ol>
+                              )}
+                            </div>
                           </li>
                         ),
                       )}
@@ -393,12 +464,17 @@ function RoutesInner() {
           </ul>
         </Card>
       </aside>
-      <div className="h-[45vh] lg:h-full lg:flex-1 order-1 lg:order-2">
+      <div className="relative h-[45vh] lg:h-full lg:flex-1 order-1 lg:order-2">
         <MapView
           routes={mapRoutes}
           stops={stopsOnMap}
           highlightStopIds={hl}
           points={points}
+          walks={walks}
+          tripStops={tripStops}
+          selectedStopId={selStop}
+          focus={focus}
+          onStopClick={fromMap}
           fitKey={option ? `opt-${chosen}-${result?.origin.lat}` : points.length ? points.map((p) => p.lat).join() : undefined}
           onMapClick={(lat, lng) => {
             if (!picking) return;
@@ -408,6 +484,17 @@ function RoutesInner() {
             setPicking(null);
           }}
         />
+        {option && (
+          <div className="pointer-events-none absolute bottom-2 left-2 z-[1000] max-w-[calc(100%-1rem)] rounded-lg bg-white/95 px-2.5 py-1.5 text-[11px] text-slate-700 shadow">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span><b className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-green-700 text-[10px] text-white">B</b> Get on</span>
+              <span><b className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-violet-600 text-[10px] text-white">T</b> Change</span>
+              <span><b className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-orange-700 text-[10px] text-white">A</b> Get off</span>
+              <span><span className="tracking-widest text-slate-600">•••</span> Walk (straight line)</span>
+            </div>
+            <div className="mt-0.5 text-slate-500">Bus lines are drawn from the route data and may be approximate.</div>
+          </div>
+        )}
       </div>
     </div>
   );

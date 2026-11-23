@@ -15,6 +15,17 @@ export interface MapRoute {
   code?: string;
   dim?: boolean;
   weight?: number;
+  /** label shown on hover/tap (route code), so lines are not told apart by colour alone */
+  label?: string;
+}
+
+/** A stop that matters for the planned trip, drawn with a lettered badge (not colour alone). */
+export interface TripStop {
+  id: number;
+  lat: number;
+  lng: number;
+  name: string;
+  role: "board" | "transfer" | "alight";
 }
 
 export interface MapProps {
@@ -31,6 +42,12 @@ export interface MapProps {
   className?: string;
   center?: [number, number];
   zoom?: number;
+  /** walking parts of a trip, drawn dashed */
+  walks?: [number, number][][];
+  tripStops?: TripStop[];
+  selectedStopId?: number | null;
+  /** pan/zoom to this point whenever key changes */
+  focus?: { lat: number; lng: number; key: string } | null;
 }
 
 const LAHORE: [number, number] = [31.5204, 74.3587];
@@ -104,13 +121,41 @@ function Fit({ fitKey, routes, points, stops }: { fitKey?: string; routes?: MapR
   return null;
 }
 
+const ROLE = {
+  board: { letter: "B", color: "#15803d", text: "Get on here" },
+  transfer: { letter: "T", color: "#7c3aed", text: "Change bus here" },
+  alight: { letter: "A", color: "#c2410c", text: "Get off here" },
+} as const;
+
+function tripStopIcon(role: TripStop["role"], selected: boolean) {
+  const r = ROLE[role];
+  const size = selected ? 30 : 24;
+  return L.divIcon({
+    className: "",
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+    html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${r.color};color:white;font:700 ${selected ? 14 : 12}px/1 system-ui,sans-serif;display:flex;align-items:center;justify-content:center;border:${selected ? "3px solid #111827" : "2px solid white"};box-shadow:0 1px 5px rgba(0,0,0,.4)">${r.letter}</div>`,
+  });
+}
+
+function Focus({ focus }: { focus?: MapProps["focus"] }) {
+  const map = useMap();
+  useEffect(() => {
+    if (focus) map.setView([focus.lat, focus.lng], Math.max(map.getZoom(), 16), { animate: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focus?.key]);
+  return null;
+}
+
 function ClickHandler({ onMapClick }: { onMapClick?: (lat: number, lng: number) => void }) {
   useMapEvents({ click: (e) => onMapClick?.(e.latlng.lat, e.latlng.lng) });
   return null;
 }
 
 export default function LeafletMap(props: MapProps) {
-  const { buses = [], routes = [], stops = [], highlightStopIds = [], selectedBusId, onBusClick, onStopClick, onMapClick, points = [] } = props;
+  const { buses = [], routes = [], stops = [], highlightStopIds = [], selectedBusId, onBusClick, onStopClick, onMapClick, points = [],
+    walks = [], tripStops = [], selectedStopId = null } = props;
+  const tripIds = useMemo(() => new Set(tripStops.map((t) => t.id)), [tripStops]);
   const hl = useMemo(() => new Set(highlightStopIds), [highlightStopIds]);
   const loaded = useRouteColors();
   const colorOf = useMemo<Record<number, string>>(() => ({ ...loaded, ...Object.fromEntries(routes.map((r) => [r.id, r.color])) }), [loaded, routes]);
@@ -128,23 +173,38 @@ export default function LeafletMap(props: MapProps) {
       />
       <ClickHandler onMapClick={onMapClick} />
       <Fit fitKey={props.fitKey} routes={routes} points={points} stops={stops} />
+      <Focus focus={props.focus} />
       {routes.map((r) => (
         <Polyline
           key={`r-${r.id}`}
           positions={r.path}
           pathOptions={{ color: r.color, weight: r.weight ?? (r.dim ? 3 : 6), opacity: r.dim ? 0.35 : 0.85 }}
-        />
+        >
+          {r.label && <Tooltip sticky>{r.label}</Tooltip>}
+        </Polyline>
       ))}
-      {stops.map((s) => (
+      {walks.map((w, i) => (
+        <Polyline key={`w-${i}`} positions={w} pathOptions={{ color: "#334155", weight: 4, opacity: 0.9, dashArray: "2 9", lineCap: "round" }}>
+          <Tooltip sticky>Walk (straight line, estimate)</Tooltip>
+        </Polyline>
+      ))}
+      {stops.filter((s) => !tripIds.has(s.id)).map((s) => (
         <CircleMarker
           key={`s-${s.id}`}
           center={[s.lat, s.lng]}
-          radius={hl.has(s.id) ? 8 : 5}
-          pathOptions={{ color: hl.has(s.id) ? "#f59e0b" : "#b91c1c", fillColor: "white", fillOpacity: 1, weight: hl.has(s.id) ? 4 : 2.5 }}
+          radius={s.id === selectedStopId ? 9 : hl.has(s.id) ? 8 : 5}
+          pathOptions={{ color: s.id === selectedStopId ? "#111827" : hl.has(s.id) ? "#f59e0b" : "#b91c1c", fillColor: "white", fillOpacity: 1, weight: hl.has(s.id) || s.id === selectedStopId ? 4 : 2.5 }}
           eventHandlers={{ click: () => onStopClick?.(s) }}
         >
           <Tooltip direction="top" offset={[0, -6]}>{s.name}</Tooltip>
         </CircleMarker>
+      ))}
+      {tripStops.map((t) => (
+        <Marker key={`t-${t.role}-${t.id}`} position={[t.lat, t.lng]} icon={tripStopIcon(t.role, t.id === selectedStopId)}
+          zIndexOffset={t.id === selectedStopId ? 900 : 500}
+          eventHandlers={{ click: () => onStopClick?.({ id: t.id, name: t.name, lat: t.lat, lng: t.lng } as Stop) }}>
+          <Tooltip direction="top" offset={[0, -12]}>{ROLE[t.role].text}: {t.name}</Tooltip>
+        </Marker>
       ))}
       {points.map((p, i) => (
         <Marker key={`p-${i}`} position={[p.lat, p.lng]} icon={pointIcon(p.kind)}>

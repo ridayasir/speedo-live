@@ -14,7 +14,10 @@ def _rides(option):
 def test_plan_is_labelled_honestly(client):
     r = client.post("/api/plan", json=RLY | THK).json()
     assert r["status"] == "ok" and r["prefer"] == "fastest"
-    assert r["search_limits"] == {"max_walk_m": 1500, "max_transfers": 2}
+    assert r["search_limits"] == {"max_walk_m": 1500, "max_transfers": 2, "max_transfer_walk_m": 300}
+    assert r["dataset"]["route_count"] >= 1 and "sources" in r["dataset"]
+    ids = [o["itinerary_id"] for o in r["options"]]
+    assert len(set(ids)) == len(ids) and all(len(i) == 12 for i in ids)
     assert 1 <= len(r["options"]) <= 3  # one recommended + at most two alternatives
     assert [o["recommended"] for o in r["options"]] == [True] + [False] * (len(r["options"]) - 1)
     for o in r["options"]:
@@ -36,8 +39,16 @@ def test_every_ride_leg_is_valid_and_in_order(client):
                 ids = [s["id"] for s in leg["stops"]]
                 assert ids[0] == leg["board"]["id"] and ids[-1] == leg["alight"]["id"]
                 assert [seq[i] for i in ids] == sorted(seq[i] for i in ids)  # boarding before alighting
-            for a, b in zip(rides, rides[1:]):  # every transfer connects at the same stop
-                assert a["alight"]["id"] == b["board"]["id"]
+            legs = o["legs"]
+            for i, leg in enumerate(legs):  # every transfer connects: same stop, or a short walk between stops
+                if leg["type"] != "ride" or leg is rides[-1]:
+                    continue
+                nxt = legs[i + 1]
+                if nxt["type"] == "ride":
+                    assert leg["alight"]["id"] == nxt["board"]["id"]
+                else:
+                    assert nxt.get("transfer") and nxt["distance_m"] <= 300
+                    assert nxt["from"]["id"] == leg["alight"]["id"] and nxt["to"]["id"] == legs[i + 2]["board"]["id"]
 
 
 def test_opposite_direction_is_rejected(client):
@@ -62,3 +73,25 @@ def test_no_route_reports_search_limits_not_absolute(client):
     codes = {w["code"] for w in r["warnings"]}
     assert codes & {"origin_no_stop", "origin_far_from_stops"}
     assert r["search_limits"]["max_walk_m"] == 1500
+
+
+def test_walking_transfer_neighbours(db):
+    """Stops within the transfer radius are linked both ways (including the stop itself); far ones are not."""
+    from app.config import get_settings
+    from app.models import BusStop
+    from app.services.planner import _neighbours
+    from app.services.geo import haversine_m
+
+    near = _neighbours(db, get_settings().max_transfer_walk_m)
+    stops = {s.id: s for s in db.all(BusStop)}
+    for sid, lst in near.items():
+        assert (sid, 0.0) in lst  # (another stop at the very same spot may also be at 0 m)
+        for oid, d in lst:
+            assert d <= 300 and any(x == sid for x, _ in near[oid])
+            assert abs(d - haversine_m(stops[sid].lat, stops[sid].lng, stops[oid].lat, stops[oid].lng)) < 1
+    # brute force: nothing within 300 m is missed
+    for a in stops.values():
+        found = {x for x, _ in near[a.id]}
+        for b in stops.values():
+            if haversine_m(a.lat, a.lng, b.lat, b.lng) <= 300:
+                assert b.id in found
