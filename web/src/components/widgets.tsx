@@ -8,6 +8,8 @@ import { ago, clock, km, useApi } from "@/lib/hooks";
 import type { Arrivals, BusState, RouteSummary, Stop } from "@/lib/types";
 import { Empty, ErrorBox, Spinner, StatusPill, effectiveStatus } from "./ui";
 import clsx from "./clsx";
+import { speak, useVoiceSearch } from "@/lib/voice";
+import { MicButton, VoicePanel } from "./VoiceSearch";
 
 export interface Place {
   label: string;
@@ -27,7 +29,7 @@ interface PlaceHit {
 }
 
 export function PlaceInput({
-  value, onChange, placeholder, onLocate, locating, icon = "origin", onPickMap, picking, allowPlaces, onSubmit,
+  value, onChange, placeholder, onLocate, locating, icon = "origin", onPickMap, picking, allowPlaces, onSubmit, voiceSearch = true,
 }: {
   value: Place | null;
   onChange: (p: Place | null) => void;
@@ -40,6 +42,8 @@ export function PlaceInput({
   /** also search any place in Lahore (markets, hospitals...) when the user presses Search / Enter */
   allowPlaces?: boolean;
   onSubmit?: (p: Place) => void;
+  /** show a mic button so passengers can say the stop / place name instead of typing it */
+  voiceSearch?: boolean;
 }) {
   const [q, setQ] = useState(value?.label || "");
   const [results, setResults] = useState<Stop[]>([]);
@@ -55,19 +59,36 @@ export function PlaceInput({
     onSubmit?.(p);
   };
   // place lookups go to OpenStreetMap, so they run only on an explicit Search / Enter, never per keystroke
-  const searchPlaces = async () => {
-    const term = q.trim();
-    if (!allowPlaces || term.length < 2) return;
+  const searchPlaces = async (text: string = q): Promise<PlaceHit[] | null> => {
+    const term = text.trim();
+    if (!allowPlaces || term.length < 2) return null;
     setOpen(true);
     setPlaceBusy(true);
+    let hits: PlaceHit[] = [];
     try {
-      setPlaces(await api<PlaceHit[]>(`/api/places?q=${encodeURIComponent(term)}`));
+      hits = await api<PlaceHit[]>(`/api/places?q=${encodeURIComponent(term)}`);
     } catch {
-      setPlaces([]);
-    } finally {
-      setPlaceBusy(false);
+      hits = [];
     }
+    setPlaces(hits);
+    setPlaceBusy(false);
+    return hits;
   };
+  // voice: put what was said in the box and search right away, then say how many matches there are
+  const voice = useVoiceSearch(async (text, lang) => {
+    setQ(text);
+    setOpen(true);
+    let n: number;
+    if (allowPlaces) {
+      n = (await searchPlaces(text))?.length ?? 0;
+    } else {
+      const stops = await api<Stop[]>(`/api/stops?q=${encodeURIComponent(text)}&limit=8`).catch(() => [] as Stop[]);
+      setResults(stops);
+      n = stops.length;
+    }
+    if (n === 0) speak(`Nothing found for ${text}. Please try again.`, `${text} نہیں ملا۔ دوبارہ کوشش کریں۔`, lang);
+    else speak(`Found ${n} ${n === 1 ? "result" : "results"}. Tap one to choose.`, `${n} نتائج ملے۔ ایک کو چنیں۔`, lang);
+  });
   useEffect(() => {
     setPlaces(null);
     if (!open || q.trim().length < 2 || q === value?.label) {
@@ -101,11 +122,12 @@ export function PlaceInput({
           onKeyDown={(e) => {
             if (e.key === "Enter" && allowPlaces) {
               e.preventDefault();
-              searchPlaces();
+              void searchPlaces();
             }
           }}
           aria-label={placeholder}
         />
+        {voiceSearch && <MicButton voice={voice} />}
         {onLocate && (
           <button type="button" onClick={onLocate} className="text-brand-600 hover:text-brand-800 p-1" title="Use my location" aria-label="Use my location">
             <LocateFixed className={clsx("h-4 w-4", locating && "animate-pulse")} />
@@ -117,6 +139,7 @@ export function PlaceInput({
           </button>
         )}
       </div>
+      {voiceSearch && <VoicePanel voice={voice} />}
       {open && (places !== null || placeBusy || results.length > 0 || (allowPlaces && q.trim().length >= 2 && q !== value?.label)) && (
         <ul className="absolute z-[1500] mt-1 max-h-80 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-lg">
           {places === null && results.map((s) => (
@@ -153,7 +176,7 @@ export function PlaceInput({
           )}
           {allowPlaces && places === null && q.trim().length >= 2 && q !== value?.label && (
             <li className="border-t border-slate-100">
-              <button type="button" onClick={searchPlaces} disabled={placeBusy}
+              <button type="button" onClick={() => void searchPlaces()} disabled={placeBusy}
                 className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm font-medium text-brand-700 hover:bg-brand-50">
                 <Search className="h-4 w-4" /> {placeBusy ? "Searching…" : `Search all places for “${q.trim()}”`}
               </button>
@@ -169,6 +192,7 @@ export function PlaceInput({
 export function GlobalSearch() {
   const [q, setQ] = useState("");
   const [res, setRes] = useState<{ stops: Stop[]; routes: RouteSummary[]; buses: { id: number; bus_number: string }[] } | null>(null);
+  const voice = useVoiceSearch((text) => setQ(text));
   useEffect(() => {
     if (q.trim().length < 2) return setRes(null);
     const t = setTimeout(() => api<typeof res>(`/api/search?q=${encodeURIComponent(q.trim())}`).then(setRes).catch(() => setRes(null)), 200);
@@ -186,7 +210,9 @@ export function GlobalSearch() {
           className="w-full bg-transparent py-3.5 text-sm outline-none"
           aria-label="Search"
         />
+        <MicButton voice={voice} />
       </div>
+      <VoicePanel voice={voice} />
       {res && (
         <div className="absolute z-[1500] mt-2 w-full rounded-2xl border border-slate-200 bg-white p-2 shadow-lg">
           {empty && <Empty>No stops, routes or buses match “{q}”.</Empty>}

@@ -20,7 +20,8 @@ function WhereTo() {
     <Card className="p-4 md:p-5">
       <h2 className="text-lg font-bold text-brand-900 md:text-xl">Where do you want to go?</h2>
       <p className="mb-3 text-sm text-slate-500">
-        Type a stop or any place in Lahore. We find the Speedo stop nearest to you and the bus that takes you there.
+        Type a stop or any place in Lahore, or tap the mic and say it (English or Urdu). We find the Speedo stop nearest
+        to you and the bus that takes you there.
       </p>
       <div className="flex flex-col gap-2 sm:flex-row">
         <div className="flex-1">

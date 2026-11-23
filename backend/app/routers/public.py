@@ -23,6 +23,7 @@ from ..limits import limiter
 from ..services.places import search as place_search
 from ..services.planner import Place, nearby_stops, plan
 from ..services.tracking import PKT, arrivals_for_stop, bus_state, schedule_departures, utcnow
+from ..services.textmatch import loose_match
 from ..store import Session
 
 router = APIRouter(prefix="/api", tags=["passenger"])
@@ -32,6 +33,12 @@ def ilike(q: str, *values: str | None) -> bool:
     """Case-insensitive substring match (the old SQL ILIKE '%q%')."""
     q = q.strip().lower()
     return any(v and q in v.lower() for v in values)
+
+
+def find_stops(q: str, stops: list) -> list:
+    """Stops whose name/code contains q; if none, a loose sound-alike match (Urdu script, other spellings)."""
+    hits = [s for s in stops if ilike(q, s.name, s.code, s.name_ur)]
+    return hits or [s for s in stops if loose_match(q, s.name, s.name_ur)]
 
 
 @router.get("/meta")
@@ -101,7 +108,7 @@ def route_buses(route_id: int, db: Session = Depends(get_db)):
 def list_stops(q: str | None = None, limit: int = Query(50, ge=1, le=500), db: Session = Depends(get_db)):
     stops = sorted(db.all(BusStop), key=lambda s: s.name)
     if q:
-        stops = [s for s in stops if ilike(q, s.name, s.code, s.name_ur)]
+        stops = find_stops(q, stops)
     return [stop_out(s) for s in stops[:limit]]
 
 
@@ -254,7 +261,7 @@ def places(request: Request, q: str = Query(min_length=2, max_length=100), db: S
 
     Call this when the passenger presses Search (not on every keystroke): place lookups are rate limited.
     """
-    stops = [s for s in db.all(BusStop) if ilike(q, s.name, s.code)]
+    stops = find_stops(q, db.all(BusStop))
     stops.sort(key=lambda s: (not s.name.lower().startswith(q.strip().lower()), s.name))
     out = [{"label": s.name, "lat": s.lat, "lng": s.lng, "kind": "stop", "stop_id": s.id} for s in stops[:4]]
     s = get_settings()
@@ -266,7 +273,7 @@ def places(request: Request, q: str = Query(min_length=2, max_length=100), db: S
 
 @router.get("/search")
 def search(q: str = Query(min_length=1, max_length=100), db: Session = Depends(get_db)):
-    stops = [s for s in db.all(BusStop) if ilike(q, s.name, s.code)][:10]
+    stops = find_stops(q, db.all(BusStop))[:10]
     routes = [r for r in db.all(Route) if ilike(q, r.name, r.code)][:10]
     buses = [b for b in db.all(Bus) if ilike(q, b.bus_number)][:10]
     return {
