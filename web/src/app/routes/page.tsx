@@ -8,7 +8,8 @@ import MapView, { type MapRoute, type TripStop } from "@/components/MapView";
 import { Button, Card, Empty, ErrorBox, Input, SectionTitle, Spinner } from "@/components/ui";
 import { NextBus, PlaceInput, RouteChip, walkingDirectionsUrl, type Place } from "@/components/widgets";
 import { VoiceTripPanel, useVoiceTrip } from "@/components/VoiceTrip";
-import VoiceGuide, { type SpokenTrip } from "@/components/VoiceGuide";
+import VoiceGuide from "@/components/VoiceGuide";
+import { journeySpeech, loadTrip, saveTrip, tripKey } from "@/lib/journey";
 import { speak, type VoiceLang } from "@/lib/voice";
 import { api } from "@/lib/api";
 import { km, saveRecent, useApi, useAuth, useGeolocation, useMeta } from "@/lib/hooks";
@@ -24,66 +25,12 @@ function parsePlace(v: string | null): Place | null {
   }
 }
 
-const spokenName = (n: string) => n.replace(/^\s*\d+[.)]?\s*/, "");
-
 const PREFS: { id: PlanPreference; label: string }[] = [
   { id: "fastest", label: "Fastest (estimate)" },
   { id: "fewer_transfers", label: "Fewer changes" },
   { id: "less_walking", label: "Less walking" },
 ];
 
-/**
- * What the voice says, built only from the planned trip (no times of buses: those are not verified).
- * Summary: which stop, which bus, where to change, where to get off. Details: every leg with walking estimates.
- */
-function journeySpeech(o: PlanOption | undefined, result: PlanResult | null): SpokenTrip {
-  if (!o) {
-    const kms = ((result?.search_limits?.max_walk_m ?? 1500) / 1000).toFixed(1);
-    const msg = {
-      en: `Sorry, we found no Speedo connection within ${kms} kilometres walking of these places. Try a nearby main stop.`,
-      ur: `معاف کیجیے، ان جگہوں سے ${kms} کلومیٹر پیدل کے اندر کوئی اسپیڈو بس نہیں ملی۔ قریب کا کوئی بڑا اسٹاپ آزمائیں۔`,
-    };
-    return { summary: msg, details: msg };
-  }
-  const rides = o.legs.filter((l): l is PlanLegRide => l.type === "ride");
-  const first = rides[0], last = rides[rides.length - 1];
-  const towards = (r: PlanLegRide) =>
-    r.towards ? { en: ` towards ${spokenName(r.towards)}`, ur: `، جو ${spokenName(r.towards)} کی طرف جاتی ہے` } : { en: "", ur: "" };
-  // where each change happens; a walking change names both stops
-  const changes = rides.slice(1).map((r, k) =>
-    rides[k].alight.id === r.board.id ? spokenName(r.board.name) : `${spokenName(rides[k].alight.name)} (walk to ${spokenName(r.board.name)})`);
-  const summary = {
-    en: `Go to ${spokenName(first.board.name)} stop and take the ${first.route_code} bus${towards(first).en}.` +
-      (changes.length ? ` Change buses at ${changes.join(", then at ")}.` : "") +
-      ` Get off at ${spokenName(last.alight.name)}.`,
-    ur: `${spokenName(first.board.name)} اسٹاپ پر جائیں اور ${first.route_code} بس لیں${towards(first).ur}۔` +
-      (changes.length ? ` ${changes.join("، پھر ")} پر بس بدلیں۔` : "") +
-      ` ${spokenName(last.alight.name)} پر اتر جائیں۔`,
-  };
-  const en: string[] = [], ur: string[] = [];
-  o.legs.forEach((l, i) => {
-    if (l.type === "walk") {
-      const m = Math.max(1, Math.round(l.minutes)), d = km(l.distance_m);
-      const target = spokenName(l.to.name || "the stop");
-      if (l.transfer) {
-        en.push(`To change buses, walk about ${d} to ${target} stop, roughly ${m} minute${m === 1 ? "" : "s"}.`);
-        ur.push(`بس بدلنے کے لیے تقریباً ${d} پیدل چل کر ${target} اسٹاپ جائیں، اندازاً ${m} منٹ۔`);
-      } else if (i === 0) {
-        en.push(`Walk to ${target} stop, about ${d} in a straight line, roughly ${m} minutes.`);
-        ur.push(`${target} اسٹاپ تک پیدل جائیں، سیدھی لکیر میں تقریباً ${d}، اندازاً ${m} منٹ۔`);
-      } else {
-        en.push(`Then walk about ${d} to ${target}, roughly ${m} minutes.`);
-        ur.push(`پھر تقریباً ${d} پیدل چل کر ${target} پہنچیں، اندازاً ${m} منٹ۔`);
-      }
-    } else {
-      const k = rides.indexOf(l);
-      const sameStop = k > 0 && rides[k - 1].alight.id === l.board.id;
-      en.push(`${sameStop ? "At the same stop," : "At"} ${spokenName(l.board.name)}, take the ${l.route_code} bus${towards(l).en}. Ride ${l.stop_count} stop${l.stop_count === 1 ? "" : "s"} and get off at ${spokenName(l.alight.name)}.`);
-      ur.push(`${spokenName(l.board.name)} سے ${l.route_code} بس لیں${towards(l).ur}۔ ${l.stop_count} اسٹاپ کے بعد ${spokenName(l.alight.name)} پر اتر جائیں۔`);
-    }
-  });
-  return { summary, details: { en: en.join(" "), ur: ur.join(" ") } };
-}
 
 function RoutesInner() {
   const params = useSearchParams();
@@ -105,6 +52,8 @@ function RoutesInner() {
   const [chosen, setChosen] = useState(0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // set when the shown trip comes from this phone's saved copy (no internet), with the time it was planned
+  const [savedAt, setSavedAt] = useState<number | null>(null);
   const [filter, setFilter] = useState("");
   const routes = useApi<RouteDetail[]>("/api/routes?with_path=true");
 
@@ -130,6 +79,7 @@ function RoutesInner() {
     if (!f || !t) return setError("Choose a starting point and a destination.");
     setBusy(true);
     setError(null);
+    const key = tripKey(f, t, pref);
     try {
       const r = await api<PlanResult>("/api/plan", {
         method: "POST",
@@ -140,6 +90,8 @@ function RoutesInner() {
       });
       setResult(r);
       setChosen(0);
+      setSavedAt(null);
+      saveTrip(key, r);
       const sayLang = sayRef.current;
       if (sayLang) {
         sayRef.current = null;
@@ -149,7 +101,16 @@ function RoutesInner() {
       saveRecent({ from: f, to: t, at: Date.now() });
       router.replace(`/routes/?from=${encodeURIComponent(JSON.stringify(f))}&to=${encodeURIComponent(JSON.stringify(t))}`, { scroll: false });
     } catch (e) {
-      setError((e as Error).message);
+      // no internet (or server down): show this trip from the phone's saved copy, clearly dated
+      const saved = loadTrip(key);
+      if (saved) {
+        setResult(saved.result);
+        setChosen(0);
+        setSavedAt(saved.at);
+      } else {
+        const offline = typeof navigator !== "undefined" && !navigator.onLine;
+        setError(offline ? "No internet connection, and this trip is not saved on this phone. Connect and try again." : (e as Error).message);
+      }
     } finally {
       setBusy(false);
     }
@@ -291,8 +252,16 @@ function RoutesInner() {
         {result && (
           <Card className="p-4">
             <SectionTitle action={<button className="text-sm text-brand-600" onClick={() => setResult(null)}>Clear</button>}>
-              {result.options.length ? (result.options.length > 1 ? `Best trip + ${result.options.length - 1} other${result.options.length > 2 ? "s" : ""}` : "Best trip") : "No connection found"}
+              {result.options.length ? (result.options.length > 1 ? `Best trip + ${result.options.length - 1} other${result.options.length > 2 ? "s" : ""}` : "Best trip")
+                : result.status === "outside_coverage" ? "Outside the Speedo area"
+                : result.status === "data_unavailable" ? "Route data unavailable" : "No connection found"}
             </SectionTitle>
+            {savedAt && (
+              <p role="status" className="mb-2 rounded-lg bg-slate-800 px-2.5 py-1.5 text-xs text-white">
+                Saved trip from {new Date(savedAt).toLocaleString("en-PK", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}{" "}
+                (no internet). Routes may have changed since; check again when you are online.
+              </p>
+            )}
             {option && (() => {
               const ride = option.legs.find((l): l is PlanLegRide => l.type === "ride");
               const walk = option.legs[0]?.type === "walk" ? option.legs[0] : null;
@@ -328,7 +297,13 @@ function RoutesInner() {
                 {meta?.demo_mode ? ` ${meta.notice}` : ""}
               </p>
             )}
-            {result.options.length === 0 && (
+            {result.options.length === 0 && result.status === "outside_coverage" && (
+              <Empty>Speedo buses run in Lahore only. Choose a starting point and destination inside Lahore.</Empty>
+            )}
+            {result.options.length === 0 && result.status === "data_unavailable" && (
+              <Empty>The route data could not be loaded right now. Please try again in a few minutes.</Empty>
+            )}
+            {result.options.length === 0 && (result.status ?? "no_route") === "no_route" && (
               <Empty>
                 No Speedo connection found within {km(result.search_limits?.max_walk_m ?? 1500)} walking of these places and
                 up to {result.search_limits?.max_transfers ?? 2} changes. There may still be a way: try a nearby main stop,

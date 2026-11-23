@@ -22,6 +22,22 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name
 log = logging.getLogger("speedo")
 
 
+class _RedactQuery(logging.Filter):
+    """Keep what passengers search for, and where they are, out of the logs: drop URL query strings
+    (place names, coordinates) from access and HTTP-client log lines (spec section 11)."""
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        if record.args and isinstance(record.args, tuple):
+            record.args = tuple(a.split("?", 1)[0] + ("?…" if "?" in a else "") if isinstance(a, str) else a
+                                for a in record.args)
+        return True
+
+
+for _name in ("uvicorn.access", "httpx"):
+    logging.getLogger(_name).addFilter(_RedactQuery())
+logging.getLogger("httpx").setLevel(logging.WARNING)  # its INFO lines carry the full place-search URL
+
+
 def _run(fn):
     with SessionLocal() as db:
         return fn(db)

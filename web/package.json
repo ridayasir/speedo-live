@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start -p ${PORT:-3000}",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node --test-reporter=spec scripts/test.cjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

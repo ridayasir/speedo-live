@@ -95,3 +95,27 @@ def test_walking_transfer_neighbours(db):
         for b in stops.values():
             if haversine_m(a.lat, a.lng, b.lat, b.lng) <= 300:
                 assert b.id in found
+
+
+def test_outside_service_area_is_its_own_state(client):
+    """Islamabad -> Lahore: not 'no route' and no stretched search to a stop far away, but outside_coverage."""
+    r = client.post("/api/plan", json={"from_lat": 33.6844, "from_lng": 73.0479, "to_lat": 31.5772, "to_lng": 74.3369}).json()
+    assert r["status"] == "outside_coverage" and r["options"] == []
+    assert [w["code"] for w in r["warnings"]] == ["origin_outside_area"]
+
+
+def test_spec_field_names_carry_the_same_estimates(client):
+    for o in client.post("/api/plan", json=RLY | THK).json()["options"]:
+        assert o["duration_seconds"] == o["total_minutes"] * 60
+        assert o["total_walk_distance_m"] == o["walk_m"]
+
+
+def test_logs_do_not_keep_search_text():
+    import logging
+    from app.main import _RedactQuery
+
+    rec = logging.LogRecord("uvicorn.access", logging.INFO, "", 0, '%s - "%s %s HTTP/%s" %d',
+                            ("1.2.3.4", "GET", "/api/places?q=Main Model Town mein hoon&lat=31.5", "1.1", 200), None)
+    _RedactQuery().filter(rec)
+    line = rec.getMessage()
+    assert "Model Town" not in line and "31.5" not in line and "/api/places?…" in line

@@ -199,7 +199,7 @@ export interface PlanResult {
   nearest_destination_stop: (Stop & { walk_m: number }) | null;
   options: PlanOption[];
   straight_line_m: number;
-  status?: "ok" | "no_route";
+  status?: "ok" | "no_route" | "outside_coverage" | "data_unavailable";
   prefer?: PlanPreference;
   search_limits?: { max_walk_m: number; max_transfers: number };
   warnings?: { code: string; message: string; distance_m?: number }[];

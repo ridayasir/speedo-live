@@ -170,9 +170,19 @@ def plan(db: Session, origin: Place, dest: Place, max_options: int = 3, prefer: 
     """One recommended trip plus up to two alternatives, ranked by `prefer` (see PREFERENCES)."""
     if prefer not in _RANK:
         prefer = "fastest"
+    s = get_settings()
+    outside = [side for side, p in (("origin", origin), ("destination", dest))
+               if not (s.area_min_lat <= p.lat <= s.area_max_lat and s.area_min_lng <= p.lng <= s.area_max_lng)]
+    if outside:  # Speedo runs in Lahore only: do not stretch the search to the nearest stop 50 km away
+        return _empty(origin, dest, prefer, "outside_coverage",
+                      [{"code": f"{side}_outside_area", "message": f"The {side} is outside the Speedo service area "
+                                                                   f"(Lahore)."} for side in outside])
     o_cands = _candidates(db, origin)
     d_cands = _candidates(db, dest)
     idx = _index(db)
+    if not idx:
+        return _empty(origin, dest, prefer, "data_unavailable",
+                      [{"code": "no_routes", "message": "No active Speedo routes are loaded right now."}])
     o_pt = {"lat": origin.lat, "lng": origin.lng, "name": origin.label or "Start"}
     d_pt = {"lat": dest.lat, "lng": dest.lng, "name": dest.label or "Destination"}
     options: dict[tuple, dict] = {}
@@ -249,8 +259,9 @@ def plan(db: Session, origin: Place, dest: Place, max_options: int = 3, prefer: 
         best_direct = next((o["total_minutes"] for o in ranked if o["transfers"] == 0), None)
         if best_direct is not None:
             ranked = [o for o in ranked if o["transfers"] == 0 or o["total_minutes"] < best_direct]
-    ranked = [dict(o, recommended=(i == 0)) for i, o in enumerate(ranked[:max_options])]
-    s = get_settings()
+    # duration_seconds / total_walk_distance_m: the spec's names for the same timetable / straight-line estimates
+    ranked = [dict(o, recommended=(i == 0), duration_seconds=o["total_minutes"] * 60, total_walk_distance_m=o["walk_m"])
+              for i, o in enumerate(ranked[:max_options])]
     warnings = []
     for side, cands in (("origin", o_cands), ("destination", d_cands)):
         if not cands:
@@ -344,3 +355,18 @@ def _dataset_info(idx: list[RouteIndex]) -> dict:
     newest = max(stamps) if stamps else None
     return {"sources": sources[:3], "source_count": len(sources), "route_count": len(routes),
             "updated_at": newest.isoformat() if hasattr(newest, "isoformat") else newest}
+
+
+def _empty(origin: Place, dest: Place, prefer: str, status: str, warnings: list[dict]) -> dict:
+    """A plan with no options and the reason (outside_coverage, data_unavailable)."""
+    s = get_settings()
+    return {
+        "origin": {"lat": origin.lat, "lng": origin.lng, "name": origin.label or "Start"},
+        "destination": {"lat": dest.lat, "lng": dest.lng, "name": dest.label or "Destination"},
+        "nearest_boarding_stop": None, "nearest_destination_stop": None,
+        "status": status, "prefer": prefer,
+        "search_limits": {"max_walk_m": round(s.max_walk_m), "max_transfers": MAX_TRANSFERS,
+                          "max_transfer_walk_m": round(s.max_transfer_walk_m)},
+        "dataset": None, "warnings": warnings, "options": [],
+        "straight_line_m": round(haversine_m(origin.lat, origin.lng, dest.lat, dest.lng)),
+    }

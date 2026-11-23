@@ -258,10 +258,7 @@ export function ago(iso: string | null | undefined): string {
   return new Date(iso).toLocaleDateString();
 }
 
-export function km(m: number | null | undefined): string {
-  if (m == null) return "–";
-  return m < 1000 ? `${Math.round(m)} m` : `${(m / 1000).toFixed(1)} km`;
-}
+export { km } from "./format";
 
 export function clock(iso: string): string {
   return new Date(iso).toLocaleTimeString("en-PK", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Karachi" });

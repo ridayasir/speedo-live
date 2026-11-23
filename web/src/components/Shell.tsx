@@ -6,6 +6,7 @@ import { Bus, Clock, Flag, Heart, Home, Map, Route as RouteIcon, User } from "lu
 
 import clsx from "./clsx";
 import { useAuth } from "@/lib/hooks";
+import { OfflineBanner, TextSizeButton } from "./Access";
 
 const NAV = [
   { href: "/", label: "Home", icon: Home },
@@ -62,6 +63,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
             ))}
           </nav>
           <div className="flex items-center gap-2">
+            <TextSizeButton />
             {user?.role === "admin" && (
               <Link href="/admin/" className="hidden sm:inline rounded-xl border border-slate-200 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50">
                 Admin
@@ -76,6 +78,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </header>
+      <OfflineBanner />
       <main className="flex-1 pb-20 md:pb-0">{children}</main>
       <nav className="md:hidden fixed bottom-0 inset-x-0 z-[1100] border-t border-slate-200 bg-white" aria-label="Main mobile">
         <div className="grid grid-cols-5">

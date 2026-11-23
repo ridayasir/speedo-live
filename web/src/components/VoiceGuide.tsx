@@ -8,10 +8,8 @@ import {
 } from "@/lib/voice";
 import clsx from "./clsx";
 
-export interface SpokenTrip {
-  summary: { en: string; ur: string };
-  details: { en: string; ur: string };
-}
+import type { SpokenTrip } from "@/lib/journey";
+export type { SpokenTrip };
 
 const btn = "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold";
 

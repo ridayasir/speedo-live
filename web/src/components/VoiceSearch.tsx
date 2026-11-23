@@ -48,6 +48,9 @@ export function VoicePanel({ voice }: { voice: Voice }) {
           </div>
           <p className="mt-0.5 text-xs text-brand-700" dir="rtl" lang="ur">اپنے اسٹاپ یا جگہ کا نام بولیں</p>
           {voice.heard && <p className="mt-2 rounded-lg bg-white px-2 py-1 text-slate-800">“{voice.heard}”</p>}
+          <p className="mt-1 text-[11px] text-slate-500">
+            Your browser&apos;s speech service turns your voice into text. Speedo Live does not record or keep your voice.
+          </p>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
             <span className="text-slate-500">Language:</span>
             {LANGS.map((l) => (

@@ -49,7 +49,7 @@ def fetch(q: str) -> list[dict]:
             r.raise_for_status()
             rows = r.json()
         except Exception as exc:  # the planner still works with stop names
-            log.warning("place search failed for %r: %s", q, exc)
+            log.warning("place search failed (query of %d characters): %s", len(q), type(exc).__name__)
             return []
     return [{"label": _short(x.get("display_name", "")), "detail": x.get("display_name", ""), "lat": float(x["lat"]),
              "lng": float(x["lon"]), "kind": "place", "type": f'{x.get("category")}/{x.get("type")}'} for x in rows]
