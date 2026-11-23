@@ -6,15 +6,30 @@ import { useEffect, useMemo, useState } from "react";
 import { Flag, History, LocateFixed, MapPin, Navigation, Radio, Star } from "lucide-react";
 import MapView from "@/components/MapView";
 import { Button, Card, Empty, ErrorBox, SectionTitle, Spinner, effectiveStatus } from "@/components/ui";
-import { GlobalSearch, NavLinkCard, PlaceInput, RouteChip, type Place } from "@/components/widgets";
+import { GlobalSearch, NavLinkCard, PlaceInput, RouteChip, findPlace, type Place, type VoiceJourney } from "@/components/widgets";
+import { speak, type VoiceLang } from "@/lib/voice";
 import { km, loadRecent, useApi, useAuth, useGeolocation, useLiveBuses, type RecentSearch } from "@/lib/hooks";
 import type { Alert, RouteDetail, RouteSummary, Stop } from "@/lib/types";
 
 function WhereTo() {
   const router = useRouter();
   const [dest, setDest] = useState<Place | null>(null);
+  const [voiceMsg, setVoiceMsg] = useState<{ text: string; error?: boolean } | null>(null);
   const go = (p: Place | null = dest) => {
     if (p) router.push(`/routes/?from=me&to=${encodeURIComponent(JSON.stringify(p))}`);
+  };
+  // "Main Model Town mein hoon, mujhe Liberty Chowk jana hai": find both places, then plan and read out the answer
+  const voiceJourney = async (j: VoiceJourney, lang: VoiceLang) => {
+    setVoiceMsg({ text: j.from ? `Finding “${j.from}” and “${j.to}”…` : `Finding “${j.to}”…` });
+    const [from, to] = await Promise.all([j.from ? findPlace(j.from) : Promise.resolve(null), findPlace(j.to)]);
+    const missing = !to ? j.to : j.from && !from ? j.from : null;
+    if (missing) {
+      setVoiceMsg({ text: `We could not find “${missing}”. Please say it again or type it.`, error: true });
+      speak(`Sorry, we could not find ${missing}. Please try again.`, `معاف کیجیے، ${missing} نہیں ملا۔ دوبارہ بولیں۔`, lang);
+      return;
+    }
+    const f = from ? encodeURIComponent(JSON.stringify(from)) : "me";
+    router.push(`/routes/?from=${f}&to=${encodeURIComponent(JSON.stringify(to))}&say=${lang}`);
   };
   return (
     <Card className="p-4 md:p-5">
@@ -25,14 +40,20 @@ function WhereTo() {
       </p>
       <div className="flex flex-col gap-2 sm:flex-row">
         <div className="flex-1">
-          <PlaceInput value={dest} onChange={setDest} onSubmit={go} allowPlaces icon="destination"
+          <PlaceInput value={dest} onChange={setDest} onSubmit={go} allowPlaces icon="destination" onVoiceJourney={voiceJourney}
             placeholder="e.g. Liberty Chowk, Emporium Mall, Jinnah Hospital" />
+          {voiceMsg && (
+            <p className={`mt-2 text-sm ${voiceMsg.error ? "text-red-700" : "text-brand-700"}`} role="status">{voiceMsg.text}</p>
+          )}
         </div>
         <Button onClick={() => go()} disabled={!dest} className="sm:w-44">
           <Navigation className="h-4 w-4" /> Find my bus
         </Button>
       </div>
       <p className="mt-2 text-xs text-slate-400">Uses your phone&apos;s location to find the nearest stop. Press Enter to search places.</p>
+      <p className="mt-1 text-xs text-slate-500">
+        🎤 Try saying: <i>“Main Model Town mein hoon, mujhe Liberty Chowk jana hai”</i> and we will tell you which stop to go to.
+      </p>
     </Card>
   );
 }

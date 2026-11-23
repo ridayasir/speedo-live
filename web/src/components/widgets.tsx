@@ -8,7 +8,7 @@ import { ago, clock, km, useApi } from "@/lib/hooks";
 import type { Arrivals, BusState, RouteSummary, Stop } from "@/lib/types";
 import { Empty, ErrorBox, Spinner, StatusPill, effectiveStatus } from "./ui";
 import clsx from "./clsx";
-import { speak, useVoiceSearch } from "@/lib/voice";
+import { parseJourney, speak, useVoiceSearch, type VoiceLang } from "@/lib/voice";
 import { MicButton, VoicePanel } from "./VoiceSearch";
 
 export interface Place {
@@ -19,6 +19,19 @@ export interface Place {
 }
 
 /* ------------------------------------------------------------------ place / stop search */
+/** Best match for a spoken or typed name: a Speedo stop first, otherwise any place in Lahore. */
+export async function findPlace(text: string): Promise<Place | null> {
+  try {
+    const hits = await api<PlaceHit[]>(`/api/places?q=${encodeURIComponent(text)}`);
+    const h = hits[0];
+    return h ? { label: h.label, lat: h.lat, lng: h.lng, stop_id: h.stop_id } : null;
+  } catch {
+    return null;
+  }
+}
+
+export type VoiceJourney = { from: string | null; to: string };
+
 interface PlaceHit {
   label: string;
   detail?: string;
@@ -30,6 +43,7 @@ interface PlaceHit {
 
 export function PlaceInput({
   value, onChange, placeholder, onLocate, locating, icon = "origin", onPickMap, picking, allowPlaces, onSubmit, voiceSearch = true,
+  onVoiceJourney,
 }: {
   value: Place | null;
   onChange: (p: Place | null) => void;
@@ -44,6 +58,8 @@ export function PlaceInput({
   onSubmit?: (p: Place) => void;
   /** show a mic button so passengers can say the stop / place name instead of typing it */
   voiceSearch?: boolean;
+  /** a spoken sentence naming where the passenger is and where they go ("Main X mein hoon, mujhe Y jana hai") */
+  onVoiceJourney?: (j: VoiceJourney, lang: VoiceLang) => void;
 }) {
   const [q, setQ] = useState(value?.label || "");
   const [results, setResults] = useState<Stop[]>([]);
@@ -75,7 +91,12 @@ export function PlaceInput({
     return hits;
   };
   // voice: put what was said in the box and search right away, then say how many matches there are
-  const voice = useVoiceSearch(async (text, lang) => {
+  const voice = useVoiceSearch(async (text, lang, raw) => {
+    const journey = onVoiceJourney ? parseJourney(raw) : null;
+    if (journey && onVoiceJourney) {
+      setOpen(false);
+      return onVoiceJourney(journey, lang);
+    }
     setQ(text);
     setOpen(true);
     let n: number;

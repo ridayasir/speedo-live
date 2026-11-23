@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowDownUp, Bus, ExternalLink, Footprints, LocateFixed, Repeat } from "lucide-react";
+import { ArrowDownUp, Bus, ExternalLink, Footprints, LocateFixed, Repeat, Volume2 } from "lucide-react";
 import MapView, { type MapRoute } from "@/components/MapView";
 import { Button, Card, Empty, ErrorBox, Input, SectionTitle, Spinner } from "@/components/ui";
-import { NextBus, PlaceInput, RouteChip, walkingDirectionsUrl, type Place } from "@/components/widgets";
+import { NextBus, PlaceInput, RouteChip, findPlace, walkingDirectionsUrl, type Place, type VoiceJourney } from "@/components/widgets";
+import { loadVoiceLang, speak, type VoiceLang } from "@/lib/voice";
 import { api } from "@/lib/api";
 import { km, saveRecent, useApi, useAuth, useGeolocation } from "@/lib/hooks";
 import type { PlanLegRide, PlanOption, PlanResult, RouteDetail, RouteSummary, Stop } from "@/lib/types";
@@ -21,8 +22,37 @@ function parsePlace(v: string | null): Place | null {
   }
 }
 
+const spokenName = (n: string) => n.replace(/^\s*\d+[.)]?\s*/, "");
+
+/** The answer to "which stop do I go to?" as one short sentence, in English and in Urdu. */
+function journeyText(o: PlanOption | undefined): { en: string; ur: string } {
+  if (!o) return {
+    en: "Sorry, no Speedo bus connects these places. Try a nearby main stop.",
+    ur: "معاف کیجیے، ان جگہوں کے درمیان کوئی اسپیڈو بس نہیں چلتی۔ قریب کا کوئی بڑا اسٹاپ آزمائیں۔",
+  };
+  const rides = o.legs.filter((l): l is PlanLegRide => l.type === "ride");
+  const walk = o.legs[0]?.type === "walk" ? o.legs[0] : null;
+  const mins = walk ? Math.max(1, Math.round(walk.minutes)) : 0;
+  const en: string[] = [], ur: string[] = [];
+  rides.forEach((r, i) => {
+    const board = spokenName(r.board.name), alight = spokenName(r.alight.name);
+    if (i === 0) {
+      en.push(`Go to ${board} stop${walk ? `, about ${mins} minute${mins === 1 ? "" : "s"} walk` : ""}.`);
+      ur.push(`${board} اسٹاپ پر جائیں${walk ? `، تقریباً ${mins} منٹ پیدل` : ""}۔`);
+    }
+    en.push(`${i === 0 ? "Take" : "Then change to"} the ${r.route_code} bus${r.towards ? ` going towards ${spokenName(r.towards)}` : ""}, and get off at ${alight}.`);
+    ur.push(`${i === 0 ? "وہاں سے" : "پھر"} ${r.route_code} بس لیں${r.towards ? `، جو ${spokenName(r.towards)} کی طرف جاتی ہے` : ""}، اور ${alight} پر اتر جائیں۔`);
+  });
+  return { en: en.join(" "), ur: ur.join(" ") };
+}
+
 function RoutesInner() {
   const params = useSearchParams();
+  // ?say=en-IN|ur-PK: the trip was asked for by voice, so read the answer aloud
+  // (a ref, so the answer is read out once even if two searches start together)
+  const sayRef = useRef<VoiceLang | null>(
+    params.get("say") === "ur-PK" ? "ur-PK" : params.get("say") === "en-IN" ? "en-IN" : null,
+  );
   const router = useRouter();
   const { user } = useAuth();
   const geo = useGeolocation();
@@ -69,12 +99,39 @@ function RoutesInner() {
       });
       setResult(r);
       setChosen(0);
+      const sayLang = sayRef.current;
+      if (sayLang) {
+        sayRef.current = null;
+        const answer = journeyText(r.options[0]);
+        speak(answer.en, answer.ur, sayLang);
+      }
       saveRecent({ from: f, to: t, at: Date.now() });
       router.replace(`/routes/?from=${encodeURIComponent(JSON.stringify(f))}&to=${encodeURIComponent(JSON.stringify(t))}`, { scroll: false });
     } catch (e) {
       setError((e as Error).message);
     } finally {
       setBusy(false);
+    }
+  };
+
+  // a spoken sentence with both places, said into either box
+  const voiceJourney = async (j: VoiceJourney, lang: VoiceLang) => {
+    setError(null);
+    const [f, t] = await Promise.all([j.from ? findPlace(j.from) : Promise.resolve(null), findPlace(j.to)]);
+    const missing = !t ? j.to : j.from && !f ? j.from : null;
+    if (missing) {
+      setError(`We could not find “${missing}”. Please say it again or type it.`);
+      speak(`Sorry, we could not find ${missing}. Please try again.`, `معاف کیجیے، ${missing} نہیں ملا۔ دوبارہ بولیں۔`, lang);
+      return;
+    }
+    setTo(t);
+    sayRef.current = lang;
+    if (f) {
+      setFrom(f);
+      search(f, t);
+    } else {
+      setAutoRun(true);
+      geo.locate();
     }
   };
 
@@ -135,13 +192,14 @@ function RoutesInner() {
         <Card className="p-4 space-y-3">
           <h1 className="text-lg font-bold text-brand-900">Plan your journey</h1>
           <PlaceInput value={from} onChange={setFrom} placeholder="Starting point (stop or any place)" allowPlaces icon="origin" onLocate={geo.locate} locating={geo.busy}
+            onVoiceJourney={voiceJourney}
             onPickMap={() => setPicking(picking === "from" ? null : "from")} picking={picking === "from"} />
           <div className="flex justify-center -my-1">
             <button className="rounded-full border border-slate-200 bg-white p-1.5 text-slate-500 hover:bg-slate-50" aria-label="Swap" onClick={() => { setFrom(to); setTo(from); }}>
               <ArrowDownUp className="h-4 w-4" />
             </button>
           </div>
-          <PlaceInput value={to} onChange={setTo} placeholder="Destination (stop or any place)" allowPlaces icon="destination"
+          <PlaceInput value={to} onChange={setTo} placeholder="Destination (stop or any place)" allowPlaces icon="destination" onVoiceJourney={voiceJourney}
             onPickMap={() => setPicking(picking === "to" ? null : "to")} picking={picking === "to"} />
           {picking && <p className="text-xs text-accent-600">Tap the map to set the {picking === "from" ? "starting point" : "destination"}.</p>}
           {geo.busy && autoRun && <p className="flex items-center gap-1 text-xs text-brand-700"><LocateFixed className="h-3.5 w-3.5 animate-pulse" /> Finding your location…</p>}
@@ -167,6 +225,11 @@ function RoutesInner() {
                     {walk ? `${km(walk.distance_m)} away · about ${Math.max(1, Math.round(walk.minutes))} min walk` : "You are at the stop"}
                   </div>
                   <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <button type="button" onClick={() => { const t = journeyText(option); speak(t.en, t.ur, loadVoiceLang()); }}
+                      className="inline-flex items-center gap-1 rounded-full bg-brand-600 px-2.5 py-0.5 text-[11px] font-semibold text-white hover:bg-brand-700"
+                      aria-label="Read the directions aloud">
+                      <Volume2 className="h-3 w-3" /> Listen
+                    </button>
                     <NextBus stopId={ride.board.id} routeId={ride.route_id} />
                     {walk && (
                       <a href={walkingDirectionsUrl(walk.from, ride.board)} target="_blank" rel="noreferrer"

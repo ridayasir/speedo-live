@@ -39,6 +39,8 @@ const LEADING = [
   /^(مجھے|میں\s+نے|ہمیں)\s+/,
 ];
 const TRAILING = [
+  /\s+(jana|jaana)\s+(chahta|chahti|chahte)\s+(hoon|hun|hu|hain)$/i,
+  /\s+جانا\s+چاہت(ا|ی|ے)\s+(ہوں|ہیں)$/,
   /\s+(jana|jaana|jaanaa)\s+(hai|hay|he|h)$/i,
   /\s+(kaise|kese|kaisay)\s+(jaun|jaon|jayen|jain)$/i,
   /\s+(stop|bus\s+stop)\s+(kahan|kidhar)\s+(hai|hay|he)$/i,
@@ -52,6 +54,8 @@ const TRAILING = [
 
 export function cleanSpokenPlace(text: string): string {
   let t = text.trim().replace(/[.?!۔؟,،]+$/g, "").trim();
+  // "main Liberty jana chahti hoon": drop the leading "main" only in this phrase ("Main Boulevard" is a place)
+  t = t.replace(/^(main|mai|mein)\s+(.+\s+(jana|jaana)\s+chaht[aie]\s+\S+)$/i, "$2").replace(/^میں\s+(.+\s+جانا\s+چاہت.+)$/, "$1");
   for (let i = 0; i < 2; i++) {
     for (const r of LEADING) t = t.replace(r, "");
     for (const r of TRAILING) t = t.replace(r, "");
@@ -60,7 +64,40 @@ export function cleanSpokenPlace(text: string): string {
   return t || text.trim();
 }
 
-export function useVoiceSearch(onResult: (text: string, lang: VoiceLang) => void) {
+/** "here", "yahan", "یہاں", "my location": the passenger means where they are now */
+const HERE = /^(here|right here|my location|current location|yahan|yahin|idhar|یہاں|یہیں|ادھر)$/i;
+
+// sentences that name both ends of the trip; group 1 = where the passenger is, group 2 = where they want to go
+const JOURNEY: RegExp[] = [
+  /^(?:main|mai|mein|hum)\s+(yahan|yahin|idhar)\s+(?:hoon|hun|hu|hon|hain)[\s,.]+(?:aur\s+|or\s+)?(.+)$/i,
+  /^میں\s+(یہاں|یہیں|ادھر)\s+ہوں[،,.۔\s]+(?:اور\s+)?(.+)$/,
+  /\bfrom\s+(.+?)\s+to\s+(.+)$/i,
+  /\b(?:i am|i'm|im|i m)\s+(?:in|at|near)\s+(.+?)[,.]?\s+(?:and\s+)?(?:i\s+)?(?:want|need|have|would like)\s+to\s+(?:go|get|reach)\s+(?:to\s+)?(.+)$/i,
+  /\b(?:i am|i'm|im|i m)\s+(?:in|at|near)\s+(.+?)[,.]?\s+(?:take me to|going to|go to|how (?:do|can) i (?:go|get) to)\s+(.+)$/i,
+  /^(?:main|mai|mein|me|hum|ham)\s+(?:abhi\s+)?(.+?)\s+(?:mein|me|main|par|pe|pr|ke paas|k pas|k pass|ke pass)\s+(?:hoon|hun|hu|hon|hain|hai)\b[,.]?\s*(?:aur\s+|or\s+)?(.+)$/i,
+  /^میں\s+(?:ابھی\s+)?(.+?)\s+(?:میں|پر|کے پاس)\s+(?:ہوں|ہیں)[،,.۔]?\s*(?:اور\s+)?(.+)$/,
+  /^(?:mujhe|mjhe|mujhay|hamein)?\s*(.+?)\s+(?:se|say|sy|sey)\s+(.+)$/i,
+  /^(?:مجھے\s+)?(.+?)\s+سے\s+(.+)$/,
+];
+
+/**
+ * "Main Model Town mein hoon, mujhe Liberty Chowk jana hai" -> { from: "Model Town", to: "Liberty Chowk" }.
+ * from is null when the passenger means where they are now. Returns null if the sentence names only one place.
+ */
+export function parseJourney(text: string): { from: string | null; to: string } | null {
+  const t = text.trim().replace(/[.?!۔؟]+$/g, "");
+  for (const r of JOURNEY) {
+    const m = t.match(r);
+    if (!m) continue;
+    const from = cleanSpokenPlace(m[1]).replace(/[,،]$/, "").trim();
+    const to = cleanSpokenPlace(m[2]).trim();
+    if (!from || !to || to.length < 2) continue;
+    return { from: HERE.test(from) ? null : from, to };
+  }
+  return null;
+}
+
+export function useVoiceSearch(onResult: (text: string, lang: VoiceLang, raw: string) => void) {
   const [supported, setSupported] = useState(false);
   const [listening, setListening] = useState(false);
   const [heard, setHeard] = useState("");
@@ -117,7 +154,7 @@ export function useVoiceSearch(onResult: (text: string, lang: VoiceLang) => void
     };
     r.onend = () => {
       setListening(false);
-      if (final.trim()) cb.current(cleanSpokenPlace(final), l);
+      if (final.trim()) cb.current(cleanSpokenPlace(final), l, final.trim());
     };
     rec.current = r;
     setHeard("");
