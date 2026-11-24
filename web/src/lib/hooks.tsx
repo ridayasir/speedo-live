@@ -168,7 +168,8 @@ export function useLiveBuses(filter?: { routeIds?: number[]; busIds?: number[] }
         setConn(retry > 2 ? "offline" : "reconnecting");
         if (!poll) {
           restFallback();
-          poll = setInterval(restFallback, 10000);
+          // no live stream (e.g. serverless hosting): ask every 5 s; the map glides buses between updates
+          poll = setInterval(restFallback, 5000);
         }
         retry++;
         timer = setTimeout(connect, Math.min(15000, 1000 * 2 ** retry));

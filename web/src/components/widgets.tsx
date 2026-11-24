@@ -290,7 +290,7 @@ export function BusRow({ b, routeCode, color, onClick, selected }: { b: BusState
         selected ? "border-accent-400 bg-amber-50" : "border-slate-100 bg-white hover:bg-slate-50",
       )}
     >
-      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-700 text-white" style={color ? { backgroundColor: color } : undefined}>
+      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-600 text-white">
         <Bus className="h-4 w-4" />
       </span>
       <span className="flex-1 min-w-0">

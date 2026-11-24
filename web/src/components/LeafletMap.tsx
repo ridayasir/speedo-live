@@ -2,11 +2,11 @@
 
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { Fragment, useEffect, useMemo, useState } from "react";
-import { CircleMarker, MapContainer, Marker, Polyline, Popup, TileLayer, Tooltip, useMap, useMapEvents } from "react-leaflet";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { CircleMarker, MapContainer, Marker, Polyline, Popup, TileLayer, Tooltip, useMap, useMapEvents, type MarkerProps } from "react-leaflet";
 import { api } from "@/lib/api";
 import { stopColor } from "@/lib/format";
-import type { BusState, RouteDetail, RouteSummary, Stop } from "@/lib/types";
+import type { BusState, RouteDetail, Stop } from "@/lib/types";
 import { effectiveStatus } from "./ui";
 
 export interface MapRoute {
@@ -60,21 +60,6 @@ const STATUS_COLOR: Record<string, string> = {
   out_of_service: "#475569",
 };
 
-// route id -> colour, loaded once and shared by every map
-let routeColorCache: Record<number, string> | null = null;
-let routeColorLoad: Promise<Record<number, string>> | null = null;
-function useRouteColors(): Record<number, string> {
-  const [colors, setColors] = useState<Record<number, string>>(routeColorCache || {});
-  useEffect(() => {
-    if (routeColorCache) return;
-    routeColorLoad ??= api<RouteSummary[]>("/api/routes?include_inactive=true")
-      .then((rs) => (routeColorCache = Object.fromEntries(rs.map((r) => [r.id, r.color]))))
-      .catch(() => ({}));
-    routeColorLoad.then(setColors);
-  }, []);
-  return colors;
-}
-
 // stop id -> the routes that serve it, loaded once and shared by every map: stops take their route's colour,
 // and a stop served by several routes (where people change buses) gets a dark ring and says so
 type StopRoute = { id: number; code: string; color: string };
@@ -98,9 +83,44 @@ function useStopRoutes(): Record<number, StopRoute[]> {
   return m;
 }
 
-function busIcon(b: BusState, selected: boolean, routeColor?: string) {
+const BUS_RED = "#dc2626";
+/** How long a bus takes to glide to its new position: about the time between two location updates. */
+export const BUS_GLIDE_MS = 4800;
+
+/**
+ * A bus marker that drives smoothly from its last position to the new one instead of jumping, so buses are seen
+ * moving between location updates. Very long jumps (a lost signal coming back) are not animated.
+ */
+function MovingMarker({ lat, lng, children, ...rest }: { lat: number; lng: number; children?: React.ReactNode } & Omit<MarkerProps, "position">) {
+  const ref = useRef<L.Marker | null>(null);
+  const first = useRef<[number, number]>([lat, lng]);
+  useEffect(() => {
+    const m = ref.current;
+    if (!m) return;
+    const from = m.getLatLng();
+    const to = L.latLng(lat, lng);
+    if (from.equals(to)) return;
+    if (from.distanceTo(to) > 1500 || typeof requestAnimationFrame === "undefined") {
+      m.setLatLng(to);
+      return;
+    }
+    const t0 = performance.now();
+    let raf = 0;
+    const step = (t: number) => {
+      const k = Math.min(1, (t - t0) / BUS_GLIDE_MS);
+      m.setLatLng([from.lat + (to.lat - from.lat) * k, from.lng + (to.lng - from.lng) * k]);
+      if (k < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf); // a newer position arrived: the next glide starts from here
+  }, [lat, lng]);
+  return <Marker ref={ref} position={first.current} {...rest}>{children}</Marker>;
+}
+
+function busIcon(b: BusState, selected: boolean) {
   const st = effectiveStatus(b);
-  const color = STATUS_COLOR[st] || routeColor || "#b91c1c";
+  // every bus is Speedo red; only lost-signal / out-of-service buses are grey (the route is in the popup/list)
+  const color = STATUS_COLOR[st] || BUS_RED;
   const ring = selected ? "3px solid #111827" : st === "delayed" ? "3px solid #f59e0b" : "2px solid white";
   const rot = b.heading ?? 0;
   const faded = st === "stale" || st === "offline";
@@ -182,8 +202,6 @@ export default function LeafletMap(props: MapProps) {
   const tripIds = useMemo(() => new Set(tripStops.map((t) => t.id)), [tripStops]);
   const stopRoutes = useStopRoutes();
   const hl = useMemo(() => new Set(highlightStopIds), [highlightStopIds]);
-  const loaded = useRouteColors();
-  const colorOf = useMemo<Record<number, string>>(() => ({ ...loaded, ...Object.fromEntries(routes.map((r) => [r.id, r.color])) }), [loaded, routes]);
   return (
     <MapContainer
       center={props.center || LAHORE}
@@ -258,10 +276,11 @@ export default function LeafletMap(props: MapProps) {
       {buses
         .filter((b) => b.lat != null && b.lng != null)
         .map((b) => (
-          <Marker
+          <MovingMarker
             key={`b-${b.bus_id}`}
-            position={[b.lat as number, b.lng as number]}
-            icon={busIcon(b, b.bus_id === selectedBusId, b.route_id != null ? colorOf[b.route_id] : undefined)}
+            lat={b.lat as number}
+            lng={b.lng as number}
+            icon={busIcon(b, b.bus_id === selectedBusId)}
             eventHandlers={{ click: () => onBusClick?.(b) }}
             zIndexOffset={b.bus_id === selectedBusId ? 1000 : 0}
           >
@@ -271,7 +290,7 @@ export default function LeafletMap(props: MapProps) {
                 {b.next_stop && <div>Next: {b.next_stop.name}</div>}
               </Popup>
             )}
-          </Marker>
+          </MovingMarker>
         ))}
     </MapContainer>
   );
