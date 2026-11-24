@@ -9,6 +9,7 @@ import MapView from "@/components/MapView";
 import { Card, Empty, ErrorBox, SectionTitle, Spinner } from "@/components/ui";
 import { BusRow, RouteChip } from "@/components/widgets";
 import { km, useApi, useLiveBuses } from "@/lib/hooks";
+import { stopColor } from "@/lib/format";
 import type { RouteDetail } from "@/lib/types";
 
 function RouteInner() {
@@ -65,7 +66,7 @@ function RouteInner() {
             <ol className="relative ml-2 border-l-2" style={{ borderColor: r.color }}>
               {r.stops.map((s, i) => (
                 <li key={s.id} className="ml-4 py-1.5">
-                  <span className="absolute -left-[7px] mt-1.5 h-3 w-3 rounded-full border-2 bg-white" style={{ borderColor: r.color }} />
+                  <span className="absolute -left-[7px] mt-1.5 h-3 w-3 rounded-full border-2 border-white shadow" style={{ backgroundColor: stopColor(s.id) }} aria-hidden />
                   <Link href={`/stop/?id=${s.id}&route=${r.id}`} className="flex items-center justify-between text-sm hover:text-brand-700">
                     <span className={i === 0 || i === r.stops.length - 1 || s.is_major ? "font-semibold" : ""}>{s.name}</span>
                     <span className="text-xs text-slate-400">+{Math.round(s.offset_minutes)} min</span>

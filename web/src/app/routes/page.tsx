@@ -12,6 +12,7 @@ import VoiceGuide from "@/components/VoiceGuide";
 import { journeySpeech, loadTrip, saveTrip, tripKey } from "@/lib/journey";
 import { speak, type VoiceLang } from "@/lib/voice";
 import { api } from "@/lib/api";
+import { stopColor } from "@/lib/format";
 import { km, saveRecent, useApi, useAuth, useGeolocation, useMeta } from "@/lib/hooks";
 import type { PlanLegRide, PlanOption, PlanPreference, PlanResult, RouteDetail, RouteSummary, Stop } from "@/lib/types";
 
@@ -391,6 +392,7 @@ function RoutesInner() {
                                           onClick={(e) => { e.stopPropagation(); focusStop(st); }}
                                           className={`flex w-full items-center gap-2 rounded px-1 py-0.5 text-left ${selStop === st.id ? "bg-amber-100 font-semibold text-slate-900" : "hover:bg-slate-50"} ${end ? "font-semibold text-slate-800" : ""}`}>
                                           <span className="w-5 shrink-0 text-right text-slate-400">{n + 1}.</span>
+                                          <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: stopColor(st.id) }} aria-hidden />
                                           <span className="min-w-0 flex-1 truncate">{st.name}</span>
                                           {n === 0 && <span className="text-[10px] uppercase text-green-700">get on</span>}
                                           {n === l.stops.length - 1 && <span className="text-[10px] uppercase text-orange-700">get off</span>}

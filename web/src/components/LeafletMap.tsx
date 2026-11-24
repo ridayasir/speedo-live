@@ -2,10 +2,11 @@
 
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { CircleMarker, MapContainer, Marker, Polyline, Popup, TileLayer, Tooltip, useMap, useMapEvents } from "react-leaflet";
 import { api } from "@/lib/api";
-import type { BusState, RouteSummary, Stop } from "@/lib/types";
+import { stopColor } from "@/lib/format";
+import type { BusState, RouteDetail, RouteSummary, Stop } from "@/lib/types";
 import { effectiveStatus } from "./ui";
 
 export interface MapRoute {
@@ -72,6 +73,29 @@ function useRouteColors(): Record<number, string> {
     routeColorLoad.then(setColors);
   }, []);
   return colors;
+}
+
+// stop id -> the routes that serve it, loaded once and shared by every map: stops take their route's colour,
+// and a stop served by several routes (where people change buses) gets a dark ring and says so
+type StopRoute = { id: number; code: string; color: string };
+let stopRouteCache: Record<number, StopRoute[]> | null = null;
+let stopRouteLoad: Promise<Record<number, StopRoute[]>> | null = null;
+function useStopRoutes(): Record<number, StopRoute[]> {
+  const [m, setM] = useState<Record<number, StopRoute[]>>(stopRouteCache || {});
+  useEffect(() => {
+    if (stopRouteCache) return;
+    stopRouteLoad ??= api<RouteDetail[]>("/api/routes?with_path=true")
+      .then((rs) => {
+        const out: Record<number, StopRoute[]> = {};
+        for (const r of rs) for (const st of r.stops || []) {
+          (out[st.id] ??= []).some((x) => x.id === r.id) || out[st.id].push({ id: r.id, code: r.code, color: r.color });
+        }
+        return (stopRouteCache = out);
+      })
+      .catch(() => ({}));
+    stopRouteLoad.then(setM);
+  }, []);
+  return m;
 }
 
 function busIcon(b: BusState, selected: boolean, routeColor?: string) {
@@ -156,6 +180,7 @@ export default function LeafletMap(props: MapProps) {
   const { buses = [], routes = [], stops = [], highlightStopIds = [], selectedBusId, onBusClick, onStopClick, onMapClick, points = [],
     walks = [], tripStops = [], selectedStopId = null } = props;
   const tripIds = useMemo(() => new Set(tripStops.map((t) => t.id)), [tripStops]);
+  const stopRoutes = useStopRoutes();
   const hl = useMemo(() => new Set(highlightStopIds), [highlightStopIds]);
   const loaded = useRouteColors();
   const colorOf = useMemo<Record<number, string>>(() => ({ ...loaded, ...Object.fromEntries(routes.map((r) => [r.id, r.color])) }), [loaded, routes]);
@@ -188,17 +213,36 @@ export default function LeafletMap(props: MapProps) {
           <Tooltip sticky>Walk (straight line, estimate)</Tooltip>
         </Polyline>
       ))}
-      {stops.filter((s) => !tripIds.has(s.id)).map((s) => (
-        <CircleMarker
-          key={`s-${s.id}`}
-          center={[s.lat, s.lng]}
-          radius={s.id === selectedStopId ? 9 : hl.has(s.id) ? 8 : 5}
-          pathOptions={{ color: s.id === selectedStopId ? "#111827" : hl.has(s.id) ? "#f59e0b" : "#b91c1c", fillColor: "white", fillOpacity: 1, weight: hl.has(s.id) || s.id === selectedStopId ? 4 : 2.5 }}
-          eventHandlers={{ click: () => onStopClick?.(s) }}
-        >
-          <Tooltip direction="top" offset={[0, -6]}>{s.name}</Tooltip>
-        </CircleMarker>
-      ))}
+      {stops.filter((s) => !tripIds.has(s.id)).map((s) => {
+        const rs = stopRoutes[s.id] || [];
+        const change = rs.length > 1;
+        const sel = s.id === selectedStopId, lit = hl.has(s.id);
+        const r = sel ? 9 : lit ? 8 : change ? 6.5 : 5;
+        return (
+          <Fragment key={`s-${s.id}`}>
+            {change && (
+              <CircleMarker center={[s.lat, s.lng]} radius={r + 3} interactive={false}
+                pathOptions={{ color: "#111827", weight: 2, fillOpacity: 0 }} />
+            )}
+            <CircleMarker
+              center={[s.lat, s.lng]}
+              radius={r}
+              pathOptions={{ color: sel ? "#111827" : lit ? "#f59e0b" : "white", fillColor: stopColor(s.id), fillOpacity: 1, weight: lit || sel ? 4 : 2 }}
+              eventHandlers={{ click: () => onStopClick?.(s) }}
+            >
+              <Tooltip direction="top" offset={[0, -6]}>
+                {s.name}
+                {rs.length > 0 && (
+                  <span style={{ display: "block", fontSize: 11, color: "#475569" }}>
+                    {change ? `Change here · ${rs.length} routes: ` : "Route: "}
+                    {rs.slice(0, 4).map((x) => x.code).join(", ")}{rs.length > 4 ? "…" : ""}
+                  </span>
+                )}
+              </Tooltip>
+            </CircleMarker>
+          </Fragment>
+        );
+      })}
       {tripStops.map((t) => (
         <Marker key={`t-${t.role}-${t.id}`} position={[t.lat, t.lng]} icon={tripStopIcon(t.role, t.id === selectedStopId)}
           zIndexOffset={t.id === selectedStopId ? 900 : 500}
